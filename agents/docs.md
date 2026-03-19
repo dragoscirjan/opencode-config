@@ -16,6 +16,36 @@ permission:
   todowrite: allow
   todoread: allow
   question: allow
+readDeny:
+  - "**/.env"
+  - "**/.env.*"
+  - "**/*.key"
+  - "**/*.pem"
+  - "**/*.p12"
+  - "**/*.pfx"
+  - "**/*.crt"
+  - "**/*.cer"
+  - "**/*credentials*"
+  - "**/*secrets*"
+  - "**/.aws/credentials"
+  - "**/.azure/credentials"
+  - "**/config/master.key"
+  - "**/config/credentials.yml.enc"
+  - "**/.npmrc"
+  - "**/.pypirc"
+  - "**/*.jks"
+  - "**/*.keystore"
+  - "**/*token*"
+  - "**/*oauth*"
+  - "**/*api-key*"
+  - "**/*apikey*"
+  - "**/.netrc"
+  - "**/.pgpass"
+  - "**/id_rsa"
+  - "**/id_ecdsa"
+  - "**/id_ed25519"
+  - "**/.ssh/*"
+  - "**/known_hosts"
 ---
 
 # Role
