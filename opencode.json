@@ -1,0 +1,163 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": [
+    "@tarquinen/opencode-dcp@latest"
+  ],
+  "agent": {
+    "plan": {
+      "prompt": "{file:./prompts/plan.md}",
+      "permission": {
+        "edit": "ask",
+        "bash": "deny"
+      }
+    },
+    "build": {
+      "prompt": "{file:./prompts/build.md}"
+    }
+  },
+  "mcp": {
+    "browser_puppeteer": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@anthropics/mcp-puppeteer"
+      ],
+      "enabled": false,
+      "environment": {
+        "PUPPETEER_EXECUTABLE_PATH": "{env:BROWSER_PATH}"
+      }
+    },
+    "browser_playwright": {
+      "type": "local",
+      "command": [
+        "npx",
+        "@playwright/mcp@latest",
+        "--browser",
+        "chromium",
+        "--executable-path",
+        "{env:BROWSER_PATH}"
+      ],
+      "enabled": true
+    },
+    "codeindex_cocoindex": {
+      "type": "local",
+      "command": [
+        "uv",
+        "run",
+        "--project",
+        "{env:COCOINDEX_PATH}/mcp-coco-index",
+        "mcp-coco-index"
+      ],
+      "environment": {
+        "COCOINDEX_DB_HOST": "{env:COCOINDEX_DB_HOST}",
+        "COCOINDEX_DB_PORT": "{env:COCOINDEX_DB_PORT}",
+        "COCOINDEX_DB_NAME": "{env:COCOINDEX_DB_NAME}",
+        "COCOINDEX_DB_USER": "{env:COCOINDEX_DB_USER}",
+        "COCOINDEX_DB_PASSWORD": "{env:COCOINDEX_DB_PASSWORD}"
+      },
+      "enabled": false
+    },
+    "codeindex_fastcode": {
+      "type": "local",
+      "command": [
+        "{env:FASTCODE_PATH}/.venv/bin/python",
+        "{env:FASTCODE_PATH}/mcp_server.py"
+      ],
+      "environment": {
+        "OPENAI_API_KEY": "{env:FASTCODE_API_KEY}",
+        "MODEL": "{env:FASTCODE_MODEL}",
+        "BASE_URL": "{env:FASTCODE_BASE_URL}"
+      },
+      "enabled": false
+    },
+    "cvs_github": {
+      "type": "remote",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer {env:GITHUB_TOKEN}",
+        "X-MCP-Toolsets": "repos,issues",
+        "X-MCP-Readonly": "true"
+      },
+      "enabled": false
+    },
+    "cvs_gitlab": {
+      "type": "remote",
+      "url": "https://{env:GITLAB_URL}/api/v4/mcp",
+      "enabled": false
+    },
+    "cvs_forgejo": {
+      "type": "local",
+      "command": [
+        "forgejo-mcp",
+        "--transport",
+        "stdio"
+      ],
+      "environment": {
+        "FORGEJO_URL": "{env:FORGEJO_URL}",
+        "FORGEJO_ACCESS_TOKEN": "{env:FORGEJO_ACCESS_TOKEN}"
+      },
+      "enabled": false
+    },
+    "docs_context7": {
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp",
+      "enabled": true
+    },
+    "docs_github_grep": {
+      "type": "remote",
+      "url": "https://mcp.grep.app",
+      "enabled": true
+    },
+    "memory_json": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ],
+      "environment": {
+        "MEMORY_FILE_PATH": "{env:PROJECT_PATH}/.memory.jsonl"
+      },
+      "enabled": true
+    },
+    "memory_libsql": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "mcp-memory-libsql"
+      ],
+      "environment": {
+        "LIBSQL_URL": "file:{env:PROJECT_PATH}/.memory.db"
+      },
+      "enabled": false
+    },
+    "sequential_thinking": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ],
+      "enabled": true
+    },
+    "webcrawl_tavily": {
+      "type": "remote",
+      "url": "https://mcp.tavily.com/mcp/?tavilyApiKey={env:TAVILY_API_KEY}",
+      "enabled": false
+    },
+    "webcrawl_firecrawl": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "firecrawl-mcp"
+      ],
+      "environment": {
+        "FIRECRAWL_API_KEY": "{env:FIRECRAWL_API_KEY}"
+      },
+      "enabled": false
+    }
+  }
+}
