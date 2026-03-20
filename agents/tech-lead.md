@@ -5,7 +5,7 @@ model: github-copilot/claude-opus-4.6
 temperature: 0.2
 hidden: true
 permission:
-  edit: deny
+  edit: allow
   bash: deny
   read: allow
   glob: allow
@@ -58,10 +58,19 @@ For each subtask:
 
 # Documentation
 
-- **Small features:** If the feature is trivially small, skip formal documents (HLD/LLD/tasks) and communicate directly.
-- Write low-level design under `.hld/<hld-name>/lld.md`
-- When splitting into phases/tasks, write them under `.hld/<hld-name>/phase-<id>.md`
-- When documents are too large to write in one go, split them into chunks and write them to avoid memory overflow.
+## File Naming
+
+`<id>` is a zero-padded 5-digit number (00001–99999). Before writing phase files, scan `.hld/hld-<hld-id>-*/` for existing `phase-*.md` files and increment from the highest `<id>` found (start at 00001 if none exist).
+
+- **LLD**: `.hld/hld-<hld-id>-<name>/lld.md`
+- **Phases/Tasks**: `.hld/hld-<hld-id>-<name>/phase-<id>.md`
+
+Where `<hld-id>` matches the parent HLD's id.
+
+## Rules
+
+- **Small features:** Skip formal documents if trivially small — communicate directly.
+- When documents are too large, split into chunks to avoid memory overflow.
 
 # Skills
 
