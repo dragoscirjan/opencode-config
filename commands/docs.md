@@ -1,15 +1,17 @@
 ---
-description: Generate project documentation
-agent: docs
+description: Generate or update MkDocs documentation for the current project
+agent: technical-writer
+subtask: true
 ---
 
-Generate or update documentation for "$ARGUMENTS" (or current project).
+Generate or update the MkDocs documentation site for this project.
 
-## Steps
+$ARGUMENTS
 
-1. Explore the codebase — understand structure, public API, and existing docs
-2. Set up tooling if missing (mise for Python, uv for deps, Taskfile for `docs` tasks)
-3. Set up `mkdocs.yml` and `docs/` if they don't exist
-4. Generate usage documentation (getting started, configuration, features)
-5. Generate API documentation from source if the project has a public API
-6. Verify with `task docs:build`
+Follow your full workflow:
+1. Explore the project — read README, source tree, existing docs/, changelogs, contributing guides
+2. Scaffold the toolchain if not already set up (uv, mise, Taskfile docs tasks, mkdocs.yml)
+3. Write or update all documentation pages following the standard nav structure
+4. Run `task docs:build` to confirm the site builds without errors
+
+If `$ARGUMENTS` is provided, treat it as a specific instruction (e.g. "update the API section" or "add a configuration page"). Otherwise, perform a full documentation audit and fill any missing sections.
