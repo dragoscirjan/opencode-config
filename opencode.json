@@ -3,18 +3,6 @@
   "plugin": [
     "@tarquinen/opencode-dcp@latest"
   ],
-  "agent": {
-    "plan": {
-      "prompt": "{file:./prompts/plan.md}",
-      "permission": {
-        "edit": "ask",
-        "bash": "deny"
-      }
-    },
-    "build": {
-      "prompt": "{file:./prompts/build.md}"
-    }
-  },
   "mcp": {
     "browser_puppeteer": {
       "type": "local",
