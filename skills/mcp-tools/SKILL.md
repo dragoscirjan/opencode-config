@@ -29,7 +29,15 @@ Local codebase semantic search and indexing.
 
 ## Version Control (`cvs_*`)
 
-GitHub, GitLab, Forgejo API access — repos, issues, PRs.
+GitHub, GitLab, Forgejo API access — repos, issues, PRs. Load `cvs-mode` skill for conventions (provider detection, attribution, autonomy levels).
+
+| Tool family | Provider | Operations |
+|-------------|----------|------------|
+| `cvs_github_*` | GitHub | Issues, PRs, comments, repos |
+| `cvs_gitlab_*` | GitLab | Issues, MRs, comments, repos |
+| `cvs_forgejo_*` | Forgejo | Issues, PRs, comments, repos |
+
+**CLI fallbacks** (when MCP tools unavailable): `gh` (GitHub), `glab` (GitLab), `forgejo-cli` (Forgejo).
 
 ## Web Crawling (`webcrawl_*`)
 

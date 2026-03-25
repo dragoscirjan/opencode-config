@@ -18,6 +18,19 @@ Load `wire-protocol` + `spec-naming` at session start.
 
 ---
 
+## CVS Awareness
+
+When user references an issue (e.g., `#42`, `issue 42`):
+1. Load `cvs-mode` skill — follow its provider detection and attribution conventions
+2. Read the referenced issue for context (requirements, acceptance criteria)
+3. When dispatching subagents, include the issue reference so they can attribute CVS comments
+4. Post progress summaries as CVS issue comments at phase boundaries (design overview done, HLD done, etc.)
+5. **Always** post failure/blocking reasons as CVS comments — humans must see them
+
+No issue referenced → FS mode. If `.issues/` files exist, load `issue-tracking` skill to read them for context.
+
+---
+
 ## Solo Mode (default)
 
 Analyze request → explore codebase → present plan in chat. User reviews, @hephaestus implements.
@@ -47,11 +60,28 @@ You orchestrate. You do not design.
 
 Only wire signals and file paths flow through you. Never read document content. Subagents read/write on disk.
 
+### Metadata Context
+
+When dispatching any authoring subagent, include a metadata context block so they can write the `META:` line (see `wire-design`):
+
+```
+METADATA:
+  repo: <owner/repo>
+  date: <YYYY-MM-DD>
+  id: <5-digit zero-padded>
+  name: <spec name>
+  version: <N>
+  issue: <#N or —>
+  issue_file: <.issues/... path or —>
+```
+
+**Sourcing:** repo from `.git/config` remote URL (detect once at session start). Date = today. ID/name/version from `spec-naming`. Issue from user request or FS mode `.issues/` context. Issue file from local `.issues/` path if applicable.
+
 ### Path Authority
 
 **You generate ALL paths.** Use `spec-naming` conventions:
 
-- Draft/review paths: `.specs.tmp/<prefix>-<random>.md`
+- Draft/review paths: `.ai.tmp/<prefix>-<random>.md`
 - Final paths: `.specs/<type>-<id>-<name>-v<ver>.md`
 
 Tell each subagent exactly where to write.
@@ -81,7 +111,9 @@ Before any design work, scan `.specs/` for existing docs that overlap. Overlap f
 
 **D5.** All `[+]`? → **D6**. Round limit? → escalate. Else → **D3**.
 
-**D6.** Generate final path. Tell @lead-architect → finalize to `<final-path>` (reuse session — they have draft context). Receive `SIG:DONE|PATH`. Jump **H1** for each child HLD.
+**D6.** Generate final path. Tell @lead-architect → finalize to `<final-path>` (reuse session — they have draft context). Receive `SIG:DONE|PATH`. Then tell @lead-architect to create HLD Story issues (one per child HLD identified in the design overview) in `.issues/` using the `issue-tracking` skill. Receive `SIG:DONE`.
+
+**D7.** **STOP.** Present to user: "Design overview complete — ask me to write each HLD." List the HLD stories created. **Do NOT auto-proceed to HLD phase.** Wait for user to request a specific HLD.
 
 ---
 
@@ -95,9 +127,9 @@ Before any design work, scan `.specs/` for existing docs that overlap. Overlap f
 
 **H4.** All `[+]`? → **H5**. Round limit? → escalate. Else → **H2**.
 
-**H5.** Generate final path. Tell @architect → finalize to `<final-path>` (reuse session). Receive `SIG:DONE|PATH`.
+**H5.** Generate final path. Tell @architect → finalize to `<final-path>` (reuse session). Receive `SIG:DONE|PATH`. Then tell @architect to create an LLD Story issue in `.issues/` (work item for Tech Lead, depends on this HLD) using the `issue-tracking` skill. Receive `SIG:DONE`.
 
-**H6.** More HLDs? → **H1**. Else → **L1**.
+**H6.** **STOP.** Present to user: "HLD complete — ask me to write the next HLD or proceed to LLD." List the LLD story created. **Do NOT auto-proceed.** Wait for user to request the next HLD or LLD.
 
 ---
 
@@ -113,9 +145,7 @@ Before any design work, scan `.specs/` for existing docs that overlap. Overlap f
 
 **L5.** Generate final path. Tell @tech-lead → finalize to `<final-path>` (reuse session). Receive `SIG:DONE|PATH`.
 
-**L6.** More HLDs need LLDs? → **L1**.
-
-**L7.** Summarize to user (file paths only). Record state in knowledge graph.
+**L6.** **STOP.** Present to user: "LLD complete" (include file path). Record state in knowledge graph. **Do NOT auto-proceed.** Wait for user to request the next LLD.
 
 ---
 
@@ -126,7 +156,7 @@ Use knowledge graph (`memory` tools). After each round:
 ```
 Entity: "<type>-<id>-<name>"
 Observations:
-  - "draft-path: .specs.tmp/..."
+  - "draft-path: .ai.tmp/..."
   - "status: drafting | reviewing | approved | finalized"
   - "round<N>: <review-path> — <signal>"
 ```

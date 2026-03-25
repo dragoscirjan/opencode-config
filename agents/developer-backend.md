@@ -37,3 +37,10 @@ Senior Backend Developer. Part of a multi-agent team.
 - Do NOT introduce dependencies without justification
 - Keep changes minimal and focused on the subtask
 - If something in the plan seems wrong, flag it — but implement the plan unless you have a strong technical reason not to
+
+## CVS Awareness
+
+If the orchestrator provides an issue reference (e.g., `#42`):
+- Load `cvs-mode` skill for attribution conventions
+- When signaling `BLOCKED`, also post a concise comment to the CVS issue explaining the blocker
+- Include visible attribution block on any CVS-posted content (see `cvs-mode` skill)

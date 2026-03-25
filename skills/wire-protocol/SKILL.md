@@ -36,13 +36,13 @@ SIG:<signal>|PATH:<path>|<optional-fields>
 
 Examples:
 ```
-SIG:DONE|PATH:.specs.tmp/hld-x7f2a.md
+SIG:DONE|PATH:.ai.tmp/hld-x7f2a.md
 SIG:DONE|FILES:src/auth.rs,src/middleware.rs
 SIG:BLOCKED|RSN:missing API spec
-SIG:APPROVED|PATH:.specs.tmp/rv-k3m9p.md|RND:1/3
-SIG:CHANGES_REQUESTED|PATH:.specs.tmp/rv-q8n4r.md|ISSUES:2C,1M|RND:2/3
+SIG:APPROVED|PATH:.ai.tmp/rv-k3m9p.md|RND:1/3
+SIG:CHANGES_REQUESTED|PATH:.ai.tmp/rv-q8n4r.md|ISSUES:2C,1M|RND:2/3
 ```
 
 ## Compressed Writing
 
-In `.specs.tmp/`, follow compressed notation defined by your domain skill (e.g., `wire-design`).
+In `.ai.tmp/`, follow compressed notation defined by your domain skill (e.g., `wire-design`).

@@ -1,0 +1,45 @@
+version: "3"
+
+includes:
+  generic:
+    taskfile: ../generic/Taskfile.yml
+
+vars:
+  OC_AGENT: athena
+
+tasks:
+  default:
+    desc: "Run all Athena agent tests"
+    cmds:
+      - task: test:writes-to-specs
+
+  # ── Test 1: Athena writes HLD to .specs/ and attributes authorship ───────────
+  test:writes-to-specs:
+    desc: "Athena must write an HLD file to .specs/ attributed with opencode:athena"
+    vars:
+      HLD_PATH:
+    cmds:
+      - rm -rf .ai.tmp .specs
+      - echo "▶ [1] Athena writes to .specs/"
+      - task: generic:run
+        vars:
+          OC_AGENT: "{{.OC_AGENT}}"
+          OC_CATCH: 1
+          OC_PROMPT: "Write a draft HLD for a simple in-memory cache system. Use the team. No validation iteration."
+      - task: generic:test:path
+        vars:
+          TEST_PATH: ".specs/"
+          TEST_FOLDER: 1
+          OK_MESSAGE: ".specs/ exists"
+          ERR_MESSAGE: ".specs/ not found — athena did not write the file"
+      - task: generic:test:path
+        vars:
+          TEST_PATH: ".specs/hld-00001-cache-v1.md"
+          OK_MESSAGE: ".specs/hld-00001-cache-v1.md exists"
+          ERR_MESSAGE: ".specs/hld-00001-cache-v1.md not found — athena did not write the file"
+      - task: generic:test:contains
+        vars:
+          TEST_PATH: "{{.HLD_PATH}}"
+          TEST_TEXT: "opencode:athena"
+          OK_MESSAGE: "opencode:athena attribution found"
+          ERR_MESSAGE: "opencode:athena attribution missing from HLD"

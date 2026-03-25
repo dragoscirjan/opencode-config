@@ -5,8 +5,32 @@
 <h1 align="center">opencode-config</h1>
 
 <p align="center">
-  My personal <a href="https://opencode.ai">opencode</a> configuration — a batteries-included setup for AI-assisted development with multi-agent workflows, language-specific skills, and curated MCP integrations.
+  My personal <a href="https://opencode.ai">opencode</a> configuration — a multi-agent AI development team with orchestrated design-to-delivery workflows, domain-specific skills, and curated MCP integrations.
 </p>
+
+---
+
+## Table of Contents
+
+- [What's Inside](#whats-inside)
+- [Agents](#agents)
+  - [Primary Agents](#primary-agents)
+  - [Subagents](#subagents)
+- [Workflows](#workflows)
+  - [Standalone Agents](#standalone-agents)
+  - [Product Owner — Epic Refinement](#product-owner--epic-refinement)
+  - [Athena — Solo Design](#athena--solo-design)
+  - [Hephaestus — Solo Build](#hephaestus--solo-build)
+  - [Athena — Team Design](#athena--team-design)
+  - [Hephaestus — Team Build](#hephaestus--team-build)
+- [Skills](#skills)
+  - [Language Skills](#language-skills)
+  - [Workflow Skills](#workflow-skills)
+- [Commands](#commands)
+- [MCP Servers](#mcp-servers)
+- [Plugin](#plugin)
+- [Setup](#setup)
+- [License](#license)
 
 ---
 
@@ -14,44 +38,281 @@
 
 ```
 .
-├── opencode.json        # Main opencode config (agents, MCP servers, plugins)
+├── opencode.json        # Main config (MCP servers, plugins)
 ├── dcp.jsonc            # Dynamic Context Pruning settings
-├── agents/              # Sub-agent definitions (role, model, permissions)
-├── commands/            # Slash commands (/docs, /review, /test)
-├── prompts/             # System prompts for Plan and Build modes
-└── skills/              # Language & methodology skill packs
+├── agents/              # Agent definitions (role, model, permissions, prompts)
+├── commands/            # Slash commands (/design, /implement, /review, …)
+└── skills/              # Domain-specific instruction packs
+```
+
+Projects that use this config also produce:
+
+```
+<project>/
+├── .issues/             # Local issue tracking (Epic, Story, Task, Spike)
+├── .specs/              # Finalized design documents (HLDs, LLDs, task plans)
+└── .ai.tmp/             # Ephemeral AI drafts (compressed notation, disposable)
 ```
 
 ## Agents
 
-A multi-agent team that can be invoked for complex tasks:
+### Primary Agents
+
+User-facing agents, switchable with <kbd>Tab</kbd>:
 
 | Agent | Role | Model |
 |-------|------|-------|
-| **architect** | System design, HLDs, architecture decisions | `claude-opus-4.6` |
-| **tech-lead** | Task breakdown, implementation planning | `claude-opus-4.6` |
-| **developer** | Code implementation | `claude-sonet-4.6` |
-| **tester** | Test writing & execution, TDD support | `claude-sonet-4.6` |
-| **code-reviewer** | Quality, security & correctness review | `claude-opus-4.6` |
-| **docs** | Technical documentation (MkDocs) | `claude-sonet-4.6` |
+| **Product Owner** | Refines ideas into structured Epics with stories and acceptance criteria | `claude-sonnet-4.6` |
+| **Athena** | Orchestrates architecture design — design overviews, HLDs, LLDs | `claude-sonnet-4.6` |
+| **Hephaestus** | Implements features solo or orchestrates a dev team for complex builds | `claude-sonnet-4.6` |
+| **Technical Writer** | Generates and maintains MkDocs documentation sites | `claude-sonnet-4.6` |
+| **Agent Architect** | Designs, writes, and refines agent/subagent definitions (meta-agent) | `claude-opus-4.6` |
 
-The **Build** prompt acts as a Senior Developer by default — it only invokes the team when a task is complex enough to warrant it. The **Plan** prompt acts as a Senior Architect for analysis and design.
+### Subagents
+
+Hidden specialists invoked by orchestrators via the Task tool:
+
+| Agent | Role | Model | Invoked by |
+|-------|------|-------|------------|
+| **Lead Architect** | Design overviews — system scope, component boundaries | `claude-opus-4.6` | Athena, Product Owner |
+| **Architect** | HLDs — what a system does, not how | `claude-sonnet-4.6` | Athena |
+| **Tech Lead** | LLDs, task breakdowns, design reviews | `claude-opus-4.6` | Athena, Hephaestus |
+| **Developer Backend** | Backend code, APIs, data layers, tests | `claude-sonnet-4.6` | Hephaestus, Athena |
+| **Developer Frontend** | Frontend code, UI components, tests | `claude-sonnet-4.6` | Hephaestus, Athena |
+| **DevOps** | Infrastructure, CI/CD, deployment configs | `claude-sonnet-4.6` | Hephaestus, Athena |
+| **Reviewer** | Code review — quality, security, correctness | `claude-opus-4.6` | Hephaestus |
+
+## Workflows
+
+### Standalone Agents
+
+```mermaid
+sequenceDiagram
+    actor User
+
+    rect rgb(16, 185, 129, 0.1)
+    note right of User: Technical Writer
+    User->>Technical Writer: Write docs for project
+    Technical Writer->>User: Docs site (MkDocs)
+    end
+
+    rect rgb(139, 92, 246, 0.1)
+    note right of User: Agent Architect
+    User->>Agent Architect: Design a new agent
+    Agent Architect->>User: Agent definition (.md)
+    end
+```
+
+### Product Owner — Epic Refinement
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant PO as Product Owner
+    participant LA as Lead Architect
+
+    rect rgb(245, 158, 11, 0.1)
+    note right of User: Epic Refinement
+    User->>PO: Rough idea
+    PO->>User: Clarifying questions
+    User->>PO: Answers
+    PO->>LA: Feasibility + story type?
+    LA->>PO: DD story or HLD story
+    PO->>User: Epic + story (DD or HLD per LA)
+    end
+```
+
+### Athena — Solo Design
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant A as Athena
+
+    rect rgb(99, 102, 241, 0.1)
+    note right of User: Solo Design
+    User->>A: Design request
+    A->>A: Write HLD
+    A->>A: Write LLD
+    A->>User: Present plan in chat
+    end
+```
+
+### Hephaestus — Solo Build
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant H as Hephaestus
+    participant Rev as Reviewer
+
+    rect rgb(234, 88, 12, 0.1)
+    note right of User: Solo Build
+    alt Direct request
+        User->>H: Implement feature
+    else Handoff from Athena
+        User->>H: Continue with implementation
+        H->>H: Read specs from .specs/
+    end
+    H->>H: Write code + tests
+    H->>Rev: Request review
+    Rev->>H: Changes requested
+    H->>H: Fix issues
+    H->>Rev: Re-review
+    Rev->>H: Approved
+    H->>User: Done
+    end
+```
+
+### Athena — Team Design
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant A as Athena
+    participant LA as Lead Architect
+    participant Arch as Architect
+    participant TL as Tech Lead
+    participant Devs as Developers
+
+    rect rgb(99, 102, 241, 0.08)
+    note right of User: Design Overview
+    User->>A: Design request
+    A->>LA: Write design overview
+    loop Review rounds (configurable limit)
+        LA->>A: Draft ready
+        A->>Arch: Review design overview
+        A->>TL: Review design overview
+        Arch->>A: Feedback
+        TL->>A: Feedback
+        A->>LA: Apply feedback
+    end
+    LA->>A: Finalized + HLD Stories
+    A->>User: Design overview complete — ask me to write each HLD
+    end
+
+    rect rgb(99, 102, 241, 0.15)
+    note right of User: HLD (one at a time, user-initiated)
+    User->>A: Write HLD for component X
+    A->>Arch: Write HLD
+    loop Review rounds (configurable limit)
+        Arch->>A: Draft ready
+        A->>TL: Review HLD
+        A->>Devs: Review HLD (feasibility)
+        TL->>A: Feedback
+        Devs->>A: Feedback
+        A->>Arch: Apply feedback
+    end
+    Arch->>A: Finalized + LLD Story
+    A->>User: HLD complete — ask me to write next HLD or proceed to LLD
+    end
+
+    rect rgb(99, 102, 241, 0.22)
+    note right of User: LLD (one at a time, user-initiated)
+    User->>A: Write LLD for component X
+    A->>TL: Write LLD
+    loop Review rounds (configurable limit)
+        TL->>A: Draft ready
+        A->>Devs: Review LLD (feasibility)
+        Devs->>A: Feedback
+        A->>TL: Apply feedback
+    end
+    TL->>A: Finalized
+    A->>User: LLD complete
+    end
+```
+
+### Hephaestus — Team Build
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant H as Hephaestus
+    participant TL as Tech Lead
+    participant Devs as Developers
+    participant Rev as Reviewer
+
+    rect rgb(234, 88, 12, 0.08)
+    note right of User: Task Planning (per story)
+    User->>H: Plan story X
+    H->>TL: Create task breakdown
+    loop Review rounds (configurable limit)
+        TL->>H: Task plan
+        H->>Devs: Review feasibility
+        Devs->>H: Feedback
+        H->>TL: Apply feedback
+    end
+    TL->>H: Write Tasks
+    H->>User: Present plan for approval
+    User->>H: Approved
+    end
+
+    rect rgb(234, 88, 12, 0.15)
+    note right of User: Implementation (user chooses scope)
+    User->>H: Implement task X (or tasks X, Y in parallel)
+    alt Multiple tasks requested
+        H->>TL: Confirm implementation order
+        TL->>H: Order / parallelism advice
+    end
+    H->>Devs: Implement tasks
+    Devs->>H: Code + tests ready
+    end
+
+    rect rgb(234, 88, 12, 0.22)
+    note right of User: Review (per task or parallel batch)
+    H->>Rev: Review changes
+    loop Review rounds (configurable limit)
+        Rev->>H: Changes requested
+        H->>Devs: Apply fixes
+        Devs->>H: Fixes ready
+        H->>Rev: Re-review
+    end
+    Rev->>H: Approved
+    H->>User: Done
+    end
+```
 
 ## Skills
 
+### Language Skills
+
 Loadable instruction packs that teach agents language-specific conventions and best practices:
 
-- **Languages** — Bash, C++, Elixir, Go, Java, JavaScript, Lua, Python, Rust, TypeScript, Zig
-- **clean-code** — SOLID principles, design patterns, readability standards
-- **mcp-tools** — External MCP tool reference
+Bash, C++, Elixir, Go, Java, JavaScript, Lua, Python, Rust, TypeScript, Zig
+
+### Workflow Skills
+
+| Skill | Purpose |
+|-------|---------|
+| **clean-code** | SOLID principles, design patterns, readability standards |
+| **tdd** | Test-Driven Development — Red-Green-Refactor cycle with wire protocol signals |
+| **issue-tracking** | Local `.issues/` conventions — file naming, YAML frontmatter, ID management |
+| **cvs-mode** | CVS integration — GitHub/GitLab/Forgejo auto-detection, MCP-first with CLI fallback |
+| **wire-protocol** | Base communication DSL for subagents — signals, compressed output, no hallucination |
+| **wire-design** | Design document extension — compressed notation for reviews and drafts |
+| **spec-naming** | Path authority for orchestrators — draft/final naming, directory conventions |
+| **mcp-tools** | External MCP tool reference |
 
 ## Commands
 
-| Command | Description |
-|---------|-------------|
-| `/docs` | Generate or update project documentation |
-| `/review` | Run a code review on the current diff |
-| `/test` | Run tests with coverage |
+| Command | Description | Agent |
+|---------|-------------|-------|
+| `/design` | Start an architecture design session — design overviews, HLDs, LLDs | Athena |
+| `/review-design` | Dispatch reviewers to evaluate an existing design document | Athena |
+| `/spike` | Conduct a technical research spike — explore, analyze, report | Athena |
+| `/implement` | Implement a feature from a spec, issue, or direct instructions | Hephaestus |
+| `/fix` | Investigate and fix a bug from a description or issue reference | Hephaestus |
+| `/review` | Trigger a code review on specific files or recent changes | Hephaestus |
+| `/tdd` | Implement a feature using Test-Driven Development | Hephaestus |
+| `/pr` | Create a pull request with auto-generated description | Hephaestus |
+| `/refine` | Refine a rough idea into a structured Epic with stories and acceptance criteria | Product Owner |
+| `/backlog` | Review and prioritize the backlog — scan issues, suggest next actions | Product Owner |
+| `/sync-issues` | Sync issues between CVS platform and local `.issues/` directory | Product Owner |
+| `/docs` | Generate or update MkDocs documentation for the current project | Technical Writer |
+| `/changelog` | Generate or update CHANGELOG.md from git history and resolved issues | Technical Writer |
+| `/new-agent` | Design a new OpenCode agent — discovery, design, prompt crafting | Agent Architect |
+| `/refine-agent` | Analyze and refine an existing agent — improve prompt, permissions, design | Agent Architect |
+| `/new-skill` | Design a new OpenCode skill — domain-specific instructions for agents | Agent Architect |
 
 ## MCP Servers
 
@@ -107,13 +368,6 @@ Uses [`@tarquinen/opencode-dcp`](https://www.npmjs.com/package/@tarquinen/openco
    ```
 
 5. **Enable/disable MCP servers** by toggling `"enabled"` in `opencode.json`.
-
-## How It Works
-
-- **Solo mode (default):** The Build agent works as a Senior Developer, handling tasks directly.
-- **Team mode:** For complex tasks (3+ files, design trade-offs, new APIs, architecture changes), the full agent team is invoked — Tech Lead plans, Developer implements, Tester verifies, Code Reviewer approves.
-- **TDD support:** Include "TDD" in your request and the Tester writes failing tests first, then the Developer implements to make them pass.
-- **Plan mode:** The Plan agent acts as a Senior Architect for analysis-only tasks — producing HLD documents, design roadmaps, and task breakdowns without writing code.
 
 ## License
 

@@ -1,0 +1,85 @@
+version: "3"
+
+tasks:
+  run:
+    cmds:
+      - |
+        {{if .OC_CATCH}}TEMP=$(mktemp){{end}}
+        npx -y opencode-ai@latest run --agent {{.OC_AGENT}} --format json \
+          '{{.OC_PROMPT}}' \
+          2>&1 {{if .OC_CATCH}}> $TEMP; \
+          echo $TEMP{{end}}
+    desc: "Run an OpenCode agent with a given prompt and stream JSON events to stdout"
+    requires:
+      vars:
+        - OC_PROMPT
+    summary: |
+      Invokes an OpenCode agent non-interactively via `opencode run`.
+      Output is streamed as raw JSON events (--format json) so callers can
+      pipe to jq or capture a session ID for later inspection with `opencode export`.
+
+      Required:
+        OC_PROMPT   The prompt to send to the agent.
+
+      Optional:
+        OC_AGENT    Agent name to use (default: build).
+        OC_CATCH    If set, captures output to a temp file and prints its path.
+    vars:
+      OC_AGENT: '{{.OC_AGENT | default "build"}}'
+
+  test:path:
+    cmds:
+      - |
+        [ {{if .TEST_FOLDER}}-d{{else}}-f{{end}} "{{.TEST_PATH}}" ] \
+          && echo "✓ {{.OK_MESSAGE}}" \
+          || { echo "✗ {{.ERR_MESSAGE}}"; exit {{.ERR_CODE}}; }
+    desc: "Assert that a file or directory exists at the given path"
+    requires:
+      vars:
+        - TEST_PATH
+    silent: true
+    summary: |
+      Checks whether a file (-f) or directory (-d) exists at TEST_PATH.
+      Prints a success or failure message and exits with ERR_CODE on failure.
+
+      Required:
+        TEST_PATH     Path to check.
+
+      Optional:
+        TEST_FOLDER   If set, checks for a directory instead of a file.
+        OK_MESSAGE    Message to print on success (default: "Test passed").
+        ERR_MESSAGE   Message to print on failure (default: "Test failed").
+        ERR_CODE      Exit code on failure (default: 1).
+    vars:
+      OK_MESSAGE: '{{.OK_MESSAGE | default "Test passed"}}'
+      ERR_MESSAGE: '{{.ERR_MESSAGE | default "Test failed"}}'
+      ERR_CODE: '{{.ERR_CODE | default "1"}}'
+
+  test:contains:
+    cmds:
+      - |
+        grep -q "{{.TEST_TEXT}}" "{{.TEST_PATH}}" \
+          && echo "✓ {{.OK_MESSAGE}}" \
+          || { echo "✗ {{.ERR_MESSAGE}}"; exit {{.ERR_CODE}}; }
+    desc: "Assert that a file contains a given string"
+    requires:
+      vars:
+        - TEST_PATH
+        - TEST_TEXT
+    silent: true
+    summary: |
+      Checks whether TEST_PATH contains the string TEST_TEXT using grep.
+      Prints a success or failure message and exits with ERR_CODE on failure.
+
+      Required:
+        TEST_PATH     Path to the file to search.
+        TEST_TEXT     String to search for.
+
+      Optional:
+        OK_MESSAGE    Message to print on success (default: "Test passed").
+        ERR_MESSAGE   Message to print on failure (default: "Test failed").
+        ERR_CODE      Exit code on failure (default: 1).
+    vars:
+      OK_MESSAGE: '{{.OK_MESSAGE | default "Test passed"}}'
+      ERR_MESSAGE: '{{.ERR_MESSAGE | default "Test failed"}}'
+      ERR_CODE: '{{.ERR_CODE | default "1"}}'

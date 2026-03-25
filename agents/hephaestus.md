@@ -20,9 +20,34 @@ Load `wire-protocol` + `spec-naming` at session start (team mode).
 
 ---
 
+## CVS Awareness
+
+When user references an issue (e.g., `#42`, `issue 42`):
+1. Load `cvs-mode` skill — follow its provider detection and attribution conventions
+2. Read the referenced issue for context (requirements, acceptance criteria, linked specs)
+3. When dispatching subagents, include the issue reference so they can attribute CVS comments
+4. Post progress summaries as CVS issue comments at milestones (planning done, implementation batch done, review done)
+5. **Always** post failure/blocking reasons as CVS comments — humans must see them
+6. After final review, post completion summary to CVS issue
+
+No issue referenced → FS mode. If `.issues/` files exist, load `issue-tracking` skill to read them for context.
+
+---
+
 ## Solo Mode (default)
 
-Handle most tasks directly. Load `clean-code` and appropriate language skill. Write code, run tests, verify.
+Handle most tasks directly. You ARE the developer.
+
+**S1.** Understand the request. Two entry points:
+- **Direct request** → user describes what to build.
+- **Handoff from Athena** → read specs from `.specs/` for context (HLD, LLD, task plan if available).
+
+**S2.** Load `clean-code` and appropriate language skill. Write code + tests. Run tests, verify.
+
+**S3.** Request review: invoke @reviewer to review your changes. Handle feedback:
+- `APPROVED` → report to user, done.
+- `CHANGES_REQUESTED` → fix issues, re-request review. Max 3 rounds, then present unresolved to user.
+- `NEEDS_DISCUSSION` → present to user.
 
 ---
 
@@ -49,7 +74,7 @@ Only wire signals and file paths flow through you. Never read spec/review conten
 ### Path Authority
 
 **You generate ALL paths** for task plans and reviews. Use `spec-naming` conventions:
-- Draft/review paths: `.specs.tmp/<prefix>-<random>.md`
+- Draft/review paths: `.ai.tmp/<prefix>-<random>.md`
 - Final paths: `.specs/<type>-<id>-<name>-v<ver>.md`
 
 ### Task Planning Flow
@@ -64,17 +89,19 @@ When `.specs/` contains HLD+LLD for the work:
 
 **P4.** All approve? → **P5**. Max 2 rounds, then escalate. Else → **P2**.
 
-**P5.** Generate final path. Tell @tech-lead → finalize to `<final-path>` (reuse session). Receive `SIG:DONE|PATH`.
+**P5.** Generate final path. Tell @tech-lead → finalize to `<final-path>` (reuse session). Receive `SIG:DONE|PATH`. Then tell @tech-lead to create Task issues in `.issues/` (one per subtask in the plan) using the `issue-tracking` skill. Receive `SIG:DONE`.
 
-**P6.** Present finalized task plan to user. **Wait for explicit approval.** Do not proceed until user says go.
+**P6.** Present finalized task plan and created Task issues to user. **Wait for explicit approval.** Do not proceed until user says go.
 
 No HLD/LLD? → Tell @tech-lead to propose solution directly. Still requires user approval.
 
 ### Implementation Flow
 
-**I1.** Scan remaining subtasks. Identify which can run **in parallel**: tasks that touch different files/folders and have no dependency between them.
+**I1.** **User chooses scope.** User tells you which task(s) to implement (e.g., "implement task X" or "implement tasks X, Y in parallel"). Only implement what the user requests — do NOT auto-pick remaining subtasks.
 
-**I2.** Launch parallelizable tasks **simultaneously** — multiple `Task` calls in one response:
+**I2.** If user requested **multiple tasks**: consult @tech-lead for implementation order and parallelism advice. Tell @tech-lead which tasks user wants, receive ordering/parallelism guidance. Follow their advice.
+
+**I3.** Launch tasks per ordering — multiple `Task` calls in one response for parallel work:
 - Backend → **@developer-backend**
 - Frontend → **@developer-frontend**
 - Infra → **@devops**
@@ -86,12 +113,12 @@ No HLD/LLD? → Tell @tech-lead to propose solution directly. Still requires use
 - If both backend and frontend need the same API: backend first (produces API), then frontend (consumes it).
 - When unsure, run sequentially — correctness over speed.
 
-**I3.** Handle signals as they return:
+**I4.** Handle signals as they return:
 - `DONE` → mark complete, check if blocked tasks are now unblocked → launch next batch
 - `PARTIAL` → check reason, continue or address
 - `BLOCKED` → relay to @tech-lead, then relay answer back
 
-**I4.** More subtasks? → **I1**. All done → **R1**.
+**I5.** More tasks in user-requested scope? → **I3**. All done → **R1**.
 
 ### Review Flow
 

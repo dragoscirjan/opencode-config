@@ -18,7 +18,48 @@ Design document domain extension for `wire-protocol`. Loaded by design authoring
 
 ### Telegraphic Writing
 
-In `.specs.tmp/` content — drop articles/filler, imperative mood, abbreviate: `req` `impl` `cfg` `auth` `svc` `db` `fn` `dep` `env` `err` `msg` `resp` `ctx`. Use `file:line` refs. Keywords over sentences. Mermaid OK.
+In `.ai.tmp/` content — drop articles/filler, imperative mood, abbreviate: `req` `impl` `cfg` `auth` `svc` `db` `fn` `dep` `env` `err` `msg` `resp` `ctx`. Use `file:line` refs. Keywords over sentences. Mermaid OK.
+
+## Document Metadata
+
+Every design document carries provenance metadata. Format differs by phase.
+
+### Compressed Drafts (`.ai.tmp/`)
+
+First line, before template header:
+
+```
+META:<type>|ID:<id>|V:<ver>|ISS:<#N>|DATE:<YYYY-MM-DD>|AUTH:opencode:<agent>|REPO:<owner/repo>[|<extra-key>:<value>]*
+```
+
+- `<type>`: `overview` | `hld` | `lld` | `tasks`
+- `ISS:—` when no issue. Omit `<extra-key>` pairs unless contextually relevant.
+- The orchestrator provides: type, ID, name, version, issue ref, repo, date. The author fills `AUTH` with its own agent name.
+
+### Finalized Documents (`.specs/`)
+
+Visible metadata block immediately after the document title (`# ...`). Must be readable in rendered markdown — **not** hidden YAML frontmatter.
+
+```markdown
+# <Document Type> — <Name>
+
+---
+Document Type: <Design Overview | HLD | LLD | Tasks>
+ID: <00000>
+Name: <name>
+Version: v<N>
+Status: Current
+Repository: [<owner/repo>](https://<provider>/<owner>/<repo>)
+Date: <YYYY-MM-DD>
+Author: opencode:<agent>
+Issue: [#<N>](https://<provider>/<owner>/<repo>/issues/<N>)   ← omit line if none
+Issue File: [<filename>](<relative-path>)                      ← omit line if none
+---
+```
+
+- The `---` fences make it a visible horizontal-rule-delimited block, not YAML frontmatter.
+- `Author` is always the agent name (e.g., `opencode:lead-architect`), never the user.
+- Agents MAY add extra fields (e.g., `Supersedes`, `Parent Doc`, `Migrated Index`) when contextually relevant.
 
 ## Workflow
 
@@ -47,6 +88,7 @@ Compressed notation required (see above). Over limit = not compressed enough.
 No code blocks. No component internals.
 
 ```
+META:overview|ID:<id>|V:<ver>|ISS:<#N>|DATE:<date>|AUTH:opencode:<agent>|REPO:<owner/repo>
 DESIGN:<id>|<name>|DRAFT:<N>
 ---
 SCOPE:                        (≤20)
@@ -76,6 +118,7 @@ ASSUME:                       (≤10)
 No code blocks. No pseudo-code.
 
 ```
+META:hld|ID:<id>|V:<ver>|ISS:<#N>|DATE:<date>|AUTH:opencode:<agent>|REPO:<owner/repo>
 HLD:<id>|<name>|DRAFT:<N>
 ---
 REQ:                          (≤20)
@@ -132,6 +175,7 @@ ACT:<REVISE|APPROVE|DISCUSS>|PRI:<high|med|low>
 ### LLD (≤200)
 
 ```
+META:lld|ID:<id>|V:<ver>|ISS:<#N>|DATE:<date>|AUTH:opencode:<agent>|REPO:<owner/repo>
 LLD:<hld-id>|<lld-name>|DRAFT:<N>
 ---
 SCOPE:          (≤5)
@@ -148,6 +192,7 @@ RISK:           (≤20)
 ### Tasks (≤200)
 
 ```
+META:tasks|ID:<id>|V:<ver>|ISS:<#N>|DATE:<date>|AUTH:opencode:<agent>|REPO:<owner/repo>
 TASKS:<hld-id>|<name>|DRAFT:<N>
 ---
 SCOPE:          (≤5)
@@ -185,6 +230,7 @@ Split at section boundaries — never mid-paragraph or mid-code-block.
 
 ### Translation Rules
 
+- **META: → metadata block**: Convert META: line to visible `---`-delimited metadata block after the document title (see Document Metadata § Finalized Documents). Expand abbreviations, add markdown links for repository/issue, set `Status: Current`. `Author` = the agent's own name (e.g., `opencode:lead-architect`), never the user. Omit `Issue` and `Issue File` lines if not applicable.
 - Expand all abbreviations to full words
 - Write complete sentences
 - Proper markdown headers and structure

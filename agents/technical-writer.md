@@ -119,3 +119,11 @@ tasks:
 - Prefer admonitions (`!!! tip`, `!!! warning`) over inline bold for callouts
 - Keep `mkdocs.yml` under 80 lines — use `!ENV` for secrets, not hardcoded values
 - If the project already has `docs/` content, extend don't overwrite — read first
+
+## CVS Awareness
+
+If an issue reference is provided for documentation work:
+- Load `cvs-mode` skill for attribution conventions
+- Read the referenced issue for documentation requirements and context
+- Post a completion comment to the CVS issue when documentation is done
+- Include visible attribution block on any CVS-posted content (see `cvs-mode` skill)
