@@ -1,6 +1,12 @@
 version: "3"
 
 tasks:
+  # ── Cleanup helper ──────────────────────────────────────────────────────────
+  clean:
+    desc: "Remove .issues/, .specs/, and .ai.tmp/ directories"
+    cmds:
+      - rm -rf .issues .specs .ai.tmp
+
   run:
     cmds:
       - |
@@ -80,6 +86,84 @@ tasks:
         ERR_MESSAGE   Message to print on failure (default: "Test failed").
         ERR_CODE      Exit code on failure (default: 1).
     vars:
+      OK_MESSAGE: '{{.OK_MESSAGE | default "Test passed"}}'
+      ERR_MESSAGE: '{{.ERR_MESSAGE | default "Test failed"}}'
+      ERR_CODE: '{{.ERR_CODE | default "1"}}'
+
+  # ── Inverse path check ──────────────────────────────────────────────────────
+  test:not-path:
+    cmds:
+      - |
+        [ ! {{if .TEST_FOLDER}}-d{{else}}-f{{end}} "{{.TEST_PATH}}" ] \
+          && echo "✓ {{.OK_MESSAGE}}" \
+          || { echo "✗ {{.ERR_MESSAGE}}"; exit {{.ERR_CODE}}; }
+    desc: "Assert that a file or directory does NOT exist"
+    requires:
+      vars:
+        - TEST_PATH
+    silent: true
+    vars:
+      OK_MESSAGE: '{{.OK_MESSAGE | default "Test passed"}}'
+      ERR_MESSAGE: '{{.ERR_MESSAGE | default "Test failed"}}'
+      ERR_CODE: '{{.ERR_CODE | default "1"}}'
+
+  # ── Count files matching a glob pattern ──────────────────────────────────────
+  test:count-files:
+    cmds:
+      - |
+        COUNT=$(find "{{.TEST_DIR}}" -maxdepth 1 -name "{{.TEST_PATTERN}}" -type f 2>/dev/null | wc -l | tr -d ' ')
+        [ "$COUNT" -eq "{{.EXPECTED_COUNT}}" ] \
+          && echo "✓ {{.OK_MESSAGE}} (found $COUNT)" \
+          || { echo "✗ {{.ERR_MESSAGE}} (found $COUNT, expected {{.EXPECTED_COUNT}})"; exit {{.ERR_CODE}}; }
+    desc: "Assert that a directory contains exactly N files matching a pattern"
+    requires:
+      vars:
+        - TEST_DIR
+        - TEST_PATTERN
+        - EXPECTED_COUNT
+    silent: true
+    vars:
+      OK_MESSAGE: '{{.OK_MESSAGE | default "Test passed"}}'
+      ERR_MESSAGE: '{{.ERR_MESSAGE | default "Test failed"}}'
+      ERR_CODE: '{{.ERR_CODE | default "1"}}'
+
+  # ── Find file by pattern, then check contents ───────────────────────────────
+  test:find-contains:
+    cmds:
+      - |
+        FILE=$(find "{{.TEST_DIR}}" -maxdepth 1 -name "{{.TEST_PATTERN}}" -type f 2>/dev/null | head -1)
+        [ -n "$FILE" ] || { echo "✗ No file matching '{{.TEST_PATTERN}}' in {{.TEST_DIR}}"; exit {{.ERR_CODE}}; }
+        grep -q '{{.TEST_TEXT}}' "$FILE" \
+          && echo "✓ {{.OK_MESSAGE}} (in $FILE)" \
+          || { echo "✗ {{.ERR_MESSAGE}} (in $FILE)"; exit {{.ERR_CODE}}; }
+    desc: "Find a file by pattern, then assert it contains a string"
+    requires:
+      vars:
+        - TEST_DIR
+        - TEST_PATTERN
+        - TEST_TEXT
+    silent: true
+    vars:
+      OK_MESSAGE: '{{.OK_MESSAGE | default "Test passed"}}'
+      ERR_MESSAGE: '{{.ERR_MESSAGE | default "Test failed"}}'
+      ERR_CODE: '{{.ERR_CODE | default "1"}}'
+
+  # ── Assert no files with certain extensions exist ────────────────────────────
+  test:no-files:
+    cmds:
+      - |
+        COUNT=$(find "{{.TEST_DIR}}" -maxdepth {{.TEST_DEPTH}} -type f \( {{.TEST_EXTENSIONS}} \) 2>/dev/null | wc -l | tr -d ' ')
+        [ "$COUNT" -eq 0 ] \
+          && echo "✓ {{.OK_MESSAGE}}" \
+          || { echo "✗ {{.ERR_MESSAGE}} (found $COUNT files)"; exit {{.ERR_CODE}}; }
+    desc: "Assert no files with given extensions exist in a directory"
+    requires:
+      vars:
+        - TEST_DIR
+        - TEST_EXTENSIONS
+    silent: true
+    vars:
+      TEST_DEPTH: '{{.TEST_DEPTH | default "3"}}'
       OK_MESSAGE: '{{.OK_MESSAGE | default "Test passed"}}'
       ERR_MESSAGE: '{{.ERR_MESSAGE | default "Test failed"}}'
       ERR_CODE: '{{.ERR_CODE | default "1"}}'

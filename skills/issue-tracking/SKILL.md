@@ -49,6 +49,7 @@ HLD complete. See `.specs/hld-00002-cvs-provider-v1.md`.
 | `labels` | yes | Array — must include `level/<type>` |
 | `parent` | no | Parent issue ID (story→epic, task→story) |
 | `depends` | no | Array of blocking issue IDs |
+| `author` | no | Attribution — `"opencode:agent=<name>"` or human name |
 
 ## Comments
 

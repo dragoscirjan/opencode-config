@@ -1,6 +1,6 @@
 ---
 name: clean-code
-description: Clean code principles, SOLID, design patterns, readability, and error handling standards. Load this skill when writing or reviewing code.
+description: Clean code principles, SOLID, design patterns, readability, error handling, and universal quality tooling. Load when writing or reviewing code.
 ---
 
 # Clean Code & Design Principles
@@ -39,3 +39,24 @@ description: Clean code principles, SOLID, design patterns, readability, and err
 - Use typed/specific errors over generic ones
 - Provide meaningful error messages with context
 - Clean up resources in error paths (finally, defer, using, etc.)
+
+## Universal Quality Tools
+
+Apply these cross-language tools on every project:
+
+| Tool | Purpose | Reference |
+|------|---------|-----------|
+| `.editorconfig` | Cross-editor indent, charset, EOL consistency | https://editorconfig.org |
+| `jscpd` | Copy-paste detection (all languages) | https://github.com/kucherenko/jscpd |
+| `Semgrep` | Multi-language static analysis, custom rules | https://semgrep.dev |
+| `SonarQube` / `SonarLint` | Code quality + security dashboard | https://www.sonarsource.com |
+| `MegaLinter` | Meta-linter for CI (orchestrates 100+ linters) | https://megalinter.io |
+| `pre-commit` | Git hook framework for linters/formatters | https://pre-commit.com |
+| `Trunk` | Auto-detect and run linters/formatters | https://trunk.io |
+| `Taskfile` | Task runner for build/test/lint/format | https://taskfile.dev |
+| `commitlint` | Commit message convention enforcement | https://commitlint.js.org |
+
+- Every project **must** have an `.editorconfig` at the root
+- Run `jscpd` in CI to catch duplicated code blocks
+- Use `pre-commit` or `Trunk` to enforce linting/formatting before commit
+- Use `Taskfile` for consistent `task lint`, `task format`, `task test`, `task validate` commands

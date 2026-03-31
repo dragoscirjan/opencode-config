@@ -3,43 +3,495 @@ version: "3"
 includes:
   generic:
     taskfile: ../generic/Taskfile.yml
+    dir: .
 
 vars:
-  OC_AGENT: athena
+  OC_AGENT: hermes
+  # Full requirement given upfront so Hermes has no reason to ask questions
 
 tasks:
-  default:
-    desc: "Run all Athena agent tests"
+  test:
+    desc: "Run all Hermes agent tests"
     cmds:
-      - task: test:writes-to-specs
+      - task: generic:clean
+      - task: prompt-solo-run
+      - task: test:solo-local
+      - task: test:epic-metadata
+      - task: test:story-metadata
+      - task: test:story-links-to-epic
+      - task: test:no-draft-in-solo
+      - task: test:no-specs-written
+      - task: test:no-code-written
+      - task: test:id-sequencing
+      - task: generic:clean
+      - task: prompt-team-run
+      - task: test:team-local
+      - task: test:team-epic-metadata
+      - task: test:team-story-metadata
+      - task: test:team-story-links-to-epic
+      - task: test:team-draft-created
+      - task: generic:clean
 
-  # ── Test 1: Athena writes HLD to .specs/ and attributes authorship ───────────
-  test:writes-to-specs:
-    desc: "Athena must write an HLD file to .specs/ attributed with opencode:athena"
-    vars:
-      HLD_PATH:
+  prompt-solo-run:
+    desc: "Hermes must create exactly 1 Epic and 1 Design Story in .issues/"
     cmds:
-      - rm -rf .ai.tmp .specs
-      - echo "▶ [1] Athena writes to .specs/"
+      - task: generic:run
+        vars:
+          OC_AGENT: "{{.OC_AGENT}}"
+          OC_PROMPT: >-
+            Create an Epic for a User Authentication System.
+            Title: User Authentication.
+            Do NOT ask clarifying questions — all information is provided below.
+            Solo mode, no team review.
+
+            Problem: Users cannot log in to the application. We need a complete
+            authentication system supporting email/password login, session management,
+            and password reset.
+
+            Scope IN: sign-up, login, logout, password reset via email, session tokens (JWT).
+            Scope OUT: OAuth/social login, two-factor authentication, admin user management.
+
+            Acceptance Criteria:
+            - Users can register with email and password
+            - Users can log in and receive a JWT
+            - Users can reset their password via email link
+            - Sessions expire after 24 hours of inactivity
+
+            Risks: JWT secret rotation strategy not yet defined.
+
+  prompt-team-run:
+    desc: "Hermes team mode — draft reviewed by minion-architect-lead before finalizing"
+    cmds:
+      - task: generic:run
+        vars:
+          OC_AGENT: "{{.OC_AGENT}}"
+          OC_PROMPT: >-
+            Create an Epic for a Notification System.
+            Title: Notification System.
+            Do NOT ask clarifying questions — all information is provided below.
+            Use the team. iterations=1.
+
+            Problem: Users have no way to receive timely updates about events
+            relevant to them. We need a multi-channel notification system that
+            supports in-app, email, and push notifications with user preferences.
+
+            Scope IN: in-app notification feed, email notifications, push
+            notifications (web), per-user notification preferences, read/unread
+            tracking.
+            Scope OUT: SMS notifications, notification analytics dashboard,
+            A/B testing of notification content, marketing campaigns.
+
+            Acceptance Criteria:
+            - Users can view an in-app notification feed with read/unread state
+            - Users receive email notifications for critical events
+            - Users can configure which channels receive which event types
+            - Notifications are delivered within 30 seconds of the triggering event
+            - Users can mark all notifications as read
+
+            Risks: Push notification delivery is best-effort — no guaranteed delivery SLA.
+            High-volume events (e.g., activity feeds) may overwhelm the email channel.
+
+  # ── Test 1: Solo mode produces Epic + Design Story in .issues/ ──────────────
+  test:solo-local:
+    desc: "Hermes must create exactly 1 Epic and 1 Design Story in .issues/"
+    cmds:
+      - echo "▶ [1] Solo mode — create Epic + Design Story"
+      - task: generic:test:path
+        vars:
+          TEST_PATH: ".issues/"
+          TEST_FOLDER: 1
+          OK_MESSAGE: ".issues/ directory exists"
+          ERR_MESSAGE: ".issues/ not found — Hermes did not create issues"
+      - task: generic:test:count-files
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "*-epic-*"
+          EXPECTED_COUNT: 1
+          OK_MESSAGE: "Exactly 1 epic file in .issues/"
+          ERR_MESSAGE: "Expected 1 epic file in .issues/"
+      - task: generic:test:count-files
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "*-story-*"
+          EXPECTED_COUNT: 1
+          OK_MESSAGE: "Exactly 1 story file in .issues/"
+          ERR_MESSAGE: "Expected 1 story file in .issues/"
+
+  # ── Test 2: Epic has correct frontmatter ────────────────────────────────────
+  test:epic-metadata:
+    desc: "Epic file must have type, status, id, level/epic label, and author"
+    cmds:
+      - echo "▶ [2] Epic frontmatter checks"
+      - task: generic:test:find-contains
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "*-epic-*"
+          TEST_TEXT: "type: epic"
+          OK_MESSAGE: "Epic has type: epic"
+          ERR_MESSAGE: "Epic missing type: epic"
+      - task: generic:test:find-contains
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "*-epic-*"
+          TEST_TEXT: "status: open"
+          OK_MESSAGE: "Epic has status: open"
+          ERR_MESSAGE: "Epic missing status: open"
+      - task: generic:test:find-contains
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "*-epic-*"
+          TEST_TEXT: 'id: "00001"'
+          OK_MESSAGE: "Epic has id: 00001"
+          ERR_MESSAGE: "Epic missing id: 00001"
+      - task: generic:test:find-contains
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "*-epic-*"
+          TEST_TEXT: "level/epic"
+          OK_MESSAGE: "Epic has level/epic label"
+          ERR_MESSAGE: "Epic missing level/epic label"
+      - task: generic:test:find-contains
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "*-epic-*"
+          TEST_TEXT: 'author: "opencode:agent=hermes"'
+          OK_MESSAGE: "Epic has author attribution"
+          ERR_MESSAGE: "Epic missing author: opencode:agent=hermes"
+
+  # ── Test 3: Story has correct frontmatter ───────────────────────────────────
+  test:story-metadata:
+    desc: "Design Story must have type, status, id, level/story label, and author"
+    cmds:
+      - echo "▶ [3] Story frontmatter checks"
+      - task: generic:test:find-contains
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "*-story-*"
+          TEST_TEXT: "type: story"
+          OK_MESSAGE: "Story has type: story"
+          ERR_MESSAGE: "Story missing type: story"
+      - task: generic:test:find-contains
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "*-story-*"
+          TEST_TEXT: "status: open"
+          OK_MESSAGE: "Story has status: open"
+          ERR_MESSAGE: "Story missing status: open"
+      - task: generic:test:find-contains
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "*-story-*"
+          TEST_TEXT: 'id: "00002"'
+          OK_MESSAGE: "Story has id: 00002"
+          ERR_MESSAGE: "Story missing id: 00002"
+      - task: generic:test:find-contains
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "*-story-*"
+          TEST_TEXT: "level/story"
+          OK_MESSAGE: "Story has level/story label"
+          ERR_MESSAGE: "Story missing level/story label"
+      - task: generic:test:find-contains
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "*-story-*"
+          TEST_TEXT: 'author: "opencode:agent=hermes"'
+          OK_MESSAGE: "Story has author attribution"
+          ERR_MESSAGE: "Story missing author: opencode:agent=hermes"
+
+  # ── Test 4: Story references Epic via parent field ──────────────────────────
+  test:story-links-to-epic:
+    desc: "Design Story parent field must reference the Epic ID"
+    cmds:
+      - echo "▶ [4] Story → Epic parent link"
+      - task: generic:test:find-contains
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "*-story-*"
+          TEST_TEXT: 'parent: "00001"'
+          OK_MESSAGE: "Story has parent: 00001 (links to Epic)"
+          ERR_MESSAGE: "Story missing parent: 00001 — not linked to Epic"
+
+  # ── Test 5: Solo mode must NOT create drafts ─────────────────────────────────
+  test:no-draft-in-solo:
+    desc: "Solo mode skips drafts — .ai.tmp/ must not exist"
+    cmds:
+      - echo "▶ [5] No draft in solo mode"
+      - task: generic:test:not-path
+        vars:
+          TEST_PATH: ".ai.tmp/"
+          TEST_FOLDER: 1
+          OK_MESSAGE: ".ai.tmp/ does not exist (correct — solo skips drafts)"
+          ERR_MESSAGE: ".ai.tmp/ exists — Hermes created drafts in solo mode"
+
+  # ── Test 6: Hermes does NOT write to .specs/ ────────────────────────────────
+  test:no-specs-written:
+    desc: "Hermes must NOT create .specs/ — that is Athena's domain"
+    cmds:
+      - echo "▶ [6] No .specs/ pollution"
+      - task: generic:test:not-path
+        vars:
+          TEST_PATH: ".specs/"
+          TEST_FOLDER: 1
+          OK_MESSAGE: ".specs/ does not exist (correct — Hermes doesn't write specs)"
+          ERR_MESSAGE: ".specs/ exists — Hermes wrote specs it shouldn't have"
+
+  # ── Test 7: Hermes does NOT write code files ────────────────────────────────
+  test:no-code-written:
+    desc: "Hermes must NOT produce any code files"
+    cmds:
+      - echo "▶ [7] No code files"
+      - task: generic:test:no-files
+        vars:
+          TEST_DIR: "."
+          TEST_EXTENSIONS: '-name "*.js" -o -name "*.ts" -o -name "*.py" -o -name "*.go" -o -name "*.rs" -o -name "*.java"'
+          TEST_DEPTH: 1
+          OK_MESSAGE: "No code files created in project root (correct)"
+          ERR_MESSAGE: "Hermes created code files it shouldn't have"
+
+  # ── Test 8: ID sequencing with pre-seeded .issues/ ──────────────────────────
+  test:id-sequencing:
+    desc: "With existing issue 00001, Epic must be 00002 and Story 00003"
+    cmds:
+      - task: generic:clean
+      - echo "▶ [8] ID sequencing — pre-seed 00001"
+      # Pre-seed a dummy issue
+      - mkdir -p .issues
+      - |
+        cat > .issues/00001-task-seed-task.md << 'EOF'
+        ---
+        id: "00001"
+        type: task
+        title: Seed Task
+        status: done
+        labels: [level/task]
+        ---
+        # Seed Task
+        Placeholder for ID sequencing test.
+        EOF
+      - task: prompt-solo-run
+      # 3 files total: seed + epic + story
+      - task: generic:test:count-files
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "*.md"
+          EXPECTED_COUNT: 3
+          OK_MESSAGE: "3 files total in .issues/ (seed + epic + story)"
+          ERR_MESSAGE: "Expected 3 files in .issues/"
+      - task: generic:test:count-files
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "00002-epic-*"
+          EXPECTED_COUNT: 1
+          OK_MESSAGE: "Epic assigned ID 00002"
+          ERR_MESSAGE: "Epic not found at ID 00002"
+      - task: generic:test:count-files
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "00003-story-*"
+          EXPECTED_COUNT: 1
+          OK_MESSAGE: "Story assigned ID 00003"
+          ERR_MESSAGE: "Story not found at ID 00003"
+      - task: generic:test:find-contains
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "00003-story-*"
+          TEST_TEXT: 'parent: "00002"'
+          OK_MESSAGE: "Story parent links to Epic 00002"
+          ERR_MESSAGE: "Story parent does not reference Epic 00002"
+
+  # ── Test 9: Team mode produces Epic + Design Story in .issues/ ───────────────
+  test:team-local:
+    desc: "Team mode must create exactly 1 Epic and 1 Design Story in .issues/"
+    cmds:
+      - echo "▶ [9] Team mode — create Epic + Design Story"
+      - task: generic:test:path
+        vars:
+          TEST_PATH: ".issues/"
+          TEST_FOLDER: 1
+          OK_MESSAGE: ".issues/ directory exists"
+          ERR_MESSAGE: ".issues/ not found — Hermes did not create issues"
+      - task: generic:test:count-files
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "*-epic-*"
+          EXPECTED_COUNT: 1
+          OK_MESSAGE: "Exactly 1 epic file in .issues/"
+          ERR_MESSAGE: "Expected 1 epic file in .issues/"
+      - task: generic:test:count-files
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "*-story-*"
+          EXPECTED_COUNT: 1
+          OK_MESSAGE: "Exactly 1 story file in .issues/"
+          ERR_MESSAGE: "Expected 1 story file in .issues/"
+
+  # ── Test 10: Team Epic has correct frontmatter ──────────────────────────────
+  test:team-epic-metadata:
+    desc: "Team Epic must have type, status, id, level/epic label, and author"
+    cmds:
+      - echo "▶ [10] Team Epic frontmatter checks"
+      - task: generic:test:find-contains
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "*-epic-*"
+          TEST_TEXT: "type: epic"
+          OK_MESSAGE: "Epic has type: epic"
+          ERR_MESSAGE: "Epic missing type: epic"
+      - task: generic:test:find-contains
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "*-epic-*"
+          TEST_TEXT: "status: open"
+          OK_MESSAGE: "Epic has status: open"
+          ERR_MESSAGE: "Epic missing status: open"
+      - task: generic:test:find-contains
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "*-epic-*"
+          TEST_TEXT: 'id: "00001"'
+          OK_MESSAGE: "Epic has id: 00001"
+          ERR_MESSAGE: "Epic missing id: 00001"
+      - task: generic:test:find-contains
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "*-epic-*"
+          TEST_TEXT: "level/epic"
+          OK_MESSAGE: "Epic has level/epic label"
+          ERR_MESSAGE: "Epic missing level/epic label"
+      - task: generic:test:find-contains
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "*-epic-*"
+          TEST_TEXT: 'author: "opencode:agent=hermes"'
+          OK_MESSAGE: "Epic has author attribution"
+          ERR_MESSAGE: "Epic missing author: opencode:agent=hermes"
+
+  # ── Test 11: Team Story has correct frontmatter ─────────────────────────────
+  test:team-story-metadata:
+    desc: "Team Design Story must have type, status, id, level/story label, and author"
+    cmds:
+      - echo "▶ [11] Team Story frontmatter checks"
+      - task: generic:test:find-contains
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "*-story-*"
+          TEST_TEXT: "type: story"
+          OK_MESSAGE: "Story has type: story"
+          ERR_MESSAGE: "Story missing type: story"
+      - task: generic:test:find-contains
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "*-story-*"
+          TEST_TEXT: "status: open"
+          OK_MESSAGE: "Story has status: open"
+          ERR_MESSAGE: "Story missing status: open"
+      - task: generic:test:find-contains
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "*-story-*"
+          TEST_TEXT: 'id: "00002"'
+          OK_MESSAGE: "Story has id: 00002"
+          ERR_MESSAGE: "Story missing id: 00002"
+      - task: generic:test:find-contains
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "*-story-*"
+          TEST_TEXT: "level/story"
+          OK_MESSAGE: "Story has level/story label"
+          ERR_MESSAGE: "Story missing level/story label"
+      - task: generic:test:find-contains
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "*-story-*"
+          TEST_TEXT: 'author: "opencode:agent=hermes"'
+          OK_MESSAGE: "Story has author attribution"
+          ERR_MESSAGE: "Story missing author: opencode:agent=hermes"
+
+  # ── Test 12: Team Story references Epic via parent field ────────────────────
+  test:team-story-links-to-epic:
+    desc: "Team Design Story parent field must reference the Epic ID"
+    cmds:
+      - echo "▶ [12] Team Story → Epic parent link"
+      - task: generic:test:find-contains
+        vars:
+          TEST_DIR: ".issues"
+          TEST_PATTERN: "*-story-*"
+          TEST_TEXT: 'parent: "00001"'
+          OK_MESSAGE: "Story has parent: 00001 (links to Epic)"
+          ERR_MESSAGE: "Story missing parent: 00001 — not linked to Epic"
+
+  # ── Test 13: Team draft exists in .ai.tmp/ ──────────────────────────────────
+  test:team-draft-created:
+    desc: "Team mode must create a draft in .ai.tmp/ before finalizing"
+    cmds:
+      - echo "▶ [13] Team draft artifact check"
+      - task: generic:test:path
+        vars:
+          TEST_PATH: ".ai.tmp/"
+          TEST_FOLDER: 1
+          OK_MESSAGE: ".ai.tmp/ directory exists (draft was created)"
+          ERR_MESSAGE: ".ai.tmp/ not found — Hermes skipped the draft step"
+      - |
+        COUNT=$(find ".ai.tmp" -maxdepth 1 -name "*.md" -type f 2>/dev/null | wc -l | tr -d ' ')
+        [ "$COUNT" -ge 1 ] \
+          && echo "✓ At least 1 draft file in .ai.tmp/ (found $COUNT)" \
+          || { echo "✗ No draft files in .ai.tmp/"; exit 1; }
+
+  # ── Test 14: CVS mode — create GitHub issue then clean up ────────────────────
+  test:cvs-mode:
+    desc: "Hermes creates issues on GitHub when instructed (requires gh CLI + git remote)"
+    cmds:
+      - task: generic:clean
+      - echo "▶ [14] CVS mode — GitHub issue creation"
+      # Precondition: gh CLI available and authenticated
+      - |
+        command -v gh >/dev/null 2>&1 \
+          || { echo "⚠ SKIP: gh CLI not found"; exit 0; }
+        gh auth status >/dev/null 2>&1 \
+          || { echo "⚠ SKIP: gh not authenticated"; exit 0; }
+        git remote get-url origin >/dev/null 2>&1 \
+          || { echo "⚠ SKIP: no git remote configured"; exit 0; }
+        echo "✓ Preconditions met (gh CLI, auth, remote)"
       - task: generic:run
         vars:
           OC_AGENT: "{{.OC_AGENT}}"
           OC_CATCH: 1
-          OC_PROMPT: "Write a draft HLD for a simple in-memory cache system. Use the team. No validation iteration."
-      - task: generic:test:path
-        vars:
-          TEST_PATH: ".specs/"
-          TEST_FOLDER: 1
-          OK_MESSAGE: ".specs/ exists"
-          ERR_MESSAGE: ".specs/ not found — athena did not write the file"
-      - task: generic:test:path
-        vars:
-          TEST_PATH: ".specs/hld-00001-cache-v1.md"
-          OK_MESSAGE: ".specs/hld-00001-cache-v1.md exists"
-          ERR_MESSAGE: ".specs/hld-00001-cache-v1.md not found — athena did not write the file"
-      - task: generic:test:contains
-        vars:
-          TEST_PATH: "{{.HLD_PATH}}"
-          TEST_TEXT: "opencode:athena"
-          OK_MESSAGE: "opencode:athena attribution found"
-          ERR_MESSAGE: "opencode:athena attribution missing from HLD"
+          OC_PROMPT: >-
+            Create an Epic for a Logging Pipeline.
+            Title: Logging Pipeline.
+            Do NOT ask clarifying questions — all information is provided.
+            Solo mode, no team review.
+            Create the issues on GitHub (CVS mode), NOT locally.
+
+            Problem: Application logs are scattered across stdout with no
+            aggregation. We need a centralized logging pipeline.
+
+            Scope IN: structured JSON logging, log aggregation endpoint, log levels.
+            Scope OUT: log analytics dashboards, alerting rules.
+
+            Acceptance Criteria:
+            - All services emit structured JSON logs
+            - Logs are forwarded to a central endpoint
+            - Log levels are configurable per service
+
+            Risks: High log volume may require rate limiting.
+      # Verify at least one issue was created on GitHub
+      - |
+        ISSUES=$(gh issue list --state open --label "level/epic" --json number --jq '.[].number' 2>/dev/null)
+        [ -n "$ISSUES" ] \
+          && echo "✓ GitHub epic issue(s) created: $ISSUES" \
+          || { echo "✗ No GitHub epic issues found with level/epic label"; exit 1; }
+      - |
+        STORIES=$(gh issue list --state open --label "level/story" --json number --jq '.[].number' 2>/dev/null)
+        [ -n "$STORIES" ] \
+          && echo "✓ GitHub story issue(s) created: $STORIES" \
+          || { echo "✗ No GitHub story issues found with level/story label"; exit 1; }
+      # Cleanup: close the issues we just created
+      - |
+        echo "Cleaning up GitHub issues..."
+        for NUM in $(gh issue list --state open --search "Logging Pipeline" --json number --jq '.[].number' 2>/dev/null); do
+          gh issue close "$NUM" --comment "Automated test cleanup" 2>/dev/null \
+            && echo "  Closed #$NUM" || echo "  Failed to close #$NUM"
+        done
+        echo "✓ CVS cleanup complete"

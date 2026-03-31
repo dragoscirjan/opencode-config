@@ -1,3 +1,3 @@
-# DEPRECATED — Use `wire-protocol` instead
+# DEPRECATED — Removed
 
-This skill has been renamed. Load `wire-protocol` for the base communication DSL.
+This skill no longer exists. Subagents communicate in plain English, ≤50 words.

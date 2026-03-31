@@ -4,3 +4,14 @@ bun.lock
 .memory.jsonl
 
 .ai.tmp/
+tests/**/.issues/
+tests/**/.specs/
+tests/**/.ai.tmp/
+tests/**/docs/
+tests/**/site/
+tests/**/.venv/
+tests/**/pyproject.toml
+tests/**/mise.toml
+tests/**/mkdocs.yml
+tests/**/uv.lock
+tests/**/.python-version

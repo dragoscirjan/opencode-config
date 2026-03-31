@@ -18,17 +18,20 @@
   - [Subagents](#subagents)
 - [Workflows](#workflows)
   - [Standalone Agents](#standalone-agents)
-  - [Product Owner — Epic Refinement](#product-owner--epic-refinement)
+  - [Hermes — Epic Refinement](#hermes--epic-refinement)
   - [Athena — Solo Design](#athena--solo-design)
   - [Hephaestus — Solo Build](#hephaestus--solo-build)
   - [Athena — Team Design](#athena--team-design)
   - [Hephaestus — Team Build](#hephaestus--team-build)
 - [Skills](#skills)
-  - [Language Skills](#language-skills)
+  - [Developer Skills](#developer-skills)
   - [Workflow Skills](#workflow-skills)
+- [Custom Tools](#custom-tools)
 - [Commands](#commands)
 - [MCP Servers](#mcp-servers)
 - [Plugin](#plugin)
+- [Testing](#testing)
+- [Scripts](#scripts)
 - [Setup](#setup)
 - [License](#license)
 
@@ -38,11 +41,17 @@
 
 ```
 .
-├── opencode.json        # Main config (MCP servers, plugins)
-├── dcp.jsonc            # Dynamic Context Pruning settings
-├── agents/              # Agent definitions (role, model, permissions, prompts)
-├── commands/            # Slash commands (/design, /implement, /review, …)
-└── skills/              # Domain-specific instruction packs
+├── opencode.json          # Main config (MCP servers, plugins)
+├── dcp.jsonc              # Dynamic Context Pruning settings
+├── AGENTS.md              # Global rules injected into all agents
+├── agents/                # Agent definitions (12 agents: 5 primary + 7 subagents)
+├── agent-templates/       # Reusable prompt templates (primary.md, subagent.md)
+├── commands/              # Slash commands (/design, /implement, /review, …)
+├── document-templates/    # Templates for HLDs, LLDs, epics, stories
+├── skills/                # Domain-specific instruction packs (10 skills)
+├── tools/                 # Custom TypeScript tools (spec-create, issue-create, …)
+├── scripts/               # Utility scripts (model switching)
+└── tests/                 # Agent integration tests (Taskfile-based)
 ```
 
 Projects that use this config also produce:
@@ -51,7 +60,7 @@ Projects that use this config also produce:
 <project>/
 ├── .issues/             # Local issue tracking (Epic, Story, Task, Spike)
 ├── .specs/              # Finalized design documents (HLDs, LLDs, task plans)
-└── .ai.tmp/             # Ephemeral AI drafts (compressed notation, disposable)
+└── .ai.tmp/             # Ephemeral AI drafts (disposable working files)
 ```
 
 ## Agents
@@ -62,11 +71,11 @@ User-facing agents, switchable with <kbd>Tab</kbd>:
 
 | Agent | Role | Model |
 |-------|------|-------|
-| **Product Owner** | Refines ideas into structured Epics with stories and acceptance criteria | `claude-sonnet-4.6` |
-| **Athena** | Orchestrates architecture design — design overviews, HLDs, LLDs | `claude-sonnet-4.6` |
-| **Hephaestus** | Implements features solo or orchestrates a dev team for complex builds | `claude-sonnet-4.6` |
-| **Technical Writer** | Generates and maintains MkDocs documentation sites | `claude-sonnet-4.6` |
-| **Agent Architect** | Designs, writes, and refines agent/subagent definitions (meta-agent) | `claude-opus-4.6` |
+| **Hermes** — Product Owner | Refines ideas into structured Epics with stories and acceptance criteria | `claude-sonnet-4.6` |
+| **Athena** — Technical Advisor | Orchestrates architecture design — design overviews, HLDs | `claude-sonnet-4.6` |
+| **Hephaestus** — Solution Engineer | Implements features solo or orchestrates a dev team for complex builds | `claude-sonnet-4.6` |
+| **Clio** — Technical Writer | Generates and maintains MkDocs documentation sites | `claude-sonnet-4.6` |
+| **Gea** — Agent Architect | Designs, writes, and refines agent/subagent definitions (meta-agent) | `claude-opus-4.6` |
 
 ### Subagents
 
@@ -74,13 +83,18 @@ Hidden specialists invoked by orchestrators via the Task tool:
 
 | Agent | Role | Model | Invoked by |
 |-------|------|-------|------------|
-| **Lead Architect** | Design overviews — system scope, component boundaries | `claude-opus-4.6` | Athena, Product Owner |
+| **Lead Architect** | Design overviews — system scope, component boundaries | `claude-opus-4.6` | Athena, Hermes |
 | **Architect** | HLDs — what a system does, not how | `claude-sonnet-4.6` | Athena |
 | **Tech Lead** | LLDs, task breakdowns, design reviews | `claude-opus-4.6` | Athena, Hephaestus |
-| **Developer Backend** | Backend code, APIs, data layers, tests | `claude-sonnet-4.6` | Hephaestus, Athena |
-| **Developer Frontend** | Frontend code, UI components, tests | `claude-sonnet-4.6` | Hephaestus, Athena |
-| **DevOps** | Infrastructure, CI/CD, deployment configs | `claude-sonnet-4.6` | Hephaestus, Athena |
+| **Developer Backend** | Backend code, APIs, data layers, tests | `claude-sonnet-4.6` | Hephaestus |
+| **Developer Frontend** | Frontend code, UI components, tests | `claude-sonnet-4.6` | Hephaestus |
+| **DevOps** | Infrastructure, CI/CD, deployment configs | `claude-sonnet-4.6` | Hephaestus |
 | **Reviewer** | Code review — quality, security, correctness | `claude-opus-4.6` | Hephaestus |
+
+All agents operate in two modes:
+
+- **Solo mode** (default) — the primary agent does all work itself
+- **Team mode** (`iterations=N`) — the primary agent delegates to subagents with iterative review rounds
 
 ## Workflows
 
@@ -91,34 +105,36 @@ sequenceDiagram
     actor User
 
     rect rgb(16, 185, 129, 0.1)
-    note right of User: Technical Writer
-    User->>Technical Writer: Write docs for project
-    Technical Writer->>User: Docs site (MkDocs)
+    note right of User: Clio (Technical Writer)
+    User->>Clio: Write docs for project
+    Clio->>Clio: Scaffold toolchain (uv, mise, mkdocs, Taskfile)
+    Clio->>Clio: Write documentation pages
+    Clio->>User: Docs site (MkDocs + Material theme)
     end
 
     rect rgb(139, 92, 246, 0.1)
-    note right of User: Agent Architect
-    User->>Agent Architect: Design a new agent
-    Agent Architect->>User: Agent definition (.md)
+    note right of User: Gea (Agent Architect)
+    User->>Gea: Design a new agent
+    Gea->>User: Agent definition (.md)
     end
 ```
 
-### Product Owner — Epic Refinement
+### Hermes — Epic Refinement
 
 ```mermaid
 sequenceDiagram
     actor User
-    participant PO as Product Owner
+    participant H as Hermes
     participant LA as Lead Architect
 
     rect rgb(245, 158, 11, 0.1)
     note right of User: Epic Refinement
-    User->>PO: Rough idea
-    PO->>User: Clarifying questions
-    User->>PO: Answers
-    PO->>LA: Feasibility + story type?
-    LA->>PO: DD story or HLD story
-    PO->>User: Epic + story (DD or HLD per LA)
+    User->>H: Rough idea
+    H->>User: Clarifying questions
+    User->>H: Answers
+    H->>LA: Feasibility + story type?
+    LA->>H: DD story or HLD story
+    H->>User: Epic + child stories (.issues/)
     end
 ```
 
@@ -132,9 +148,10 @@ sequenceDiagram
     rect rgb(99, 102, 241, 0.1)
     note right of User: Solo Design
     User->>A: Design request
-    A->>A: Write HLD
-    A->>A: Write LLD
-    A->>User: Present plan in chat
+    A->>A: Scan .specs/ and document-templates/
+    A->>A: Write HLD (.specs/)
+    A->>A: Create implementation story (.issues/)
+    A->>User: Present HLD + story
     end
 ```
 
@@ -187,7 +204,7 @@ sequenceDiagram
         TL->>A: Feedback
         A->>LA: Apply feedback
     end
-    LA->>A: Finalized + HLD Stories
+    LA->>A: Finalized
     A->>User: Design overview complete — ask me to write each HLD
     end
 
@@ -203,22 +220,8 @@ sequenceDiagram
         Devs->>A: Feedback
         A->>Arch: Apply feedback
     end
-    Arch->>A: Finalized + LLD Story
-    A->>User: HLD complete — ask me to write next HLD or proceed to LLD
-    end
-
-    rect rgb(99, 102, 241, 0.22)
-    note right of User: LLD (one at a time, user-initiated)
-    User->>A: Write LLD for component X
-    A->>TL: Write LLD
-    loop Review rounds (configurable limit)
-        TL->>A: Draft ready
-        A->>Devs: Review LLD (feasibility)
-        Devs->>A: Feedback
-        A->>TL: Apply feedback
-    end
-    TL->>A: Finalized
-    A->>User: LLD complete
+    Arch->>A: Finalized
+    A->>User: HLD complete + implementation story created
     end
 ```
 
@@ -274,30 +277,41 @@ sequenceDiagram
 
 ## Skills
 
-### Language Skills
+### Developer Skills
 
-Loadable instruction packs that teach agents language-specific conventions and best practices:
-
-Bash, C++, Elixir, Go, Java, JavaScript, Lua, Python, Rust, TypeScript, Zig
+| Skill | Scope |
+|-------|-------|
+| **developer-backend** | C/C++, C#, Java, Go, Python, Rust, Zig, Elixir, Lua, Swift, JS/TS, Shell/Bash, Fish, PowerShell, Markdown, YAML, JSON |
+| **developer-frontend** | HTML/CSS, JavaScript, TypeScript, Angular, React, Vue, Svelte |
+| **developer-devops** | Ansible, Terraform, OpenTofu, Shell/Bash, PowerShell, Fish |
 
 ### Workflow Skills
 
 | Skill | Purpose |
 |-------|---------|
-| **clean-code** | SOLID principles, design patterns, readability standards |
-| **tdd** | Test-Driven Development — Red-Green-Refactor cycle with wire protocol signals |
+| **clean-code** | SOLID principles, design patterns, readability standards, quality tooling (.editorconfig, jscpd, Semgrep, MegaLinter, pre-commit, commitlint) |
+| **tdd** | Test-Driven Development — Red-Green-Refactor cycle |
 | **issue-tracking** | Local `.issues/` conventions — file naming, YAML frontmatter, ID management |
+| **issue-tracking-cvs** | CVS-backed issue tracking — same conventions via GitHub/GitLab/Forgejo API |
 | **cvs-mode** | CVS integration — GitHub/GitLab/Forgejo auto-detection, MCP-first with CLI fallback |
-| **wire-protocol** | Base communication DSL for subagents — signals, compressed output, no hallucination |
-| **wire-design** | Design document extension — compressed notation for reviews and drafts |
-| **spec-naming** | Path authority for orchestrators — draft/final naming, directory conventions |
-| **mcp-tools** | External MCP tool reference |
+| **mcp-tools** | External MCP tool reference — memory, docs, browser, code indexing, CVS, web crawl |
+
+## Custom Tools
+
+TypeScript tools extending agent capabilities (built with `@opencode-ai/plugin`):
+
+| Tool | Purpose |
+|------|---------|
+| **spec-create** | Creates `.specs/<type>-<id>-<slug>-v<ver>.md` with auto-incrementing ID and versioning. Types: `hld`, `lld`, `task`. |
+| **issue-create** | Creates `.issues/<id>-<type>-<slug>.md` with auto-incrementing ID. Types: `epic`, `story`, `task`, `spike`. |
+| **draft-create** | Creates `.ai.tmp/<slug>-<hash>.md` for ephemeral working drafts. |
+| **enable-cvs-labels** | Creates labels on GitHub/GitLab/Forgejo. Presets: types, priority, status, scope. Auto-detects platform from git remote. |
 
 ## Commands
 
 | Command | Description | Agent |
 |---------|-------------|-------|
-| `/design` | Start an architecture design session — design overviews, HLDs, LLDs | Athena |
+| `/design` | Start an architecture design session — design overviews, HLDs | Athena |
 | `/review-design` | Dispatch reviewers to evaluate an existing design document | Athena |
 | `/spike` | Conduct a technical research spike — explore, analyze, report | Athena |
 | `/implement` | Implement a feature from a spec, issue, or direct instructions | Hephaestus |
@@ -305,14 +319,14 @@ Bash, C++, Elixir, Go, Java, JavaScript, Lua, Python, Rust, TypeScript, Zig
 | `/review` | Trigger a code review on specific files or recent changes | Hephaestus |
 | `/tdd` | Implement a feature using Test-Driven Development | Hephaestus |
 | `/pr` | Create a pull request with auto-generated description | Hephaestus |
-| `/refine` | Refine a rough idea into a structured Epic with stories and acceptance criteria | Product Owner |
-| `/backlog` | Review and prioritize the backlog — scan issues, suggest next actions | Product Owner |
-| `/sync-issues` | Sync issues between CVS platform and local `.issues/` directory | Product Owner |
-| `/docs` | Generate or update MkDocs documentation for the current project | Technical Writer |
-| `/changelog` | Generate or update CHANGELOG.md from git history and resolved issues | Technical Writer |
-| `/new-agent` | Design a new OpenCode agent — discovery, design, prompt crafting | Agent Architect |
-| `/refine-agent` | Analyze and refine an existing agent — improve prompt, permissions, design | Agent Architect |
-| `/new-skill` | Design a new OpenCode skill — domain-specific instructions for agents | Agent Architect |
+| `/refine` | Refine a rough idea into a structured Epic with stories and acceptance criteria | Hermes |
+| `/backlog` | Review and prioritize the backlog — scan issues, suggest next actions | Hermes |
+| `/sync-issues` | Sync issues between CVS platform and local `.issues/` directory | Hermes |
+| `/docs` | Generate or update MkDocs documentation for the current project | Clio |
+| `/changelog` | Generate or update CHANGELOG.md from git history and resolved issues | Clio |
+| `/new-agent` | Design a new OpenCode agent — discovery, design, prompt crafting | Gea |
+| `/refine-agent` | Analyze and refine an existing agent — improve prompt, permissions, design | Gea |
+| `/new-skill` | Design a new OpenCode skill — domain-specific instructions for agents | Gea |
 
 ## MCP Servers
 
@@ -327,7 +341,7 @@ Pre-configured integrations (enable/disable in `opencode.json`):
 | **JSON Memory** | Persistent knowledge graph | Enabled |
 | **Sequential Thinking** | Structured reasoning | Enabled |
 | **LibSQL Memory** | SQLite-based memory | Disabled |
-| **GitHub MCP** | GitHub repos & issues | Disabled |
+| **GitHub MCP** | GitHub repos & issues | Enabled |
 | **GitLab MCP** | GitLab integration | Disabled |
 | **Forgejo MCP** | Forgejo integration | Disabled |
 | **CocoIndex** | Code indexing | Disabled |
@@ -338,6 +352,34 @@ Pre-configured integrations (enable/disable in `opencode.json`):
 ## Plugin
 
 Uses [`@tarquinen/opencode-dcp`](https://www.npmjs.com/package/@tarquinen/opencode-dcp) for Dynamic Context Pruning — automatic context management to keep conversations efficient.
+
+## Testing
+
+Agent integration tests live in `tests/` and use [Task](https://taskfile.dev) as the test runner. Each agent suite follows a pattern: clean workspace, seed input, run agent via `opencode run`, then assert outputs.
+
+```bash
+# Run all tests
+cd tests && task test
+
+# Run a specific agent's tests
+cd tests && task athena:test
+cd tests && task hermes:test
+cd tests && task clio:test
+```
+
+| Suite | Tests | What's verified |
+|-------|-------|-----------------|
+| **Athena** | 11 | Solo: HLD in `.specs/` with correct metadata + story in `.issues/`. Team: HLD + draft in `.ai.tmp/` + story. |
+| **Hermes** | 14 | Solo: Epic + Story in `.issues/` with parent links and ID sequencing. Team: + draft. CVS: GitHub issue creation. |
+| **Clio** | 13 | Scaffold validation: pyproject.toml, mise.toml, mkdocs.yml, Taskfile.yml, docs/. Boundary: no `.issues/` or `.specs/`. |
+
+Reusable test helpers are defined in `tests/generic/Taskfile.yml` (path assertions, content checks, file counting).
+
+## Scripts
+
+| Script | Purpose |
+|--------|---------|
+| `scripts/switch-models.sh` | Bulk model swap across all agent files. Supports keywords: `copilot`, `anthropic`, `openai`, `openrouter`, `free`. Strong tier (opus) for Lead Architect, Tech Lead, Reviewer, Gea. Fast tier (sonnet) for all others. |
 
 ## Setup
 
@@ -368,6 +410,15 @@ Uses [`@tarquinen/opencode-dcp`](https://www.npmjs.com/package/@tarquinen/openco
    ```
 
 5. **Enable/disable MCP servers** by toggling `"enabled"` in `opencode.json`.
+
+6. **Switch model providers** (optional):
+   ```bash
+   # Switch all agents to Anthropic direct API models
+   ./scripts/switch-models.sh anthropic
+
+   # Switch to GitHub Copilot models (default)
+   ./scripts/switch-models.sh copilot
+   ```
 
 ## License
 

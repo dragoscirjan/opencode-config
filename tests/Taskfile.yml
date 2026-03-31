@@ -1,62 +1,24 @@
 version: "3"
 
+includes:
+  athena:
+    taskfile: ./athena/Taskfile.yml
+    dir: ./athena
+  # clio:
+  #   taskfile: ./clio/Taskfile.yml
+  #   dir: ./clio
+  hermes:
+    taskfile: ./hermes/Taskfile.yml
+    dir: ./hermes
+  # hephaestus:
+  #   taskfile: ./hephaestus/Taskfile.yml
+  #   dir: ./hephaestus
+
 tasks:
-  # # ── Test 1: Agent writes to .specs/ ───────────────────────────────────────
-  # test:writes-to-specs:
-  #   desc: "Architect must reference a path inside .specs/"
-  #   cmds:
-  #     - |
-  #       echo "▶ [1/4] Architect writes to .specs/"
-  #       OUT=$(opencode run --agent architect \
-  #         "Write a draft HLD for a simple in-memory cache system. The next available ID is 00003." \
-  #         2>&1)
-  #       echo "${OUT}" | grep -q '\.specs/' \
-  #         && echo "  ✓ PASS: output references .specs/" \
-  #         || { echo "  ✗ FAIL: no .specs/ path found in output"; echo "${OUT}"; exit 1; }
-  #
-  # # ── Test 2: Document has required metadata fields ─────────────────────────
-  # test:document-format:
-  #   desc: "Architect output must include metadata block with id, name, version, status, date"
-  #   cmds:
-  #     - |
-  #       echo "▶ [2/4] Document format check"
-  #       OUT=$(opencode run --agent architect \
-  #         "Write a draft HLD for a simple notification service. The next available ID is 00003." \
-  #         2>&1)
-  #       PASS=true
-  #       for FIELD in "00003" "v1" "status" "date"; do
-  #         echo "${OUT}" | grep -qi "${FIELD}" \
-  #           || { echo "  ✗ FAIL: missing field '${FIELD}' in output"; PASS=false; }
-  #       done
-  #       $PASS && echo "  ✓ PASS: all required metadata fields present"
-  #       $PASS || exit 1
-  #
-  # # ── Test 3: Update existing HLD → produces v2 ─────────────────────────────
-  # test:update-increments-version:
-  #   desc: "Updating an existing HLD must produce v2, keeping same ID"
-  #   cmds:
-  #     - |
-  #       echo "▶ [3/4] Update existing HLD → v2"
-  #       OUT=$(opencode run --agent architect \
-  #         "The HLD at .specs/hld-00001-logging-v1.md needs a new section on structured log formats. Update it and save the new version." \
-  #         2>&1)
-  #       echo "${OUT}" | grep -q 'v2' \
-  #         || { echo "  ✗ FAIL: no 'v2' found in output"; echo "${OUT}"; exit 1; }
-  #       echo "${OUT}" | grep -q '00001' \
-  #         || { echo "  ✗ FAIL: ID 00001 not preserved (got a new ID instead)"; echo "${OUT}"; exit 1; }
-  #       echo "  ✓ PASS: v2 with same ID 00001"
-  #
-  # # ── Test 4: New HLD → increments ID ───────────────────────────────────────
-  # test:new-hld-increments-id:
-  #   desc: "A new HLD must use the next available ID, not reuse existing ones"
-  #   cmds:
-  #     - |
-  #       echo "▶ [4/4] New HLD increments ID"
-  #       OUT=$(opencode run --agent architect \
-  #         "There is already hld-00001-logging-v1.md in .specs/. Write a new HLD for a metrics collection system. The next available ID is 00002." \
-  #         2>&1)
-  #       echo "${OUT}" | grep -q '00002' \
-  #         || { echo "  ✗ FAIL: expected ID 00002 not found"; echo "${OUT}"; exit 1; }
-  #       echo "${OUT}" | grep -qE 'hld-00001' \
-  #         && { echo "  ✗ FAIL: reused existing ID 00001"; exit 1; } || true
-  #       echo "  ✓ PASS: new ID 00002 used"
+  test:
+    desc: "Run all agents' tests"
+    cmds:
+      - task: hermes:test
+      - task: athen:test
+      # - task: hephaestus:test
+      - task: clio:test
