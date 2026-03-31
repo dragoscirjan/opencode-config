@@ -4,9 +4,9 @@ includes:
   athena:
     taskfile: ./athena/Taskfile.yml
     dir: ./athena
-  # clio:
-  #   taskfile: ./clio/Taskfile.yml
-  #   dir: ./clio
+  clio:
+    taskfile: ./clio/Taskfile.yml
+    dir: ./clio
   hermes:
     taskfile: ./hermes/Taskfile.yml
     dir: ./hermes
@@ -19,6 +19,6 @@ tasks:
     desc: "Run all agents' tests"
     cmds:
       - task: hermes:test
-      - task: athen:test
+      - task: athena:test
       # - task: hephaestus:test
       - task: clio:test

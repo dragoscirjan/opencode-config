@@ -125,6 +125,12 @@ export default tool({
       return `Error: id must be a 5-digit zero-padded number (e.g. 00001), got "${providedId}"`
     }
 
+    // Validate parent format if provided
+    const parentId = args.parent?.trim()
+    if (parentId && !/^\d{5}$/.test(parentId)) {
+      return `Error: parent must be a 5-digit zero-padded number (e.g. 00001), got "${parentId}"`
+    }
+
     // Compute ID
     const specsDir = join(cwd, ".specs")
     mkdirSync(specsDir, { recursive: true })
@@ -134,7 +140,7 @@ export default tool({
     const version = nextVersion(specsDir, specType, id)
 
     // Build filename and path
-    const slug = kebabCase(title)
+    const slug = kebabCase(title) || "untitled"
     const filename = `${specType}-${id}-${slug}-v${version}.md`
     const filepath = join(specsDir, filename)
 
@@ -145,7 +151,7 @@ export default tool({
       title,
       version,
       status,
-      parent: args.parent?.trim() || undefined,
+      parent: parentId || undefined,
       author: args.author?.trim() || undefined,
     })
 

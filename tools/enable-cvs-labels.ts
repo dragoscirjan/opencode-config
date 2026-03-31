@@ -42,6 +42,7 @@ type Platform = "github" | "gitlab" | "forgejo"
 
 interface RepoInfo {
   platform: Platform
+  host: string
   owner: string
   repo: string
   projectPath: string
@@ -83,7 +84,7 @@ function parseGitRemote(cwd: string): RepoInfo {
   }
 
   const platform = detectPlatform(host)
-  return { platform, owner, repo, projectPath: `${owner}/${repo}` }
+  return { platform, host, owner, repo, projectPath: `${owner}/${repo}` }
 }
 
 /** Normalize a URL env var — ensure it has a scheme and no trailing slash. */
@@ -106,14 +107,14 @@ function detectPlatform(host: string): Platform {
   if (matchesDomain(host, "gitlab.com")) return "gitlab"
   if (matchesDomain(host, "gitea.io") || matchesDomain(host, "codeberg.org")) return "forgejo"
 
-  const gitlabUrl = normalizeUrl(process.env.GITLAB_URL ?? "")
+  const gitlabUrl = normalizeUrl(process.env.GITLAB_URL || "")
   if (gitlabUrl) {
     try {
       if (matchesDomain(host, new URL(gitlabUrl).hostname)) return "gitlab"
     } catch { /* invalid URL, skip */ }
   }
 
-  const forgejoUrl = normalizeUrl(process.env.FORGEJO_URL ?? "")
+  const forgejoUrl = normalizeUrl(process.env.FORGEJO_URL || "")
   if (forgejoUrl) {
     try {
       if (matchesDomain(host, new URL(forgejoUrl).hostname)) return "forgejo"
@@ -123,7 +124,7 @@ function detectPlatform(host: string): Platform {
   // Fallback: check env vars for token presence
   if (process.env.GITHUB_TOKEN) return "github"
 
-  if (process.env.GITLAB_TOKEN ?? process.env.GITLAB_PRIVATE_TOKEN) {
+  if (process.env.GITLAB_TOKEN || process.env.GITLAB_PRIVATE_TOKEN) {
     if (!gitlabUrl) {
       throw new Error("GITLAB_TOKEN is set but GITLAB_URL is not. Set GITLAB_URL (e.g. 'gitlab.example.com' or 'https://gitlab.example.com').")
     }
@@ -186,8 +187,8 @@ function createLabelsGitHub(labels: Label[], cwd: string, dryRun: boolean): stri
 
 function createLabelsGitLab(labels: Label[], info: RepoInfo, dryRun: boolean): string[] {
   const results: string[] = []
-  const gitlabUrl = normalizeUrl(process.env.GITLAB_URL ?? "")
-  const token = process.env.GITLAB_TOKEN ?? process.env.GITLAB_PRIVATE_TOKEN ?? ""
+  const gitlabUrl = normalizeUrl(process.env.GITLAB_URL || "") || `https://${info.host}`
+  const token = process.env.GITLAB_TOKEN || process.env.GITLAB_PRIVATE_TOKEN || ""
 
   if (!token) {
     return ["Error: GITLAB_TOKEN or GITLAB_PRIVATE_TOKEN is not set. Cannot authenticate with GitLab."]
@@ -235,8 +236,8 @@ function createLabelsGitLab(labels: Label[], info: RepoInfo, dryRun: boolean): s
 
 function createLabelsForgejo(labels: Label[], info: RepoInfo, dryRun: boolean): string[] {
   const results: string[] = []
-  const forgejoUrl = normalizeUrl(process.env.FORGEJO_URL ?? "")
-  const token = process.env.FORGEJO_ACCESS_TOKEN ?? ""
+  const forgejoUrl = normalizeUrl(process.env.FORGEJO_URL || "") || `https://${info.host}`
+  const token = process.env.FORGEJO_ACCESS_TOKEN || ""
 
   if (!token) {
     return ["Error: FORGEJO_ACCESS_TOKEN is not set. Cannot authenticate with Forgejo."]

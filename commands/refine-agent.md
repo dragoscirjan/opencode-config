@@ -1,6 +1,6 @@
 ---
 description: Analyze and refine an existing agent — improve prompt quality, permissions, and design
-agent: agent-architect
+agent: gea
 ---
 
 Refine the following agent:

@@ -110,25 +110,25 @@ export default tool({
     const autoLabel = `level/${issueType}`
     const extraLabels = args.labels
       ? args.labels
-          .split(",")
-          .map((l) => l.trim())
-          .filter(Boolean)
+        .split(",")
+        .map((l) => l.trim())
+        .filter(Boolean)
       : []
     const labels = [autoLabel, ...extraLabels]
 
     // Parse depends
     const depends = args.depends
       ? args.depends
-          .split(",")
-          .map((d) => d.trim())
-          .filter(Boolean)
+        .split(",")
+        .map((d) => d.trim())
+        .filter(Boolean)
       : undefined
 
     // Compute ID and path
     const issuesDir = join(cwd, ".issues")
     mkdirSync(issuesDir, { recursive: true })
     const id = nextId(issuesDir)
-    const slug = kebabCase(title)
+    const slug = kebabCase(title) || "untitled"
     const filename = `${id}-${issueType}-${slug}.md`
     const filepath = join(issuesDir, filename)
 

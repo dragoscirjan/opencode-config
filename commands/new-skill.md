@@ -1,6 +1,6 @@
 ---
 description: Design a new OpenCode skill — domain-specific instructions loaded on-demand by agents
-agent: agent-architect
+agent: gea
 ---
 
 Design a new skill:

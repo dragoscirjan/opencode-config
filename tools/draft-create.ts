@@ -27,7 +27,7 @@ export default tool({
     mkdirSync(draftsDir, { recursive: true })
 
     const hash = randomBytes(4).toString("hex")
-    const slug = kebabCase(title)
+    const slug = kebabCase(title) || "untitled"
     const filename = `${slug}-${hash}.md`
     const filepath = join(draftsDir, filename)
 
