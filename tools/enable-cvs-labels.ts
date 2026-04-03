@@ -96,22 +96,27 @@ function normalizeUrl(raw: string): string {
   return url.replace(/\/+$/, "")
 }
 
+/** Returns true if `host` equals `domain` or is a subdomain of it. */
+function matchesDomain(host: string, domain: string): boolean {
+  return host === domain || host.endsWith(`.${domain}`)
+}
+
 function detectPlatform(host: string): Platform {
-  if (host.includes("github.com")) return "github"
-  if (host.includes("gitlab.com")) return "gitlab"
-  if (host.includes("gitea.io") || host.includes("codeberg.org")) return "forgejo"
+  if (matchesDomain(host, "github.com")) return "github"
+  if (matchesDomain(host, "gitlab.com")) return "gitlab"
+  if (matchesDomain(host, "gitea.io") || matchesDomain(host, "codeberg.org")) return "forgejo"
 
   const gitlabUrl = normalizeUrl(process.env.GITLAB_URL ?? "")
   if (gitlabUrl) {
     try {
-      if (host.includes(new URL(gitlabUrl).hostname)) return "gitlab"
+      if (matchesDomain(host, new URL(gitlabUrl).hostname)) return "gitlab"
     } catch { /* invalid URL, skip */ }
   }
 
   const forgejoUrl = normalizeUrl(process.env.FORGEJO_URL ?? "")
   if (forgejoUrl) {
     try {
-      if (host.includes(new URL(forgejoUrl).hostname)) return "forgejo"
+      if (matchesDomain(host, new URL(forgejoUrl).hostname)) return "forgejo"
     } catch { /* invalid URL, skip */ }
   }
 
