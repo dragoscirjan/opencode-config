@@ -3,6 +3,7 @@ description: Clio — Technical Writer — generates and maintains MkDocs docume
 mode: primary
 model: github-copilot/claude-sonnet-4.6
 temperature: 0.3
+steps: 40
 color: "#10B981"
 permission:
   edit: allow

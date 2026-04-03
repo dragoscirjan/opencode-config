@@ -45,7 +45,7 @@ function buildFrontmatter(fields: {
     `type: ${fields.type}`,
     `title: "${fields.title}"`,
     `status: ${fields.status}`,
-    `labels: [${fields.labels.join(", ")}]`,
+    `labels: [${fields.labels.map((l) => `"${l}"`).join(", ")}]`,
   ]
   if (fields.parent) lines.push(`parent: "${fields.parent}"`)
   if (fields.depends?.length) {

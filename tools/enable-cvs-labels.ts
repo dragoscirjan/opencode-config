@@ -98,6 +98,8 @@ function normalizeUrl(raw: string): string {
 
 function detectPlatform(host: string): Platform {
   if (host.includes("github.com")) return "github"
+  if (host.includes("gitlab.com")) return "gitlab"
+  if (host.includes("gitea.io") || host.includes("codeberg.org")) return "forgejo"
 
   const gitlabUrl = normalizeUrl(process.env.GITLAB_URL ?? "")
   if (gitlabUrl) {
