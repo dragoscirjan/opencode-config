@@ -116,13 +116,27 @@ export default tool({
       : []
     const labels = [autoLabel, ...extraLabels]
 
-    // Parse depends
+    // Validate parent ID
+    const ID_PATTERN = /^\d{5}$/
+    const parentId = args.parent?.trim() || undefined
+    if (parentId && !ID_PATTERN.test(parentId)) {
+      return `Error: invalid parent "${parentId}". Must be a 5-digit ID (e.g. "00001").`
+    }
+
+    // Parse and validate depends
     const depends = args.depends
       ? args.depends
         .split(",")
         .map((d) => d.trim())
         .filter(Boolean)
       : undefined
+    if (depends) {
+      for (const dep of depends) {
+        if (!ID_PATTERN.test(dep)) {
+          return `Error: invalid depends ID "${dep}". Each must be a 5-digit ID (e.g. "00001").`
+        }
+      }
+    }
 
     // Compute ID and path
     const issuesDir = join(cwd, ".issues")
@@ -139,7 +153,7 @@ export default tool({
       title,
       status,
       labels,
-      parent: args.parent?.trim() || undefined,
+      parent: parentId,
       depends,
       author: args.author?.trim() || undefined,
     })

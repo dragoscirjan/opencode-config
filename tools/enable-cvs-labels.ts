@@ -54,16 +54,16 @@ function parseGitRemote(cwd: string): RepoInfo {
     encoding: "utf-8",
   }).trim()
 
-  // SSH SCP-like:  git@github.com:owner/repo.git
-  // SSH URL:       ssh://git@github.com/owner/repo.git
-  // SSH with port: ssh://git@github.com:22/owner/repo.git
-  // HTTPS:         https://github.com/owner/repo.git
+  // SSH SCP-like:   git@github.com:owner/repo.git
+  // SSH URL:        ssh://git@github.com/owner/repo.git
+  // SSH with port:  ssh://git@github.com:22/owner/repo.git
+  // HTTPS:          https://github.com/owner/repo.git
+  // HTTPS w/ port:  https://gitlab.example.com:8443/group/repo.git
   let host = ""
   let path = ""
 
   const scpMatch = remoteUrl.match(/@([^:/]+):(?!\/\/)(.+?)(?:\.git)?$/)
   const sshUrlMatch = remoteUrl.match(/ssh:\/\/[^@]+@([^:/]+)(?::\d+)?\/(.+?)(?:\.git)?$/)
-  const httpsMatch = remoteUrl.match(/https?:\/\/([^/]+)\/(.+?)(?:\.git)?$/)
 
   if (scpMatch) {
     host = scpMatch[1]
@@ -71,9 +71,11 @@ function parseGitRemote(cwd: string): RepoInfo {
   } else if (sshUrlMatch) {
     host = sshUrlMatch[1]
     path = sshUrlMatch[2]
-  } else if (httpsMatch) {
-    host = httpsMatch[1]
-    path = httpsMatch[2]
+  } else if (/^https?:\/\//i.test(remoteUrl)) {
+    // Use URL parser for HTTPS — correctly handles ports (e.g. :8443)
+    const parsed = new URL(remoteUrl.replace(/\.git$/, ""))
+    host = parsed.hostname
+    path = parsed.pathname.replace(/^\//, "")
   }
 
   const [owner, ...repoParts] = path.split("/")

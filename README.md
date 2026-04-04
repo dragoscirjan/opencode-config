@@ -379,7 +379,7 @@ Reusable test helpers are defined in `tests/generic/Taskfile.yml` (path assertio
 
 | Script | Purpose |
 |--------|---------|
-| `scripts/switch-models.sh` | Bulk model swap across all agent files. Supports keywords: `copilot`, `anthropic`, `openai`, `openrouter`, `free`. Strong tier (opus) for Lead Architect, Tech Lead, Reviewer, Gea. Fast tier (sonnet) for all others. |
+| `scripts/switch-models.sh` | Bulk model swap across all agent files. Supports keywords: `copilot`, `anthropic`, `openai`, `openrouter`, `free`. Strong tier (opus) for `minion-lead-architect`, `minion-tech-lead`, `minion-reviewer`, Gea. Fast tier (sonnet) for all others. |
 
 ## Setup
 
