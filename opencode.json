@@ -1,5 +1,9 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "instructions": [
+    "CONTRIBUTING.md",
+    "PLAN.md"
+  ],
   "plugin": [
     "@tarquinen/opencode-dcp@latest"
   ],
@@ -67,7 +71,7 @@
         "X-MCP-Toolsets": "repos,issues",
         "X-MCP-Readonly": "true"
       },
-      "enabled": false
+      "enabled": true
     },
     "cvs_gitlab": {
       "type": "remote",

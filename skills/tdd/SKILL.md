@@ -26,14 +26,6 @@ When this skill is loaded, the developer follows the Red-Green-Refactor cycle. T
 - Mock external dependencies, not internal logic
 - Arrange-Act-Assert structure
 
-## Wire Protocol Extension
+## Status Updates
 
-When in TDD mode, use these additional signals:
-
-```
-SIG:RED|FILES:<test-files>
-SIG:GREEN|FILES:<impl-files>,<test-files>
-SIG:REFACTOR|FILES:<changed-files>
-```
-
-The standard `DONE`, `BLOCKED`, `PARTIAL` signals still apply for final status.
+After each TDD step, tell the orchestrator what happened in plain English, ≤50 words. Example: "Red: wrote 3 tests for auth middleware — all fail as expected. Files: src/auth.test.ts"
