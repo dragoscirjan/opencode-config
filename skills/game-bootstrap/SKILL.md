@@ -1,11 +1,11 @@
 ---
 name: game-bootstrap
-description: Godot 4 project scaffolding — project.godot, STRUCTURE.md, script stubs, scene builders, build order. Load after game decomposition.
+description: Godot 4 project scaffolding — project.godot, architecture notes, script stubs, scene builders, build order. Load after game decomposition.
 ---
 
 # Game Bootstrap — Architecture & Scaffolding
 
-Design game architecture and produce a compilable Godot project skeleton: `project.godot`, `STRUCTURE.md`, script stubs, and scene builder stubs. Defines *what exists and how it connects* — not behavior.
+Design game architecture and produce a compilable Godot project skeleton: `project.godot`, architecture notes (written to a draft via `draft-create`), script stubs, and scene builder stubs. Defines *what exists and how it connects* — not behavior.
 
 Works for both fresh projects and incremental changes.
 
@@ -16,10 +16,10 @@ Works for both fresh projects and incremental changes.
 3. **Assess project state:**
    - No project → create from scratch.
    - Existing project, fresh start → delete existing scenes/scripts.
-   - Existing project, incremental → read `STRUCTURE.md` and scripts. Identify what to add/replace. Preserve unchanged files.
+   - Existing project, incremental → read existing architecture notes and scripts. Identify what to add/replace. Preserve unchanged files.
 4. **Design/update architecture** — scenes, scripts, signals, input actions.
 5. **Write/update `project.godot`.**
-6. **Write `STRUCTURE.md`** — always complete, not a diff.
+6. **Write architecture notes** to the draft path — always complete, not a diff.
 7. **Write script stubs** — for new scripts and explicitly replaced ones.
 8. **Import assets** — `timeout 60 godot --headless --import 2>&1`. Ensures all assets (`.glb`, `.png`) are imported before scene builders reference them.
 9. **Build scenes** — for each new/changed scene, write builder to `scenes/build_{name}.gd`, then run in dependency order (leaf scenes first): `timeout 60 godot --headless --script scenes/build_{name}.gd`
@@ -91,9 +91,9 @@ fire={
 }
 ```
 
-### 2. STRUCTURE.md
+### 2. Architecture Notes (draft)
 
-Complete architecture reference. Always written in full, even for incremental updates.
+Complete architecture reference. Written to a draft path provided by the orchestrator. Always written in full, even for incremental updates.
 
 ```markdown
 # {Project Name}
@@ -266,7 +266,7 @@ For pause menus, set `process_mode = Node.PROCESS_MODE_ALWAYS` on the CanvasLaye
 - **`preload()` fails in headless** — always use `load()` in scene builders.
 - **Scene builder hangs** — missing `quit()` call.
 
-## Asset Hints in STRUCTURE.md
+## Asset Hints in Architecture Notes
 
 Include `## Asset Hints` listing what visual assets the architecture needs. The asset planner uses these.
 

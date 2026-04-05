@@ -19,15 +19,15 @@ Three-phase asset workflow:
 ### Input
 
 - `budget_cents` — total budget (or remaining for iterations)
-- `PLAN.md` — game description, risk tasks, main build with asset needs
-- `STRUCTURE.md` — architecture with Asset Hints section
+- Game plan spec (in `.specs/`) — game description, risk tasks, main build with asset needs
+- Architecture notes (draft in `.ai.tmp/`) — architecture with Asset Hints section
 - `reference.png` — visual composition target
-- `ASSETS.md` — art direction (from visual target phase)
+- Art direction notes (draft in `.ai.tmp/`) — art direction from visual target phase
 
 ### Workflow
 
 1. **Read `reference.png`** — understand visual composition, proportions, environment layers.
-2. **Read `STRUCTURE.md` Asset Hints + `PLAN.md` Assets needed** — reconcile both lists (they may overlap or complement each other).
+2. **Read architecture Asset Hints + game plan Assets needed** — reconcile both lists (they may overlap or complement each other).
 3. **Categorize assets:**
    - **3D models** — characters, vehicles, key props, buildings (need geometry)
    - **Textures** — ground, walls, UI backgrounds (flat, tileable)
@@ -59,7 +59,7 @@ Reserve ~10% of budget for retries. Prioritize by visual impact — cut low-impa
 
 ### Art Direction Usage
 
-Read `ASSETS.md` **Art direction** but do NOT mechanically prepend it. Different asset types need different treatment:
+Read the **Art direction** from your draft but do NOT mechanically prepend it. Different asset types need different treatment:
 - **Textures** — often need no style language at all
 - **3D model references** — need clean studio lighting; style cues can hurt mesh quality
 - **Backgrounds** — benefit most from art direction language
@@ -279,9 +279,9 @@ godot-grid-slice path_grid.png -o assets/img/items/ --grid 2x2 --names "sword,sh
 
 ---
 
-## ASSETS.md Format
+## Asset Manifest Format
 
-Every asset row **must** include a **Size** column — the intended in-game dimensions:
+Track all assets in a draft (via `draft-create`). Every asset row **must** include a **Size** column — the intended in-game dimensions:
 
 - **3D models:** target size in meters (e.g., `4m long`)
 - **Textures:** tile size in meters (e.g., `2m tile`)

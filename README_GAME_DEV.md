@@ -106,7 +106,7 @@ Freya does NOT write code, GDScript, or engine internals. She describes the game
 | Temperature | 0.3 | Creative for game design, precise for code |
 | Steps | 100 | Multi-hour pipeline runs |
 
-Loads skills progressively — one per pipeline stage. Delegates API lookup to Mimir and visual QA to Heimdall. Manages the document protocol (`PLAN.md`, `STRUCTURE.md`, `ASSETS.md`, `MEMORY.md`) for crash-safe resumability.
+Loads skills progressively — one per pipeline stage. Delegates API lookup to Mimir and visual QA to Heimdall. Uses `.specs/` for game plans (via `spec-create`), `.ai.tmp/` drafts for ephemeral working docs, and the knowledge graph (`memory` tools) for discoveries and quirks — all standard OpenCode document protocol.
 
 When the game requires work beyond GDScript, Odin delegates to **shared software minions**:
 
@@ -153,7 +153,7 @@ Backends: Gemini Flash (default), native Claude vision, or both with aggregated 
 
 ```mermaid
 flowchart TD
-    A[User: 'Make a snowboarding game'] --> B{PLAN.md exists?}
+    A[User: 'Make a snowboarding game'] --> B{Game plan in .specs/?}
     GDD[GDD in .specs/] -.->|Optional| C
     B -->|No| C[Visual Target]
     B -->|Yes| G
@@ -193,8 +193,8 @@ flowchart TD
 **Stages:**
 
 1. **Visual Target** — generates a reference screenshot (`reference.png`) defining the art direction. Anchors every downstream decision.
-2. **Decomposition** — risk-first analysis. Isolates genuinely hard problems (procedural generation, custom physics, shaders) for separate verification. Routine features build together. Output: `PLAN.md`.
-3. **Architecture** — scene hierarchy, script responsibilities, signal flow, physics layers, input mapping. Produces a compilable Godot skeleton. Output: `STRUCTURE.md`.
+2. **Decomposition** — risk-first analysis. Isolates genuinely hard problems (procedural generation, custom physics, shaders) for separate verification. Routine features build together. Output: game plan spec in `.specs/`.
+3. **Architecture** — scene hierarchy, script responsibilities, signal flow, physics layers, input mapping. Produces a compilable Godot skeleton. Output: architecture notes in `.ai.tmp/`.
 4. **Asset Generation** — budget-aware dual-backend system. Gemini (5-15c) for precise work, xAI Grok (2c) for textures and video, Tripo3D (37c) for 3D models. Animated sprites via video generation with loop detection.
 5. **Task Execution** — inline in Odin's context. Risk tasks first (isolated verification), then main build. Generates scene builders (headless .tscn construction) and runtime scripts (game logic). Each task: write, validate, capture, QA.
 6. **Visual QA** — Heimdall analyzes screenshots against references. Catches z-fighting, missing textures, broken physics, placeholder remnants, implementation shortcuts.
@@ -324,8 +324,8 @@ Loading all domain knowledge at once would consume the context window before any
 **Why risk-first decomposition?**
 Most game features are routine (movement, UI, cameras). Every task boundary is an integration risk. The decomposer isolates only genuinely hard problems (procedural generation, custom physics, complex shaders) for separate verification. Everything else builds in one pass, reducing integration bugs.
 
-**Why a document protocol?**
-`PLAN.md`, `STRUCTURE.md`, `ASSETS.md`, and `MEMORY.md` survive context compaction. When the context window approaches its limit and earlier messages compress, these files preserve the full pipeline state. The pipeline can resume from any point by reading them.
+**Why the standard document protocol?**
+Game plans live in `.specs/` (created via `spec-create`), ephemeral working docs (asset manifests, architecture notes) in `.ai.tmp/` (via `draft-create`), and accumulated discoveries in the knowledge graph (`memory` tools). This follows the same OpenCode conventions used by Athena and Hephaestus — `.specs/` survives across sessions, the knowledge graph survives context compaction, and `.ai.tmp/` is transient. The pipeline can resume from any point by reading the spec and knowledge graph.
 
 **Why a Game Design Document?**
 Without a GDD, Odin must invent game mechanics, art direction, controls, and scope on the fly — conflating design decisions with engine implementation. Freya writes the GDD first, capturing WHAT the game does in plain English. Odin then translates a stable design into a Godot project. This mirrors the software path (Architect writes HLD → Hephaestus implements) and means non-technical stakeholders can review the game design before any code is written. For quick builds, `/godogen` skips the GDD and lets Odin handle everything inline.

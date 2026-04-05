@@ -320,4 +320,4 @@ Beyond basic albedo:
 
 ## Feedback Loop
 
-Quirks are curated in this skill. When the task executor discovers a workaround during a game build, it writes to `MEMORY.md` (project-level). Recurring patterns get promoted here by the skill maintainer.
+Quirks are curated in this skill. When the task executor discovers a workaround during a game build, it writes to the knowledge graph (`memory` tools). Recurring patterns get promoted here by the skill maintainer.

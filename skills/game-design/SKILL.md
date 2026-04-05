@@ -9,7 +9,7 @@ description: Visual target generation, risk-first game decomposition, and verifi
 
 Two-phase design process that precedes all implementation:
 1. **Visual Target** — generate a reference screenshot that anchors art direction
-2. **Decomposition** — analyze risks, define verification criteria, produce `PLAN.md`
+2. **Decomposition** — analyze risks, define verification criteria, produce a game plan spec (via `spec-create`)
 
 ---
 
@@ -48,7 +48,7 @@ HUD: {each UI element — type and screen position}.
 ### Output
 
 - `reference.png` — 1K 16:9 image
-- Write art direction into `ASSETS.md`:
+- Write art direction into a draft (via `draft-create`):
 
 ```markdown
 # Assets
@@ -60,7 +60,7 @@ HUD: {each UI element — type and screen position}.
 
 ## Phase 2: Decomposition
 
-Analyze the game for implementation risks and define verification criteria. Output is `PLAN.md`.
+Analyze the game for implementation risks and define verification criteria. Output is a game plan spec (created via `spec-create` with `type=task`).
 
 ### Workflow
 
@@ -68,7 +68,7 @@ Analyze the game for implementation risks and define verification criteria. Outp
 2. **Read the game description** — core technical requirements.
 3. **Scan for risks** — identify features needing isolation (see taxonomy).
 4. **Define verification criteria** — risk-specific, general, and final.
-5. **Write `PLAN.md`.**
+5. **Write the game plan spec** (via `spec-create` with `type=task`, `author=odin`).
 
 ### Risk Taxonomy
 
@@ -106,7 +106,7 @@ Each task gets a **Verify** field — what to check after implementation.
 - `reference.png` consistency
 - Presentation video as final deliverable
 
-### PLAN.md Format
+### Game Plan Format
 
 ```markdown
 # Game Plan: {Name}
@@ -141,7 +141,7 @@ Each task gets a **Verify** field — what to check after implementation.
     - Output: screenshots/presentation/gameplay.mp4
 ```
 
-### What NOT to Include in PLAN.md
+### What NOT to Include in the Game Plan
 
 - GDScript code or implementation details
 - Detailed technical specs

@@ -7,7 +7,7 @@ description: Task implementation workflow, test harnesses, screenshot/video capt
 
 ## Phases
 
-### Risk Tasks (if PLAN.md has any)
+### Risk Tasks (if game plan has any)
 
 Implement each risk feature in isolation before the main build:
 1. Set up minimal environment — only the nodes needed to exercise the risk
@@ -16,7 +16,7 @@ Implement each risk feature in isolation before the main build:
 
 ### Main Build
 
-Implement everything in PLAN.md's **Main Build**:
+Implement everything in the game plan's **Main Build**:
 1. Generate scenes first, then scripts (scenes create nodes that scripts attach to)
 2. Run the implementation loop until verification criteria pass
 3. Run final verification including presentation video
@@ -37,7 +37,7 @@ Implement everything in PLAN.md's **Main Build**:
 9. **Visual QA** — delegate to Heimdall (visual-qa subagent) when applicable
 10. If verification fails → fix and repeat from step 2
 
-After each phase: update `PLAN.md`, write discoveries to `MEMORY.md`, git commit.
+After each phase: update the game plan spec status, write discoveries to knowledge graph (`memory` tools), git commit.
 
 ### Iteration Tracking
 
@@ -262,7 +262,7 @@ In `test/debug_{issue}.gd`:
 
 ## Project Memory
 
-Read `MEMORY.md` before starting work — contains discoveries from previous tasks. After completing your task, write back:
+Read the knowledge graph (`memory` tools) before starting work — it contains discoveries from previous tasks. After completing your task, write back:
 - What worked and what failed
 - Technical specifics later tasks will need
 - Workarounds discovered
