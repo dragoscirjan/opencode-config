@@ -1,4 +1,9 @@
+<!--
+For Gea: 
+- this document must me 400 works (max 500)
+-->
 ---
+
 description: Clio — Technical Writer — generates and maintains MkDocs documentation sites
 mode: primary
 model: github-copilot/claude-sonnet-4.6

@@ -107,12 +107,48 @@
       "url": "https://mcp.grep.app",
       "enabled": true
     },
-    "ide_godot": {
+    "godot_editor": {
       "type": "local",
       "command": [
         "npx",
         "-y",
         "@coding-solo/godot-mcp"
+      ],
+      "enabled": false
+    },
+    "godot_forge": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "godot-forge"
+      ],
+      "enabled": false
+    },
+    "godot_diagnostics": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "minimal-godot-mcp"
+      ],
+      "enabled": false
+    },
+    "godot_docs": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@nuskey8/godot-docs-mcp"
+      ],
+      "enabled": false
+    },
+    "godot_gopeak": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "gopeak"
       ],
       "enabled": false
     },

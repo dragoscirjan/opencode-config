@@ -1,4 +1,9 @@
+<!--
+For Gea: 
+- this document must me 400 works (max 500)
+-->
 ---
+
 description: Hephaestus — Solution Engineer — writes LLDs and implements features solo or with a team
 mode: primary
 model: github-copilot/claude-sonnet-4.6

@@ -23,6 +23,9 @@ Works for both fresh projects and incremental changes.
 7. **Write script stubs** — for new scripts and explicitly replaced ones.
 8. **Import assets** — `timeout 60 godot --headless --import 2>&1`. Ensures all assets (`.glb`, `.png`) are imported before scene builders reference them.
 9. **Build scenes** — for each new/changed scene, write builder to `scenes/build_{name}.gd`, then run in dependency order (leaf scenes first): `timeout 60 godot --headless --script scenes/build_{name}.gd`
+
+> **MCP alternative (when `godot_editor` is enabled — see `mcp-tools-godot` skill):** For trivial scenes (a root node + a few children, no complex transforms), use `create_scene` + `add_node` + `load_sprite` + `save_scene` instead of writing a scene builder script. For scenes with scripts attached, custom properties, precise transforms, or sub-scene instantiation — always use scene builder scripts. Use `godot_analyze_scene` from `godot_forge` to check `.tscn` files for antipatterns after building.
+
 10. **Verify** — `timeout 60 godot --headless --quit 2>&1`. No `ERROR` or `Parser Error` lines. RID warnings are benign.
 11. **Git commit** — `git add -A && git commit -m "scaffold: project skeleton"`
 

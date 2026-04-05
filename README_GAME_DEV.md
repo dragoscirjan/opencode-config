@@ -213,6 +213,7 @@ Loaded progressively by Odin — one per pipeline stage, keeping the context win
 | **game-execution** | Task workflow, test harness patterns, visual QA integration | Task execution |
 | **platform-export** | Per-platform export: prerequisites, templates, signing, build commands | When user requests export |
 | **game-bootstrap** | Cross-platform setup verification, dependency detection, install instructions | First pipeline run |
+| **mcp-tools-godot** | Godot MCP servers reference — editor, diagnostics, testing, docs, runtime | When Godot MCP servers are enabled |
 
 ## Tools
 
@@ -227,6 +228,42 @@ All native TypeScript using `@opencode-ai/plugin`. No Python. No ImageMagick.
 | **godot-grid-slice** | Sprite sheet slicing into individual frames | `sharp` |
 | **godot-loop-detect** | Animated sprite loop frame detection from video | `sharp`, `fluent-ffmpeg` |
 | **godot-api-docs** | Bootstrap 850+ Godot class API docs from engine XML source | `simple-git`, `fast-xml-parser` |
+
+### Godot MCP Servers (opt-in)
+
+The pipeline optionally integrates five complementary MCP servers for Godot editor/runtime interaction. All are **disabled by default** in `opencode.json` because they require Godot 4 to be installed.
+
+**Enable a server:**
+
+```json
+// In opencode.json → mcp → godot_editor
+"enabled": true
+```
+
+| Server | Key | npm Package | Purpose | Godot Required? |
+|--------|-----|-------------|---------|-----------------|
+| **Editor & Runtime** | `godot_editor` | `@coding-solo/godot-mcp` | Launch editor, run/stop projects, scene CRUD, debug output, UID management | Yes |
+| **Static Analysis & Testing** | `godot_forge` | `godot-forge` | Script pitfall detection (10 checks), scene antipattern analysis, GUT/GdUnit4 test runner, docs search with 3→4 migration | No (6/8 tools) |
+| **LSP Diagnostics** | `godot_diagnostics` | `minimal-godot-mcp` | Native LSP single-file and bulk diagnostics, DAP debug console | No (uses native LSP/DAP) |
+| **Online Documentation** | `godot_docs` | `@nuskey8/godot-docs-mcp` | Search docs.godotengine.org — tutorials, guides, and class reference | No |
+| **Full-Stack Runtime** | `godot_gopeak` | `gopeak` | 110+ tools: ClassDB, DAP debugger, input injection, CC0 asset library (Poly Haven, Kenney) | Yes (plugin required) |
+
+**Relationship to custom tools:** The MCP servers handle **Godot editor/runtime interaction** (running projects, managing scenes, diagnostics, docs). The `godot-*` TypeScript tools handle **asset generation/processing** (image gen, background removal, visual QA, API docs). They are complementary with no overlap.
+
+**When Odin uses MCP tools vs bash:**
+
+| Operation | Without MCP | With MCP |
+|-----------|-------------|----------|
+| Validate project | `godot --headless --quit 2>&1` | `run_project` + `get_debug_output` |
+| Simple scene creation | Scene builder script + `godot --headless --script` | `create_scene` + `add_node` + `save_scene` |
+| Project structure | `find` / `ls` | `get_project_structure` |
+| Script analysis | Manual review | `godot_analyze_script` (godot_forge) |
+| LSP diagnostics | N/A | `get_diagnostics` / `scan_workspace_diagnostics` |
+| Run tests | `godot --headless --script` | `godot_run_tests` (godot_forge) |
+| Search docs | `godot-api-docs` tool (offline XML) | `godot_docs_search` (online) |
+| Screenshot capture | `godot --write-movie` | `godot --write-movie` (no MCP equivalent) |
+| Asset import | `godot --headless --import` | `godot --headless --import` (no MCP equivalent) |
+| Script validation | `godot --headless --check-only` | `godot --headless --check-only` (no MCP equivalent) |
 
 ## Commands
 

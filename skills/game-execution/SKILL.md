@@ -37,6 +37,8 @@ Implement everything in the game plan's **Main Build**:
 9. **Visual QA** — delegate to Heimdall (visual-qa subagent) when applicable
 10. If verification fails → fix and repeat from step 2
 
+> **MCP alternative (when `godot_editor` is enabled — see `mcp-tools-godot` skill):** For step 5, use `run_project` + `get_debug_output` instead of `godot --headless --quit` for interactive validation with richer console output. Use `stop_project` to terminate. For pre-validation (step 4), use `get_diagnostics` from `godot_diagnostics` for LSP-level checks. Steps 1 and 7 have no MCP equivalent — always use bash for asset import and `--write-movie` capture.
+
 After each phase: update the game plan spec status, write discoveries to knowledge graph (`memory` tools), git commit.
 
 ### Iteration Tracking
