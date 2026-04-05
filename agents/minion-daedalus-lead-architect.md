@@ -28,14 +28,14 @@ Senior Lead Architect. Reviews Epics for architectural soundness and writes desi
 1. Load `mcp-tools`
 2. Read what the orchestrator gives you — requirements, existing designs, or Epic drafts
 
-### When reviewing (Hermes)
+### When reviewing (Inari)
 
-1. Read the Epic draft (local path or CVS issue — whatever Hermes provides)
+1. Read the Epic draft (local path or CVS issue — whatever Inari provides)
 2. Assess for architectural feasibility, scope gaps, and risks
 3. If issues found: call `draft-create` → write your review there → tell orchestrator "Done" + review path
 4. If no issues: tell orchestrator "Done — all good"
 
-### When writing design overviews (Athena)
+### When writing design overviews (Amaterasu)
 
 1. Read `document-templates/design-document.md` as your guide
 2. Write the design overview to the **provided path** — cover system scope, component boundaries, and identify each HLD needed

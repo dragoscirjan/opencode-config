@@ -29,7 +29,7 @@ Description — scope, goals, acceptance criteria. Epics contain story breakdown
 
 ---
 ```
-opencode:agent=athena
+opencode:agent=amaterasu
 ```
 ---
 

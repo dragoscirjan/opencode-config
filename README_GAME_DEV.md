@@ -30,7 +30,7 @@ Inspired by [Godogen](https://github.com/AexLiworworthy/godogen) (Claude Code sk
 
 ## How It Works
 
-- **Unified workflow** — game ideas flow through the same front door as software: Hermes (Product Owner) refines the idea into an Epic, Athena (Technical Advisor) orchestrates a Game Design Document via Freya (Game Designer), then Odin (Game Generator) builds the game from the GDD. You can also go directly to Odin for quick builds.
+- **Unified workflow** — game ideas flow through the same front door as software: Inari (Product Owner) refines the idea into an Epic, Amaterasu (Technical Advisor) orchestrates a Game Design Document via Freya (Game Designer), then Odin (Game Generator) builds the game from the GDD. You can also go directly to Odin for quick builds.
 - **Four game-specific agents** — Freya writes GDDs (what the game does), Odin builds it (visual target through delivery), Mimir handles Godot API lookup, Heimdall does visual QA. All in isolated contexts.
 - **Godot 4 output** — real projects with proper scene trees, scripts, and asset organization. Handles 2D and 3D.
 - **Asset generation** — Gemini creates precise references and characters; xAI Grok handles textures, simple objects, and animated sprites via video generation; Tripo3D converts images to 3D models. Budget-aware: maximizes visual impact per cent spent.
@@ -44,15 +44,15 @@ Inspired by [Godogen](https://github.com/AexLiworworthy/godogen) (Claude Code sk
 The game development workflow mirrors the software development workflow:
 
 ```
-Software:  Hermes (Epic) → Athena → Architect (HLD)  → Hephaestus (build)
-Game:      Hermes (Epic) → Athena → Freya (GDD)      → Odin (build)
+Software:  Inari (Epic) → Amaterasu → Architect (HLD)  → Hephaestus (build)
+Game:      Inari (Epic) → Amaterasu → Freya (GDD)      → Odin (build)
 ```
 
 ```mermaid
 sequenceDiagram
     actor User
-    participant H as Hermes
-    participant A as Athena
+    participant H as Inari
+    participant A as Amaterasu
     participant F as Freya
     participant O as Odin
 
@@ -60,7 +60,7 @@ sequenceDiagram
     note right of User: Scoping (optional)
     User->>H: "Make a snowboarding game"
     H->>User: Clarifying questions (scope, platforms, budget)
-    H->>User: Epic + Design Story for Athena
+    H->>User: Epic + Design Story for Amaterasu
     end
 
     rect rgb(99, 102, 241, 0.1)
@@ -80,7 +80,7 @@ sequenceDiagram
     end
 ```
 
-**Quick mode:** Skip Hermes and Athena — go directly to Odin with `/godogen`. Odin handles planning internally.
+**Quick mode:** Skip Inari and Amaterasu — go directly to Odin with `/godogen`. Odin handles planning internally.
 
 ## Agents
 
@@ -92,7 +92,7 @@ sequenceDiagram
 |---|---|---|
 | Model | `claude-sonnet-4.6` | Creative writing + structured design |
 | Temperature | 0.4 | Balanced — creative for vision, structured for mechanics |
-| Hidden | true | Invoked by Athena during the design workflow |
+| Hidden | true | Invoked by Amaterasu during the design workflow |
 
 Freya does NOT write code, GDScript, or engine internals. She describes the game — Odin translates it into a Godot project. Loads the `game-design` skill and follows the GDD template at `document-templates/gdd.md`. Challenges vague mechanics, flags missing win/lose conditions, and pushes for specificity.
 
@@ -362,7 +362,7 @@ Loading all domain knowledge at once would consume the context window before any
 Most game features are routine (movement, UI, cameras). Every task boundary is an integration risk. The decomposer isolates only genuinely hard problems (procedural generation, custom physics, complex shaders) for separate verification. Everything else builds in one pass, reducing integration bugs.
 
 **Why the standard document protocol?**
-Game plans live in `.specs/` (created via `spec-create`), ephemeral working docs (asset manifests, architecture notes) in `.ai.tmp/` (via `draft-create`), and accumulated discoveries in the knowledge graph (`memory` tools). This follows the same OpenCode conventions used by Athena and Hephaestus — `.specs/` survives across sessions, the knowledge graph survives context compaction, and `.ai.tmp/` is transient. The pipeline can resume from any point by reading the spec and knowledge graph.
+Game plans live in `.specs/` (created via `spec-create`), ephemeral working docs (asset manifests, architecture notes) in `.ai.tmp/` (via `draft-create`), and accumulated discoveries in the knowledge graph (`memory` tools). This follows the same OpenCode conventions used by Amaterasu and Hephaestus — `.specs/` survives across sessions, the knowledge graph survives context compaction, and `.ai.tmp/` is transient. The pipeline can resume from any point by reading the spec and knowledge graph.
 
 **Why a Game Design Document?**
 Without a GDD, Odin must invent game mechanics, art direction, controls, and scope on the fly — conflating design decisions with engine implementation. Freya writes the GDD first, capturing WHAT the game does in plain English. Odin then translates a stable design into a Godot project. This mirrors the software path (Architect writes HLD → Hephaestus implements) and means non-technical stakeholders can review the game design before any code is written. For quick builds, `/godogen` skips the GDD and lets Odin handle everything inline.

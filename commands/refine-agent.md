@@ -1,6 +1,6 @@
 ---
 description: Analyze and refine an existing agent — improve prompt quality, permissions, and design
-agent: gea
+agent: tsukuyomi
 ---
 
 Refine the following agent:

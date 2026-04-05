@@ -61,7 +61,7 @@ This configuration covers two specialized domains, each with its own agents, ski
 
 ### Software Development
 
-Hermes (Product Owner) refines ideas into Epics. Athena (Technical Advisor) designs architecture via HLDs. Hephaestus (Solution Engineer) implements features with optional team delegation. Clio (Technical Writer) generates docs. Gea (Agent Architect) designs new agents.
+Inari (Product Owner) refines ideas into Epics. Amaterasu (Technical Advisor) designs architecture via HLDs. Hephaestus (Solution Engineer) implements features with optional team delegation. Benzaiten (Technical Writer) generates docs. Tsukuyomi (Agent Architect) designs new agents.
 
 All agents support **solo mode** (agent does all work) and **team mode** (delegates to specialized subagents with iterative review rounds).
 
@@ -69,7 +69,7 @@ See **[README_DEV.md](README_DEV.md)** for full agent descriptions, workflow dia
 
 ### Game Development
 
-Same front door: Hermes refines game ideas into Epics. Athena designs games via GDDs (Game Design Documents), authored by Freya (Game Designer subagent). Odin (Game Generator) builds the game: visual target, architecture, asset generation, task execution, visual QA, and delivery. Mimir handles Godot API lookup. Heimdall handles visual QA.
+Same front door: Inari refines game ideas into Epics. Amaterasu designs games via GDDs (Game Design Documents), authored by Freya (Game Designer subagent). Odin (Game Generator) builds the game: visual target, architecture, asset generation, task execution, visual QA, and delivery. Mimir handles Godot API lookup. Heimdall handles visual QA.
 
 See **[README_GAME_DEV.md](README_GAME_DEV.md)** for the pipeline, agents, skills, tools, and platform support.
 
@@ -77,11 +77,11 @@ See **[README_GAME_DEV.md](README_GAME_DEV.md)** for the pipeline, agents, skill
 
 | Agent | Domain | Role | Model |
 |-------|--------|------|-------|
-| **Hermes** | Both | Product Owner — Epics, stories, acceptance criteria | `claude-sonnet-4.6` |
-| **Athena** | Both | Technical Advisor — design overviews, HLDs, GDDs | `claude-sonnet-4.6` |
+| **Inari** | Both | Product Owner — Epics, stories, acceptance criteria | `claude-sonnet-4.6` |
+| **Amaterasu** | Both | Technical Advisor — design overviews, HLDs, GDDs | `claude-sonnet-4.6` |
 | **Hephaestus** | Software | Solution Engineer — LLDs, implementation, team orchestration | `claude-sonnet-4.6` |
-| **Clio** | Software | Technical Writer — MkDocs documentation | `claude-sonnet-4.6` |
-| **Gea** | Meta | Agent Architect — designs agent/subagent definitions | `claude-opus-4.6` |
+| **Benzaiten** | Software | Technical Writer — MkDocs documentation | `claude-sonnet-4.6` |
+| **Tsukuyomi** | Meta | Agent Architect — designs agent/subagent definitions | `claude-opus-4.6` |
 | **Odin** | Game | Game Generator — full Godot 4 pipeline from GDD to build | `claude-opus-4.6` |
 
 <details>
@@ -89,10 +89,10 @@ See **[README_GAME_DEV.md](README_GAME_DEV.md)** for the pipeline, agents, skill
 
 | Agent | Domain | Role | Model | Invoked by |
 |-------|--------|------|-------|------------|
-| **Daedalus** (Lead Architect) | Both | Design overviews, scope review | `claude-opus-4.6` | Athena, Hermes |
-| **Archimedes** (Architect) | Software | HLDs — what, not how | `claude-sonnet-4.6` | Athena |
-| **Freya** (Game Designer) | Game | GDDs — game vision, mechanics, art direction | `claude-sonnet-4.6` | Athena |
-| **Odysseus** (Tech Lead) | Shared | LLDs, task breakdowns, design reviews | `claude-opus-4.6` | Athena, Hephaestus, Odin |
+| **Daedalus** (Lead Architect) | Both | Design overviews, scope review | `claude-opus-4.6` | Amaterasu, Inari |
+| **Archimedes** (Architect) | Software | HLDs — what, not how | `claude-sonnet-4.6` | Amaterasu |
+| **Freya** (Game Designer) | Game | GDDs — game vision, mechanics, art direction | `claude-sonnet-4.6` | Amaterasu |
+| **Odysseus** (Tech Lead) | Shared | LLDs, task breakdowns, design reviews | `claude-opus-4.6` | Amaterasu, Hephaestus, Odin |
 | **Hector** (Developer Backend) | Shared | Backend code, APIs, data layers, tests | `claude-sonnet-4.6` | Hephaestus, Odin |
 | **Orpheus** (Developer Frontend) | Shared | Frontend code, UI components, tests | `claude-sonnet-4.6` | Hephaestus, Odin |
 | **Atlas** (DevOps) | Shared | Infrastructure, CI/CD, deployment | `claude-sonnet-4.6` | Hephaestus, Odin |
@@ -136,16 +136,16 @@ Agent integration tests live in `tests/` and use [Task](https://taskfile.dev) as
 cd tests && task test
 
 # Run a specific agent's tests
-cd tests && task athena:test
-cd tests && task hermes:test
-cd tests && task clio:test
+cd tests && task amaterasu:test
+cd tests && task inari:test
+cd tests && task benzaiten:test
 ```
 
 | Suite | Tests | What's verified |
 |-------|-------|-----------------|
-| **Athena** | 11 | Solo: HLD in `.specs/` with correct metadata + story in `.issues/`. Team: HLD + draft in `.ai.tmp/` + story. |
-| **Hermes** | 14 | Solo: Epic + Story in `.issues/` with parent links and ID sequencing. Team: + draft. CVS: GitHub issue creation. |
-| **Clio** | 13 | Scaffold validation: pyproject.toml, mise.toml, mkdocs.yml, Taskfile.yml, docs/. Boundary: no `.issues/` or `.specs/`. |
+| **Amaterasu** | 11 | Solo: HLD in `.specs/` with correct metadata + story in `.issues/`. Team: HLD + draft in `.ai.tmp/` + story. |
+| **Inari** | 14 | Solo: Epic + Story in `.issues/` with parent links and ID sequencing. Team: + draft. CVS: GitHub issue creation. |
+| **Benzaiten** | 13 | Scaffold validation: pyproject.toml, mise.toml, mkdocs.yml, Taskfile.yml, docs/. Boundary: no `.issues/` or `.specs/`. |
 
 Reusable test helpers are defined in `tests/generic/Taskfile.yml` (path assertions, content checks, file counting).
 
@@ -153,7 +153,7 @@ Reusable test helpers are defined in `tests/generic/Taskfile.yml` (path assertio
 
 | Script | Purpose |
 |--------|---------|
-| `scripts/switch-models.sh` | Bulk model swap across all agent files. Supports keywords: `copilot`, `anthropic`, `openai`, `openrouter`, `free`. Strong tier (opus) for Daedalus (Lead Architect), Odysseus (Tech Lead), Argus (Reviewer), Gea, Odin. Fast tier (sonnet) for all others. |
+| `scripts/switch-models.sh` | Bulk model swap across all agent files. Supports keywords: `copilot`, `anthropic`, `openai`, `openrouter`, `free`. Strong tier (opus) for Daedalus (Lead Architect), Odysseus (Tech Lead), Argus (Reviewer), Tsukuyomi, Odin. Fast tier (sonnet) for all others. |
 
 ## Setup
 

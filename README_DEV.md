@@ -11,10 +11,10 @@ Multi-agent AI development team with orchestrated design-to-delivery workflows. 
   - [Subagents](#subagents)
 - [Workflows](#workflows)
   - [Standalone Agents](#standalone-agents)
-  - [Hermes — Epic Refinement](#hermes--epic-refinement)
-  - [Athena — Solo Design](#athena--solo-design)
+  - [Inari — Epic Refinement](#inari--epic-refinement)
+  - [Amaterasu — Solo Design](#amaterasu--solo-design)
   - [Hephaestus — Solo Build](#hephaestus--solo-build)
-  - [Athena — Team Design](#athena--team-design)
+  - [Amaterasu — Team Design](#amaterasu--team-design)
   - [Hephaestus — Team Build](#hephaestus--team-build)
 - [Skills](#skills)
   - [Developer Skills](#developer-skills)
@@ -32,11 +32,11 @@ User-facing agents, switchable with <kbd>Tab</kbd>:
 
 | Agent | Role | Model |
 |-------|------|-------|
-| **Hermes** — Product Owner | Refines ideas into structured Epics with stories and acceptance criteria | `claude-sonnet-4.6` |
-| **Athena** — Technical Advisor | Orchestrates architecture design — design overviews, HLDs, GDDs (via Freya for game projects) | `claude-sonnet-4.6` |
+| **Inari** — Product Owner | Refines ideas into structured Epics with stories and acceptance criteria | `claude-sonnet-4.6` |
+| **Amaterasu** — Technical Advisor | Orchestrates architecture design — design overviews, HLDs, GDDs (via Freya for game projects) | `claude-sonnet-4.6` |
 | **Hephaestus** — Solution Engineer | Implements features solo or orchestrates a dev team for complex builds | `claude-sonnet-4.6` |
-| **Clio** — Technical Writer | Generates and maintains MkDocs documentation sites | `claude-sonnet-4.6` |
-| **Gea** — Agent Architect | Designs, writes, and refines agent/subagent definitions (meta-agent) | `claude-opus-4.6` |
+| **Benzaiten** — Technical Writer | Generates and maintains MkDocs documentation sites | `claude-sonnet-4.6` |
+| **Tsukuyomi** — Agent Architect | Designs, writes, and refines agent/subagent definitions (meta-agent) | `claude-opus-4.6` |
 
 ### Subagents
 
@@ -44,9 +44,9 @@ Hidden specialists invoked by orchestrators via the Task tool:
 
 | Agent | Role | Model | Invoked by |
 |-------|------|-------|------------|
-| **Daedalus** (Lead Architect) | Design overviews — system scope, component boundaries | `claude-opus-4.6` | Athena, Hermes |
-| **Archimedes** (Architect) | HLDs — what a system does, not how | `claude-sonnet-4.6` | Athena |
-| **Odysseus** (Tech Lead) | LLDs, task breakdowns, design reviews | `claude-opus-4.6` | Athena, Hephaestus, Odin |
+| **Daedalus** (Lead Architect) | Design overviews — system scope, component boundaries | `claude-opus-4.6` | Amaterasu, Inari |
+| **Archimedes** (Architect) | HLDs — what a system does, not how | `claude-sonnet-4.6` | Amaterasu |
+| **Odysseus** (Tech Lead) | LLDs, task breakdowns, design reviews | `claude-opus-4.6` | Amaterasu, Hephaestus, Odin |
 | **Hector** (Developer Backend) | Backend code, APIs, data layers, tests | `claude-sonnet-4.6` | Hephaestus, Odin |
 | **Orpheus** (Developer Frontend) | Frontend code, UI components, tests | `claude-sonnet-4.6` | Hephaestus, Odin |
 | **Atlas** (DevOps) | Infrastructure, CI/CD, deployment configs | `claude-sonnet-4.6` | Hephaestus, Odin |
@@ -66,26 +66,26 @@ sequenceDiagram
     actor User
 
     rect rgb(16, 185, 129, 0.1)
-    note right of User: Clio (Technical Writer)
-    User->>Clio: Write docs for project
-    Clio->>Clio: Scaffold toolchain (uv, mise, mkdocs, Taskfile)
-    Clio->>Clio: Write documentation pages
-    Clio->>User: Docs site (MkDocs + Material theme)
+    note right of User: Benzaiten (Technical Writer)
+    User->>Benzaiten: Write docs for project
+    Benzaiten->>Benzaiten: Scaffold toolchain (uv, mise, mkdocs, Taskfile)
+    Benzaiten->>Benzaiten: Write documentation pages
+    Benzaiten->>User: Docs site (MkDocs + Material theme)
     end
 
     rect rgb(139, 92, 246, 0.1)
-    note right of User: Gea (Agent Architect)
-    User->>Gea: Design a new agent
-    Gea->>User: Agent definition (.md)
+    note right of User: Tsukuyomi (Agent Architect)
+    User->>Tsukuyomi: Design a new agent
+    Tsukuyomi->>User: Agent definition (.md)
     end
 ```
 
-### Hermes — Epic Refinement
+### Inari — Epic Refinement
 
 ```mermaid
 sequenceDiagram
     actor User
-    participant H as Hermes
+    participant H as Inari
     participant LA as Lead Architect
 
     rect rgb(245, 158, 11, 0.1)
@@ -99,14 +99,14 @@ sequenceDiagram
     end
 ```
 
-### Athena — Solo Design
+### Amaterasu — Solo Design
 
-> For game projects, Athena dispatches to **Freya** (Game Designer) instead of writing an HLD herself. See [Game Development](README_GAME_DEV.md#workflow) for that workflow.
+> For game projects, Amaterasu dispatches to **Freya** (Game Designer) instead of writing an HLD herself. See [Game Development](README_GAME_DEV.md#workflow) for that workflow.
 
 ```mermaid
 sequenceDiagram
     actor User
-    participant A as Athena
+    participant A as Amaterasu
 
     rect rgb(99, 102, 241, 0.1)
     note right of User: Solo Design
@@ -130,7 +130,7 @@ sequenceDiagram
     note right of User: Solo Build
     alt Direct request
         User->>H: Implement feature
-    else Handoff from Athena
+    else Handoff from Amaterasu
         User->>H: Continue with implementation
         H->>H: Read specs from .specs/
     end
@@ -144,12 +144,12 @@ sequenceDiagram
     end
 ```
 
-### Athena — Team Design
+### Amaterasu — Team Design
 
 ```mermaid
 sequenceDiagram
     actor User
-    participant A as Athena
+    participant A as Amaterasu
     participant LA as Lead Architect
     participant Arch as Architect
     participant TL as Tech Lead
@@ -274,19 +274,19 @@ TypeScript tools extending agent capabilities (built with `@opencode-ai/plugin`)
 
 | Command | Description | Agent |
 |---------|-------------|-------|
-| `/design` | Start an architecture design session — design overviews, HLDs | Athena |
-| `/review-design` | Dispatch reviewers to evaluate an existing design document | Athena |
-| `/spike` | Conduct a technical research spike — explore, analyze, report | Athena |
+| `/design` | Start an architecture design session — design overviews, HLDs | Amaterasu |
+| `/review-design` | Dispatch reviewers to evaluate an existing design document | Amaterasu |
+| `/spike` | Conduct a technical research spike — explore, analyze, report | Amaterasu |
 | `/implement` | Implement a feature from a spec, issue, or direct instructions | Hephaestus |
 | `/fix` | Investigate and fix a bug from a description or issue reference | Hephaestus |
 | `/review` | Trigger a code review on specific files or recent changes | Hephaestus |
 | `/tdd` | Implement a feature using Test-Driven Development | Hephaestus |
 | `/pr` | Create a pull request with auto-generated description | Hephaestus |
-| `/refine` | Refine a rough idea into a structured Epic with stories and acceptance criteria | Hermes |
-| `/backlog` | Review and prioritize the backlog — scan issues, suggest next actions | Hermes |
-| `/sync-issues` | Sync issues between CVS platform and local `.issues/` directory | Hermes |
-| `/docs` | Generate or update MkDocs documentation for the current project | Clio |
-| `/changelog` | Generate or update CHANGELOG.md from git history and resolved issues | Clio |
-| `/new-agent` | Design a new OpenCode agent — discovery, design, prompt crafting | Gea |
-| `/refine-agent` | Analyze and refine an existing agent — improve prompt, permissions, design | Gea |
-| `/new-skill` | Design a new OpenCode skill — domain-specific instructions for agents | Gea |
+| `/refine` | Refine a rough idea into a structured Epic with stories and acceptance criteria | Inari |
+| `/backlog` | Review and prioritize the backlog — scan issues, suggest next actions | Inari |
+| `/sync-issues` | Sync issues between CVS platform and local `.issues/` directory | Inari |
+| `/docs` | Generate or update MkDocs documentation for the current project | Benzaiten |
+| `/changelog` | Generate or update CHANGELOG.md from git history and resolved issues | Benzaiten |
+| `/new-agent` | Design a new OpenCode agent — discovery, design, prompt crafting | Tsukuyomi |
+| `/refine-agent` | Analyze and refine an existing agent — improve prompt, permissions, design | Tsukuyomi |
+| `/new-skill` | Design a new OpenCode skill — domain-specific instructions for agents | Tsukuyomi |
