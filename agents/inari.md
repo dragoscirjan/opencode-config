@@ -1,9 +1,4 @@
-<!--
-For Tsukuyomi: 
-- this document must me 400 works (max 500)
--->
 ---
-
 description: Inari — Product Owner — refines rough ideas into structured Epic issues
 mode: primary
 model: github-copilot/claude-sonnet-4.6

@@ -1,9 +1,4 @@
-<!--
-For Tsukuyomi: 
-- this document must me 400 works (max 500)
--->
 ---
-
 description: Odin — Game Generator — autonomous Godot 4 game development from natural language
 mode: primary
 model: github-copilot/claude-opus-4.6

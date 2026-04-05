@@ -18,12 +18,22 @@ Inspired by [Godogen](https://github.com/AexLiworworthy/godogen) (Claude Code sk
 - [Pipeline](#pipeline)
 - [Skills](#skills)
 - [Tools](#tools)
+  - [Godot MCP Servers (opt-in)](#godot-mcp-servers-opt-in)
 - [Commands](#commands)
 - [Platform Support](#platform-support)
   - [Development Hosts](#development-hosts)
   - [Export Targets](#export-targets)
-- [Prerequisites](#prerequisites)
-- [Getting Started](#getting-started)
+- [Setup](#setup)
+  - [Step 1: Install OpenCode](#step-1-install-opencode)
+  - [Step 2: Clone this config](#step-2-clone-this-config)
+  - [Step 3: Install Node.js dependencies](#step-3-install-nodejs-dependencies)
+  - [Step 4: Install system dependencies](#step-4-install-system-dependencies)
+  - [Step 5: Configure AI API keys](#step-5-configure-ai-api-keys)
+  - [Step 6: Agents — what's involved](#step-6-agents--whats-involved)
+  - [Step 7: Enable Godot MCP servers (optional)](#step-7-enable-godot-mcp-servers-optional)
+  - [Step 8: Build your first game](#step-8-build-your-first-game)
+  - [Step 9: Export to platforms (optional)](#step-9-export-to-platforms-optional)
+- [Troubleshooting](#troubleshooting)
 - [Architecture Decisions](#architecture-decisions)
 
 ---
@@ -295,57 +305,240 @@ Games can be exported to all five platforms:
 | **Android** | OpenJDK 17, Android SDK, debug keystore, export templates | ETC2/ASTC texture compression |
 | **iOS** | Xcode, Apple Developer account, provisioning profiles | macOS-only host required |
 
-## Prerequisites
+## Setup
 
-Three system dependencies:
+Complete setup guide — from zero to generating games.
 
-| Dependency | Purpose | Install |
-|---|---|---|
-| **Node.js** (18+) | OpenCode runtime, all tools | [nodejs.org](https://nodejs.org) |
-| **Godot 4** | Game engine (headless or editor) | [godotengine.org](https://godotengine.org/download/) |
-| **ffmpeg** | Video conversion, frame extraction | `apt install ffmpeg` / `brew install ffmpeg` / `winget install ffmpeg` |
+### Step 1: Install OpenCode
 
-API keys as environment variables:
-
-| Key | Service | Used For |
-|---|---|---|
-| `GOOGLE_API_KEY` | [Google AI Studio](https://aistudio.google.com/) | Gemini image generation + visual QA |
-| `XAI_API_KEY` | [xAI Grok](https://console.x.ai/) | Image/video generation (textures, animated sprites) |
-| `TRIPO3D_API_KEY` | [Tripo3D](https://platform.tripo3d.ai/) | Image-to-3D conversion (3D games only) |
-
-## Getting Started
-
-### 1. Install tools
+Follow the [OpenCode installation guide](https://opencode.ai). Verify it's working:
 
 ```bash
-bun install   # from the opencode config directory
+opencode --version
 ```
 
-### 2. Create a game project
+### Step 2: Clone this config
 
 ```bash
-npx godogen-publish ~/my-game
-npx godogen-publish --force ~/my-game   # clean existing target
+git clone git@github.com:dragoscirjan/opencode-config.git ~/.config/opencode
+cd ~/.config/opencode
 ```
 
-This creates the target directory with `.opencode/agents/`, `.opencode/skills/`, `.opencode/tools/`, `.opencode/commands/`, and an `AGENTS.md`. Initializes a git repo.
+### Step 3: Install Node.js dependencies
 
-### 3. Build a game
+Installs the OpenCode plugin SDK used by all custom tools:
 
-Open OpenCode in the game folder, switch to **Odin** (<kbd>Tab</kbd>), and describe what you want:
-
-```
-/godogen A top-down racing game with a topographic map aesthetic, contour lines,
-and terrain ramps that launch the car into the air.
+```bash
+bun install    # or: npm install
 ```
 
-Odin runs the full pipeline autonomously. Progress updates go to your connected channel (Telegram, Slack) if configured.
+### Step 4: Install system dependencies
 
-### 4. Export (optional)
+Three system dependencies are required. Install all three for your platform:
+
+<details>
+<summary><strong>Linux (Ubuntu / Debian)</strong></summary>
+
+```bash
+# Node.js (if not already installed)
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt install -y nodejs
+
+# Godot 4
+# Option A: Download from https://godotengine.org/download/linux/
+# Option B: Flatpak
+flatpak install flathub org.godotengine.Godot
+# Ensure 'godot' is on PATH (symlink or alias)
+
+# ffmpeg
+sudo apt install -y ffmpeg
+```
+
+</details>
+
+<details>
+<summary><strong>macOS</strong></summary>
+
+```bash
+# Node.js
+brew install node
+
+# Godot 4
+brew install --cask godot
+# Ensure 'godot' is on PATH:
+sudo ln -sf /Applications/Godot.app/Contents/MacOS/Godot /usr/local/bin/godot
+
+# ffmpeg
+brew install ffmpeg
+```
+
+</details>
+
+<details>
+<summary><strong>Windows</strong></summary>
+
+```powershell
+# Node.js
+winget install OpenJS.NodeJS.LTS
+
+# Godot 4
+# Download from https://godotengine.org/download/windows/
+# Add godot.exe to PATH (or use Scoop: scoop install godot)
+
+# ffmpeg
+winget install Gyan.FFmpeg
+# Or: scoop install ffmpeg
+```
+
+</details>
+
+Verify all three are available:
+
+```bash
+node --version      # v18+ required
+godot --version     # 4.x required
+ffmpeg -version     # any recent version
+```
+
+### Step 5: Configure AI API keys
+
+The game pipeline uses three external AI services for asset generation and visual QA. Set them as environment variables (e.g., in `~/.bashrc`, `~/.zshrc`, or a `.env` file):
+
+```bash
+export GOOGLE_API_KEY="your-key-here"     # Required — image gen + visual QA
+export XAI_API_KEY="your-key-here"        # Required — textures + video gen
+export TRIPO3D_API_KEY="your-key-here"    # Optional — 3D model gen (3D games only)
+```
+
+**Where to get each key:**
+
+| Key | Service | Get it at | Free tier | Cost per asset |
+|-----|---------|-----------|-----------|---------------|
+| `GOOGLE_API_KEY` | Google AI Studio (Gemini) | [aistudio.google.com/apikey](https://aistudio.google.com/apikey) | Yes — generous free tier | 5–15¢ per image |
+| `XAI_API_KEY` | xAI Grok API | [console.x.ai](https://console.x.ai/) | $25/mo free credit for new accounts | ~2¢ per image, ~5¢/sec for video |
+| `TRIPO3D_API_KEY` | Tripo3D | [platform.tripo3d.ai](https://platform.tripo3d.ai/) | 500 free credits on signup | ~50¢ per 3D model (default), ~40¢ (high quality) |
+
+**Which tools use which key:**
+
+| Tool | API Key(s) | Purpose |
+|------|-----------|---------|
+| `godot-asset-gen` (image) | `GOOGLE_API_KEY` or `GEMINI_API_KEY` | Gemini text-to-image, image-to-image for precise references and characters |
+| `godot-asset-gen` (image/video via Grok) | `XAI_API_KEY` | xAI Grok for textures, simple objects, and animated sprite video |
+| `godot-visual-qa` | `GOOGLE_API_KEY` or `GEMINI_API_KEY` | Gemini Flash screenshot analysis |
+| `godot-tripo3d` | `TRIPO3D_API_KEY` | Image-to-3D GLB model conversion |
+
+> **Note:** `GEMINI_API_KEY` and `GOOGLE_API_KEY` are interchangeable — the tools check both. Set whichever you prefer.
+
+> **Budget tracking:** The `godot-asset-gen` tool tracks spending in `assets/budget.json` within your game project. Use the `set_budget` / `get_budget` commands to manage it. Odin respects the budget automatically.
+
+### Step 6: Agents — what's involved
+
+No agent configuration is needed — agents are pre-configured in `agents/`. Here's what's relevant for game dev and when each activates:
+
+| Agent | Role | When it activates |
+|-------|------|-------------------|
+| **Odin** | Game Generator — runs the full pipeline | You switch to Odin (<kbd>Tab</kbd>) and describe a game, or use `/godogen` |
+| **Inari** | Product Owner — refines game ideas into Epics | When you want structured requirements before building |
+| **Amaterasu** | Technical Advisor — orchestrates GDD via Freya | When you want a Game Design Document before building |
+| **Freya** | Game Designer — writes GDDs | Hidden subagent, invoked by Amaterasu automatically |
+| **Mimir** | Godot API lookup (850+ classes) | Hidden subagent, invoked by Odin when it needs API docs |
+| **Heimdall** | Visual QA — screenshot analysis | Hidden subagent, invoked by Odin during the QA phase |
+| **Hector** | Backend developer | Invoked by Odin for GDExtension modules (C/C++/Rust) |
+| **Atlas** | DevOps | Invoked by Odin for CI/CD pipelines, automated builds |
+| **Argus** | Code reviewer | Invoked by Odin for pre-release quality gates |
+
+**Three ways to start:**
+
+1. **Quick mode** — go directly to Odin: `/godogen Make a tower defense game`. Odin handles everything.
+2. **Designed mode** — Amaterasu first: ask Amaterasu to design the game (produces a GDD in `.specs/`), then Odin builds from it.
+3. **Full pipeline** — Inari → Amaterasu → Odin: Inari writes the Epic with acceptance criteria, Amaterasu designs the GDD, Odin builds.
+
+### Step 7: Enable Godot MCP servers (optional)
+
+Five MCP servers provide enhanced editor/runtime integration. They're **all disabled by default** because they require Godot 4 to be installed and some need the editor to be running.
+
+To enable a server, edit `opencode.json`:
+
+```json
+"godot_editor": {
+  ...
+  "enabled": true     // ← change from false
+}
+```
+
+| Server | Key | When to enable |
+|--------|-----|---------------|
+| `godot_editor` | `@coding-solo/godot-mcp` | You want Odin to launch/stop the editor, manage scenes interactively |
+| `godot_forge` | `godot-forge` | You want script analysis, scene antipattern detection, test running (6/8 tools work without editor) |
+| `godot_diagnostics` | `minimal-godot-mcp` | You want LSP diagnostics from Godot's language server |
+| `godot_docs` | `@nuskey8/godot-docs-mcp` | You want live online docs search (complements offline `godot-api-docs` tool) |
+| `godot_gopeak` | `gopeak` | You need 110+ tools: debugger, input injection, CC0 asset library. **Requires editor plugin.** |
+
+> **Most users don't need MCP servers.** The pipeline works fully with just the bash-based headless workflow. MCP servers add convenience for interactive development.
+
+### Step 8: Build your first game
+
+1. **Create a game project directory:**
+
+   ```bash
+   mkdir ~/my-game && cd ~/my-game
+   git init
+   ```
+
+2. **Open OpenCode** in that directory:
+
+   ```bash
+   opencode
+   ```
+
+3. **Switch to Odin** by pressing <kbd>Tab</kbd> and selecting `odin`.
+
+4. **Describe your game:**
+
+   ```
+   /godogen A side-scrolling platformer with a robot character, neon city background,
+   and wall-jumping mechanics. 2D pixel art style.
+   ```
+
+5. **Wait.** Odin runs the full pipeline autonomously:
+   - Generates a visual target (`reference.png`)
+   - Decomposes the game into tasks
+   - Designs the architecture
+   - Generates art assets (if API keys are set)
+   - Writes all GDScript code and builds scenes
+   - Captures screenshots and runs visual QA
+   - Commits the result
+
+6. **Play it:**
+
+   ```bash
+   godot --path . &    # opens the editor — press F5 to run
+   # or headless test:
+   godot --path . --quit
+   ```
+
+### Step 9: Export to platforms (optional)
 
 ```
 /godogen Export to Android APK and Windows EXE
 ```
+
+Odin loads the `platform-export` skill and handles export template installation, `export_presets.cfg` generation, and build commands. See [Export Targets](#export-targets) for per-platform requirements.
+
+## Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| `godot: command not found` | Add Godot to PATH. On macOS: `sudo ln -sf /Applications/Godot.app/Contents/MacOS/Godot /usr/local/bin/godot` |
+| `GEMINI_API_KEY or GOOGLE_API_KEY not set` | Set `export GOOGLE_API_KEY="..."` in your shell profile and restart the terminal |
+| `XAI_API_KEY environment variable not set` | Set `export XAI_API_KEY="..."` — required for texture and video generation |
+| `TRIPO3D_API_KEY environment variable not set` | Only needed for 3D games. Set it or skip 3D model generation. |
+| Godot headless hangs | Scene builder is missing `quit(0)`. Odin handles this, but if you run manually: `timeout 60 godot --headless --script build_scene.gd` |
+| `Cannot infer the type of "x" variable` | Use `=` (not `:=`) with `load().instantiate()` — a common GDScript gotcha |
+| MCP server errors | Ensure `"enabled": true` in `opencode.json` and that Godot is installed/running (for servers that need it) |
+| `bun install` or `npm install` fails | Ensure Node.js 18+ is installed. Run from `~/.config/opencode/`. |
+| Visual QA finds no defects but game looks wrong | Heimdall relies on good reference images. Try regenerating the visual target. |
+| Asset generation costs too high | Use `godot-asset-gen set_budget` to cap spending. Odin respects budget limits. |
 
 ## Architecture Decisions
 

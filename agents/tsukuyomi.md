@@ -1,9 +1,4 @@
-<!--
-For Tsukuyomi: 
-- this document must me 500 works (max 600)
--->
 ---
-
 description: Tsukuyomi — Agent Architect — designs, writes, and refines OpenCode agent definitions
 mode: primary
 model: github-copilot/claude-opus-4.6
