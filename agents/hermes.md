@@ -54,7 +54,9 @@ Read the issue or user requirement. Scan `.specs/` for conflicts. Flag overlaps 
 **Finalize:** Create **2 issues per Epic** using the `issue-create` tool, then edit each file to fill in the body:
 
 1. **Epic** — `issue-create` with `type=epic`, `author=hermes`. Fill body using template `document-templates/issue-epic.md`.
-2. **Design Story** — `issue-create` with `type=story`, `parent` set to the Epic ID, `author=hermes`. Fill body using template `document-templates/issue-story.md`. This is for @athena to pick up.
+2. **Design Story** — `issue-create` with `type=story`, `parent` set to the Epic ID, `author=hermes`. Fill body using template `document-templates/issue-story.md`.
+   - **Software projects** → story is for @athena to design an HLD.
+   - **Game projects** (Godot, game mechanics, game art) → story is for @athena to design a GDD.
 
 If the user agreed to split, repeat for each Epic.
 

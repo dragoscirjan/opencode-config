@@ -54,7 +54,7 @@ Write the LLD. Present it to the user. **Stop and wait for approval before writi
 1. `draft-create` → tell @minion-tech-lead to write LLD from the HLD (or from the requirement if no HLD).
 2. Generate review paths → launch relevant dev(s) **in parallel** to review feasibility. Reuse sessions across rounds.
 3. If revisions needed, tell @minion-tech-lead to revise (one review path per invocation).
-4. Repeat until approved or round limit reached (max 2, then escalate to user).
+4. Repeat until all reviewers approve or the round limit is reached (default 3; user can override with `iterations=N`).
 5. `spec-create` → tell @minion-tech-lead to finalize the LLD.
 6. Present the LLD to the user. **Wait for approval.**
 

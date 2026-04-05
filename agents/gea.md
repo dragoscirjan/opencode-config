@@ -6,7 +6,7 @@ temperature: 0.3
 color: "#8B5CF6"
 permission:
   edit: allow
-  bash: deny
+  bash: allow
   webfetch: allow
   task: allow
   skill: allow
