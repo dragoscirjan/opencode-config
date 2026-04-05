@@ -108,6 +108,18 @@ Freya does NOT write code, GDScript, or engine internals. She describes the game
 
 Loads skills progressively — one per pipeline stage. Delegates API lookup to Mimir and visual QA to Heimdall. Manages the document protocol (`PLAN.md`, `STRUCTURE.md`, `ASSETS.md`, `MEMORY.md`) for crash-safe resumability.
 
+When the game requires work beyond GDScript, Odin delegates to **shared software minions**:
+
+| Agent | When Odin uses them |
+|-------|---------------------|
+| **Hector** (Developer Backend) | C/C++/Rust/C# GDExtension modules, native plugins, server-side game logic |
+| **Orpheus** (Developer Frontend) | Web-based launcher, HTML5 export UI, companion web app |
+| **Atlas** (DevOps) | CI/CD pipelines, automated builds, export workflows, itch.io/Steam deployment |
+| **Odysseus** (Tech Lead) | Complex architecture trade-offs (ECS vs scene-tree, networking), LLD review |
+| **Argus** (Reviewer) | Code review for GDExtension modules, large refactors, pre-release quality gates |
+
+Odin writes all GDScript himself — shared minions handle non-GDScript languages and infrastructure only.
+
 ### Mimir — Godot API Lookup
 
 **Subagent** (`minion-mimir-godot-api`). Guardian of the Well of Knowledge. Keeps 850+ class API docs out of Odin's context window.

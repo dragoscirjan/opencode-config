@@ -92,11 +92,11 @@ See **[README_GAME_DEV.md](README_GAME_DEV.md)** for the pipeline, agents, skill
 | **Daedalus** (Lead Architect) | Both | Design overviews, scope review | `claude-opus-4.6` | Athena, Hermes |
 | **Archimedes** (Architect) | Software | HLDs — what, not how | `claude-sonnet-4.6` | Athena |
 | **Freya** (Game Designer) | Game | GDDs — game vision, mechanics, art direction | `claude-sonnet-4.6` | Athena |
-| **Odysseus** (Tech Lead) | Software | LLDs, task breakdowns, design reviews | `claude-opus-4.6` | Athena, Hephaestus |
-| **Hector** (Developer Backend) | Software | Backend code, APIs, data layers, tests | `claude-sonnet-4.6` | Hephaestus |
-| **Orpheus** (Developer Frontend) | Software | Frontend code, UI components, tests | `claude-sonnet-4.6` | Hephaestus |
-| **Atlas** (DevOps) | Software | Infrastructure, CI/CD, deployment | `claude-sonnet-4.6` | Hephaestus |
-| **Argus** (Reviewer) | Software | Code review — quality, security, correctness | `claude-opus-4.6` | Hephaestus |
+| **Odysseus** (Tech Lead) | Shared | LLDs, task breakdowns, design reviews | `claude-opus-4.6` | Athena, Hephaestus, Odin |
+| **Hector** (Developer Backend) | Shared | Backend code, APIs, data layers, tests | `claude-sonnet-4.6` | Hephaestus, Odin |
+| **Orpheus** (Developer Frontend) | Shared | Frontend code, UI components, tests | `claude-sonnet-4.6` | Hephaestus, Odin |
+| **Atlas** (DevOps) | Shared | Infrastructure, CI/CD, deployment | `claude-sonnet-4.6` | Hephaestus, Odin |
+| **Argus** (Reviewer) | Shared | Code review — quality, security, correctness | `claude-opus-4.6` | Hephaestus, Odin |
 | **Mimir** | Game | Godot API lookup (850+ classes) | `claude-sonnet-4.6` | Odin |
 | **Heimdall** | Game | Visual QA — screenshot analysis, defect detection | `claude-sonnet-4.6` | Odin |
 

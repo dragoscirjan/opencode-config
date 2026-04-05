@@ -7,6 +7,7 @@
 
 - **Game development** (Godot, GDScript, game mechanics, game assets) → design with @athena (GDD), build with @odin.
 - **Software development** (everything else) → design with @athena (HLD), build with @hephaestus.
+- **Shared subagents** — Hector, Orpheus, Atlas, Odysseus, and Argus are language/domain specialists, not domain-bound. Both Hephaestus and Odin may invoke them. Domain expertise lives in the primary agent (Odin knows game architecture, Hephaestus knows software architecture); subagents provide language-specific execution.
 - If a request crosses domains, clarify with the user before proceeding.
 
 ## Best Practices

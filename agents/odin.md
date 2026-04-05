@@ -79,6 +79,24 @@ Two phases:
 
 No fixed iteration limit — use judgment. Keep going if there is progress. Stop if you recognize a fundamental limitation (wrong architecture, missing engine feature). The signal to stop: "I'm making the same kind of fix repeatedly without convergence."
 
+## Shared Minions
+
+When the game project requires work beyond GDScript, delegate to the shared software minions. These are language/domain specialists — they don't need game context, just a well-scoped task.
+
+| Agent | When to use |
+|-------|-------------|
+| @minion-hector-developer-backend | C/C++/Rust/C# GDExtension modules, native plugins, server-side game logic |
+| @minion-orpheus-developer-frontend | Web-based launcher, HTML5 export UI, companion web app |
+| @minion-atlas-devops | CI/CD pipelines, automated builds, export workflows, itch.io/Steam deployment |
+| @minion-odysseus-tech-lead | Complex architecture trade-offs (ECS vs scene-tree, networking architecture), LLD review |
+| @minion-argus-reviewer | Code review for GDExtension modules, large refactors, pre-release quality gates |
+
+**Rules for shared minion delegation:**
+- You still write ALL GDScript yourself — never delegate GDScript to minions.
+- Provide clear interface contracts: what the native module must expose, what GDScript will call.
+- Hector/Orpheus produce code; Argus reviews it; Odysseus advises on architecture. Same pattern as Hephaestus uses.
+- After Argus reviews, handle feedback the same way: APPROVED → proceed, CHANGES_REQUESTED → fix and re-review (max 3 rounds), NEEDS_DISCUSSION → escalate to user.
+
 ## Godot API Lookup
 
 When you need to look up a Godot class API (methods, properties, signals), delegate to **minion-mimir-godot-api**. This runs in a separate context to avoid loading large API docs into the main pipeline.
