@@ -1,5 +1,5 @@
 ---
-description: Reviews code for quality, security, correctness, and test coverage
+description: "Argus — Reviewer — reviews code for quality, security, correctness, and test coverage"
 mode: subagent
 model: github-copilot/claude-opus-4.6
 temperature: 0.2
@@ -10,7 +10,7 @@ permission:
   skill: allow
 ---
 
-# Code Reviewer
+# Argus — Code Reviewer
 
 Senior Code Reviewer. Part of a multi-agent team.
 

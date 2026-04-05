@@ -45,17 +45,17 @@ Write the LLD. Present it to the user. **Stop and wait for approval before writi
 
 | Agent | Role |
 |-------|------|
-| @minion-tech-lead | Writes LLDs, proposes solutions |
-| @minion-developer-backend | Backend code, APIs, data layers + tests |
-| @minion-developer-frontend | Frontend code, UI components + tests |
-| @minion-devops | Infrastructure, CI/CD, deployment |
-| @minion-reviewer | Code review — correctness, security, coverage |
+| @minion-odysseus-tech-lead | Writes LLDs, proposes solutions |
+| @minion-hector-developer-backend | Backend code, APIs, data layers + tests |
+| @minion-orpheus-developer-frontend | Frontend code, UI components + tests |
+| @minion-atlas-devops | Infrastructure, CI/CD, deployment |
+| @minion-argus-reviewer | Code review — correctness, security, coverage |
 
-1. `draft-create` → tell @minion-tech-lead to write LLD from the HLD (or from the requirement if no HLD).
+1. `draft-create` → tell @minion-odysseus-tech-lead to write LLD from the HLD (or from the requirement if no HLD).
 2. Generate review paths → launch relevant dev(s) **in parallel** to review feasibility. Reuse sessions across rounds.
-3. If revisions needed, tell @minion-tech-lead to revise (one review path per invocation).
+3. If revisions needed, tell @minion-odysseus-tech-lead to revise (one review path per invocation).
 4. Repeat until all reviewers approve or the round limit is reached (default 3; user can override with `iterations=N`).
-5. `spec-create` → tell @minion-tech-lead to finalize the LLD.
+5. `spec-create` → tell @minion-odysseus-tech-lead to finalize the LLD.
 6. Present the LLD to the user. **Wait for approval.**
 
 ### 3. Implement
@@ -65,7 +65,7 @@ The approved LLD is your implementation plan. Its Tasks section tells you what t
 **Solo:**
 
 1. Load `clean-code` + appropriate developer skill (`developer-backend`, `developer-frontend`, or `developer-devops`). Work through the LLD tasks in order. Write code + tests. Run tests, verify.
-2. **Review** — Invoke @minion-reviewer. Handle feedback:
+2. **Review** — Invoke @minion-argus-reviewer. Handle feedback:
    - `APPROVED` → deliver.
    - `CHANGES_REQUESTED` → fix, re-request. Default 3 rounds max (`iterations=N` to override), then move on.
    - `NEEDS_DISCUSSION` → present to user.
@@ -73,11 +73,11 @@ The approved LLD is your implementation plan. Its Tasks section tells you what t
 **Team:**
 
 1. **User chooses scope.** Only implement what the user requests — do NOT auto-pick tasks from the LLD.
-2. Multiple tasks → consult @minion-tech-lead for ordering and parallelism.
-3. Dispatch: backend → @minion-developer-backend, frontend → @minion-developer-frontend, infra → @minion-devops. If user said "TDD", instruct devs to load `tdd` skill.
+2. Multiple tasks → consult @minion-odysseus-tech-lead for ordering and parallelism.
+3. Dispatch: backend → @minion-hector-developer-backend, frontend → @minion-orpheus-developer-frontend, infra → @minion-atlas-devops. If user said "TDD", instruct devs to load `tdd` skill.
 4. **Parallel rules:** different files only, no output dependencies, backend before frontend for shared APIs, sequential when unsure.
-5. Handle returns: DONE → next batch. BLOCKED → relay to @minion-tech-lead, then back. All done → Review.
-6. Tell @minion-reviewer to review changes. Handle feedback same as Solo. Default 3 rounds max (`iterations=N` to override), then move on.
+5. Handle returns: DONE → next batch. BLOCKED → relay to @minion-odysseus-tech-lead, then back. All done → Review.
+6. Tell @minion-argus-reviewer to review changes. Handle feedback same as Solo. Default 3 rounds max (`iterations=N` to override), then move on.
 
 ### 4. Deliver
 

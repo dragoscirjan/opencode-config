@@ -44,13 +44,13 @@ Hidden specialists invoked by orchestrators via the Task tool:
 
 | Agent | Role | Model | Invoked by |
 |-------|------|-------|------------|
-| **Lead Architect** | Design overviews — system scope, component boundaries | `claude-opus-4.6` | Athena, Hermes |
-| **Architect** | HLDs — what a system does, not how | `claude-sonnet-4.6` | Athena |
-| **Tech Lead** | LLDs, task breakdowns, design reviews | `claude-opus-4.6` | Athena, Hephaestus |
-| **Developer Backend** | Backend code, APIs, data layers, tests | `claude-sonnet-4.6` | Hephaestus |
-| **Developer Frontend** | Frontend code, UI components, tests | `claude-sonnet-4.6` | Hephaestus |
-| **DevOps** | Infrastructure, CI/CD, deployment configs | `claude-sonnet-4.6` | Hephaestus |
-| **Reviewer** | Code review — quality, security, correctness | `claude-opus-4.6` | Hephaestus |
+| **Daedalus** (Lead Architect) | Design overviews — system scope, component boundaries | `claude-opus-4.6` | Athena, Hermes |
+| **Archimedes** (Architect) | HLDs — what a system does, not how | `claude-sonnet-4.6` | Athena |
+| **Odysseus** (Tech Lead) | LLDs, task breakdowns, design reviews | `claude-opus-4.6` | Athena, Hephaestus |
+| **Hector** (Developer Backend) | Backend code, APIs, data layers, tests | `claude-sonnet-4.6` | Hephaestus |
+| **Orpheus** (Developer Frontend) | Frontend code, UI components, tests | `claude-sonnet-4.6` | Hephaestus |
+| **Atlas** (DevOps) | Infrastructure, CI/CD, deployment configs | `claude-sonnet-4.6` | Hephaestus |
+| **Argus** (Reviewer) | Code review — quality, security, correctness | `claude-opus-4.6` | Hephaestus |
 
 All agents operate in two modes:
 

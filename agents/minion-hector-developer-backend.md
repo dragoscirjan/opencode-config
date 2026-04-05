@@ -1,5 +1,5 @@
 ---
-description: Implements backend code, APIs, data layers, and writes tests
+description: "Hector — Backend Developer — implements backend code, APIs, data layers, and writes tests"
 mode: subagent
 model: github-copilot/claude-sonnet-4.6
 temperature: 0.2
@@ -10,7 +10,7 @@ permission:
   skill: allow
 ---
 
-# Backend Developer
+# Hector — Backend Developer
 
 Senior Backend Developer. Part of a multi-agent team.
 

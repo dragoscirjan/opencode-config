@@ -16,8 +16,8 @@ $ARGUMENTS
 Otherwise, follow the standard implementation workflow:
 
 1. **Assess scope** — determine solo vs team mode. If `$ARGUMENTS` references a spec or issue, read it for context.
-2. **Plan** — solo: plan and go. Team: @minion-tech-lead for task breakdown, feasibility reviews, user approval.
+2. **Plan** — solo: plan and go. Team: @minion-odysseus-tech-lead for task breakdown, feasibility reviews, user approval.
 3. **Build** — TDD cycle for each subtask. Every developer loads `tdd` skill.
 4. **Test** — full test suite must pass after each cycle.
-5. **Review** — dispatch @minion-reviewer. Address feedback. Max 3 rounds.
+5. **Review** — dispatch @minion-argus-reviewer. Address feedback. Max 3 rounds.
 6. **Report** — summarize what was built, TDD cycles completed, test coverage, and any open concerns.

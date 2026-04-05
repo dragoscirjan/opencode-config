@@ -60,7 +60,7 @@ tasks:
             Risks: JWT secret rotation strategy not yet defined.
 
   prompt-team-run:
-    desc: "Hermes team mode — draft reviewed by minion-architect-lead before finalizing"
+    desc: "Hermes team mode — draft reviewed by minion-daedalus-lead-architect before finalizing"
     cmds:
       - task: generic:run
         vars:

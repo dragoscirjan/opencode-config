@@ -39,9 +39,9 @@ Read the issue or user requirement. Scan `.specs/` for conflicts. Decide the doc
 
 | Doc Type | Author | Reviewers |
 |----------|--------|-----------|
-| Design Overview | @minion-architect-lead | @minion-architect, @minion-tech-lead |
-| HLD | @minion-architect | @minion-tech-lead, relevant dev(s) |
-| GDD | @minion-freya-game-designer | @minion-architect-lead (scope review) |
+| Design Overview | @minion-daedalus-lead-architect | @minion-archimedes-architect, @minion-odysseus-tech-lead |
+| HLD | @minion-archimedes-architect | @minion-odysseus-tech-lead, relevant dev(s) |
+| GDD | @minion-freya-game-designer | @minion-daedalus-lead-architect (scope review) |
 
 1. Call `draft-create` → tell the author to write to that path.
 2. Generate a review path per reviewer → launch reviewers **in parallel**. Reuse sessions across rounds.

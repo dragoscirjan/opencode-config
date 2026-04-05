@@ -46,7 +46,7 @@ Read the issue or user requirement. Scan `.specs/` for conflicts. Flag overlaps 
 **Team** (user says "team", "use the team", or similar):
 
 1. Call `draft-create` → write your Epic draft there.
-2. Send draft path to @minion-architect-lead for review, pass the context.
+2. Send draft path to @minion-daedalus-lead-architect for review, pass the context.
 3. Architect-lead responds with "all good" or a review draft path.
 4. If review draft: read it, revise (new `draft-create`), go to step 2.
 5. Repeat until agreed or round limit reached (default 3; user can override with `iterations=N`).
