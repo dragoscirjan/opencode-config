@@ -6,12 +6,12 @@ includes:
     dir: .
 
 vars:
-  OC_AGENT: athena
-  # Full requirement given upfront so Athena has no reason to ask questions
+  OC_AGENT: amaterasu
+  # Full requirement given upfront so Amaterasu has no reason to ask questions
 
 tasks:
   test:
-    desc: "Run all Athena agent tests"
+    desc: "Run all Amaterasu agent tests"
     cmds:
       - task: generic:clean
       - task: prompt-solo-run
@@ -31,7 +31,7 @@ tasks:
       - task: generic:clean
 
   prompt-solo-run:
-    desc: "Athena must write an HLD to .specs/ and create an implementation story"
+    desc: "Amaterasu must write an HLD to .specs/ and create an implementation story"
     cmds:
       - task: generic:run
         vars:
@@ -59,7 +59,7 @@ tasks:
             Cache stampede when popular keys expire simultaneously.
 
   prompt-team-run:
-    desc: "Athena team mode — draft reviewed by subagents before finalizing"
+    desc: "Amaterasu team mode — draft reviewed by subagents before finalizing"
     cmds:
       - task: generic:run
         vars:
@@ -91,7 +91,7 @@ tasks:
 
   # ── Test 1: Solo mode produces HLD in .specs/ ───────────────────────────────
   test:solo-spec-exists:
-    desc: "Athena must create exactly 1 HLD file in .specs/"
+    desc: "Amaterasu must create exactly 1 HLD file in .specs/"
     cmds:
       - echo "▶ [1] Solo mode — HLD in .specs/"
       - task: generic:test:path
@@ -99,7 +99,7 @@ tasks:
           TEST_PATH: ".specs/"
           TEST_FOLDER: 1
           OK_MESSAGE: ".specs/ directory exists"
-          ERR_MESSAGE: ".specs/ not found — Athena did not create specs"
+          ERR_MESSAGE: ".specs/ not found — Amaterasu did not create specs"
       - task: generic:test:count-files
         vars:
           TEST_DIR: ".specs"
@@ -124,13 +124,13 @@ tasks:
         vars:
           TEST_DIR: ".specs"
           TEST_PATTERN: "hld-*"
-          TEST_TEXT: 'author: "opencode:agent=athena"'
+          TEST_TEXT: 'author: "opencode:agent=amaterasu"'
           OK_MESSAGE: "HLD has author attribution"
-          ERR_MESSAGE: "HLD missing author: opencode:agent=athena"
+          ERR_MESSAGE: "HLD missing author: opencode:agent=amaterasu"
 
   # ── Test 3: Solo mode creates implementation story in .issues/ ──────────────
   test:solo-story-created:
-    desc: "Athena must create exactly 1 implementation story in .issues/"
+    desc: "Amaterasu must create exactly 1 implementation story in .issues/"
     cmds:
       - echo "▶ [3] Solo mode — implementation story in .issues/"
       - task: generic:test:path
@@ -138,7 +138,7 @@ tasks:
           TEST_PATH: ".issues/"
           TEST_FOLDER: 1
           OK_MESSAGE: ".issues/ directory exists"
-          ERR_MESSAGE: ".issues/ not found — Athena did not create stories"
+          ERR_MESSAGE: ".issues/ not found — Amaterasu did not create stories"
       - task: generic:test:count-files
         vars:
           TEST_DIR: ".issues"
@@ -177,9 +177,9 @@ tasks:
         vars:
           TEST_DIR: ".issues"
           TEST_PATTERN: "*-story-*"
-          TEST_TEXT: 'author: "opencode:agent=athena"'
+          TEST_TEXT: 'author: "opencode:agent=amaterasu"'
           OK_MESSAGE: "Story has author attribution"
-          ERR_MESSAGE: "Story missing author: opencode:agent=athena"
+          ERR_MESSAGE: "Story missing author: opencode:agent=amaterasu"
 
   # ── Test 5: Solo mode must NOT create drafts ────────────────────────────────
   test:solo-no-drafts:
@@ -191,11 +191,11 @@ tasks:
           TEST_PATH: ".ai.tmp/"
           TEST_FOLDER: 1
           OK_MESSAGE: ".ai.tmp/ does not exist (correct — solo skips drafts)"
-          ERR_MESSAGE: ".ai.tmp/ exists — Athena created drafts in solo mode"
+          ERR_MESSAGE: ".ai.tmp/ exists — Amaterasu created drafts in solo mode"
 
-  # ── Test 6: Athena does NOT write code files ────────────────────────────────
+  # ── Test 6: Amaterasu does NOT write code files ────────────────────────────────
   test:solo-no-code:
-    desc: "Athena must NOT produce any code files"
+    desc: "Amaterasu must NOT produce any code files"
     cmds:
       - echo "▶ [6] No code files"
       - task: generic:test:no-files
@@ -204,7 +204,7 @@ tasks:
           TEST_EXTENSIONS: '-name "*.js" -o -name "*.ts" -o -name "*.py" -o -name "*.go" -o -name "*.rs" -o -name "*.java"'
           TEST_DEPTH: 1
           OK_MESSAGE: "No code files created in project root (correct)"
-          ERR_MESSAGE: "Athena created code files it shouldn't have"
+          ERR_MESSAGE: "Amaterasu created code files it shouldn't have"
 
   # ── Team Tests ───────────────────────────────────────────────────────────────
 
@@ -218,7 +218,7 @@ tasks:
           TEST_PATH: ".specs/"
           TEST_FOLDER: 1
           OK_MESSAGE: ".specs/ directory exists"
-          ERR_MESSAGE: ".specs/ not found — Athena did not create specs"
+          ERR_MESSAGE: ".specs/ not found — Amaterasu did not create specs"
       - task: generic:test:count-files
         vars:
           TEST_DIR: ".specs"
@@ -243,9 +243,9 @@ tasks:
         vars:
           TEST_DIR: ".specs"
           TEST_PATTERN: "hld-*"
-          TEST_TEXT: 'author: "opencode:agent=athena"'
+          TEST_TEXT: 'author: "opencode:agent=amaterasu"'
           OK_MESSAGE: "HLD has author attribution"
-          ERR_MESSAGE: "HLD missing author: opencode:agent=athena"
+          ERR_MESSAGE: "HLD missing author: opencode:agent=amaterasu"
 
   # ── Test 9: Team mode creates draft in .ai.tmp/ ────────────────────────────
   test:team-draft-created:
@@ -257,7 +257,7 @@ tasks:
           TEST_PATH: ".ai.tmp/"
           TEST_FOLDER: 1
           OK_MESSAGE: ".ai.tmp/ directory exists (draft was created)"
-          ERR_MESSAGE: ".ai.tmp/ not found — Athena skipped the draft step"
+          ERR_MESSAGE: ".ai.tmp/ not found — Amaterasu skipped the draft step"
       - |
         COUNT=$(find ".ai.tmp" -maxdepth 1 -name "*.md" -type f 2>/dev/null | wc -l | tr -d ' ')
         [ "$COUNT" -ge 1 ] \
@@ -274,7 +274,7 @@ tasks:
           TEST_PATH: ".issues/"
           TEST_FOLDER: 1
           OK_MESSAGE: ".issues/ directory exists"
-          ERR_MESSAGE: ".issues/ not found — Athena did not create stories"
+          ERR_MESSAGE: ".issues/ not found — Amaterasu did not create stories"
       - task: generic:test:count-files
         vars:
           TEST_DIR: ".issues"
@@ -313,6 +313,6 @@ tasks:
         vars:
           TEST_DIR: ".issues"
           TEST_PATTERN: "*-story-*"
-          TEST_TEXT: 'author: "opencode:agent=athena"'
+          TEST_TEXT: 'author: "opencode:agent=amaterasu"'
           OK_MESSAGE: "Story has author attribution"
-          ERR_MESSAGE: "Story missing author: opencode:agent=athena"
+          ERR_MESSAGE: "Story missing author: opencode:agent=amaterasu"

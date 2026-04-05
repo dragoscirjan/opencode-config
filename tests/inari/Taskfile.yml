@@ -6,12 +6,12 @@ includes:
     dir: .
 
 vars:
-  OC_AGENT: hermes
-  # Full requirement given upfront so Hermes has no reason to ask questions
+  OC_AGENT: inari
+  # Full requirement given upfront so Inari has no reason to ask questions
 
 tasks:
   test:
-    desc: "Run all Hermes agent tests"
+    desc: "Run all Inari agent tests"
     cmds:
       - task: generic:clean
       - task: prompt-solo-run
@@ -33,7 +33,7 @@ tasks:
       - task: generic:clean
 
   prompt-solo-run:
-    desc: "Hermes must create exactly 1 Epic and 1 Design Story in .issues/"
+    desc: "Inari must create exactly 1 Epic and 1 Design Story in .issues/"
     cmds:
       - task: generic:run
         vars:
@@ -60,7 +60,7 @@ tasks:
             Risks: JWT secret rotation strategy not yet defined.
 
   prompt-team-run:
-    desc: "Hermes team mode — draft reviewed by minion-architect-lead before finalizing"
+    desc: "Inari team mode — draft reviewed by minion-daedalus-lead-architect before finalizing"
     cmds:
       - task: generic:run
         vars:
@@ -93,7 +93,7 @@ tasks:
 
   # ── Test 1: Solo mode produces Epic + Design Story in .issues/ ──────────────
   test:solo-local:
-    desc: "Hermes must create exactly 1 Epic and 1 Design Story in .issues/"
+    desc: "Inari must create exactly 1 Epic and 1 Design Story in .issues/"
     cmds:
       - echo "▶ [1] Solo mode — create Epic + Design Story"
       - task: generic:test:path
@@ -101,7 +101,7 @@ tasks:
           TEST_PATH: ".issues/"
           TEST_FOLDER: 1
           OK_MESSAGE: ".issues/ directory exists"
-          ERR_MESSAGE: ".issues/ not found — Hermes did not create issues"
+          ERR_MESSAGE: ".issues/ not found — Inari did not create issues"
       - task: generic:test:count-files
         vars:
           TEST_DIR: ".issues"
@@ -154,9 +154,9 @@ tasks:
         vars:
           TEST_DIR: ".issues"
           TEST_PATTERN: "*-epic-*"
-          TEST_TEXT: 'author: "opencode:agent=hermes"'
+          TEST_TEXT: 'author: "opencode:agent=inari"'
           OK_MESSAGE: "Epic has author attribution"
-          ERR_MESSAGE: "Epic missing author: opencode:agent=hermes"
+          ERR_MESSAGE: "Epic missing author: opencode:agent=inari"
 
   # ── Test 3: Story has correct frontmatter ───────────────────────────────────
   test:story-metadata:
@@ -195,9 +195,9 @@ tasks:
         vars:
           TEST_DIR: ".issues"
           TEST_PATTERN: "*-story-*"
-          TEST_TEXT: 'author: "opencode:agent=hermes"'
+          TEST_TEXT: 'author: "opencode:agent=inari"'
           OK_MESSAGE: "Story has author attribution"
-          ERR_MESSAGE: "Story missing author: opencode:agent=hermes"
+          ERR_MESSAGE: "Story missing author: opencode:agent=inari"
 
   # ── Test 4: Story references Epic via parent field ──────────────────────────
   test:story-links-to-epic:
@@ -222,23 +222,23 @@ tasks:
           TEST_PATH: ".ai.tmp/"
           TEST_FOLDER: 1
           OK_MESSAGE: ".ai.tmp/ does not exist (correct — solo skips drafts)"
-          ERR_MESSAGE: ".ai.tmp/ exists — Hermes created drafts in solo mode"
+          ERR_MESSAGE: ".ai.tmp/ exists — Inari created drafts in solo mode"
 
-  # ── Test 6: Hermes does NOT write to .specs/ ────────────────────────────────
+  # ── Test 6: Inari does NOT write to .specs/ ────────────────────────────────
   test:no-specs-written:
-    desc: "Hermes must NOT create .specs/ — that is Athena's domain"
+    desc: "Inari must NOT create .specs/ — that is Amaterasu's domain"
     cmds:
       - echo "▶ [6] No .specs/ pollution"
       - task: generic:test:not-path
         vars:
           TEST_PATH: ".specs/"
           TEST_FOLDER: 1
-          OK_MESSAGE: ".specs/ does not exist (correct — Hermes doesn't write specs)"
-          ERR_MESSAGE: ".specs/ exists — Hermes wrote specs it shouldn't have"
+          OK_MESSAGE: ".specs/ does not exist (correct — Inari doesn't write specs)"
+          ERR_MESSAGE: ".specs/ exists — Inari wrote specs it shouldn't have"
 
-  # ── Test 7: Hermes does NOT write code files ────────────────────────────────
+  # ── Test 7: Inari does NOT write code files ────────────────────────────────
   test:no-code-written:
-    desc: "Hermes must NOT produce any code files"
+    desc: "Inari must NOT produce any code files"
     cmds:
       - echo "▶ [7] No code files"
       - task: generic:test:no-files
@@ -247,7 +247,7 @@ tasks:
           TEST_EXTENSIONS: '-name "*.js" -o -name "*.ts" -o -name "*.py" -o -name "*.go" -o -name "*.rs" -o -name "*.java"'
           TEST_DEPTH: 1
           OK_MESSAGE: "No code files created in project root (correct)"
-          ERR_MESSAGE: "Hermes created code files it shouldn't have"
+          ERR_MESSAGE: "Inari created code files it shouldn't have"
 
   # ── Test 8: ID sequencing with pre-seeded .issues/ ──────────────────────────
   test:id-sequencing:
@@ -310,7 +310,7 @@ tasks:
           TEST_PATH: ".issues/"
           TEST_FOLDER: 1
           OK_MESSAGE: ".issues/ directory exists"
-          ERR_MESSAGE: ".issues/ not found — Hermes did not create issues"
+          ERR_MESSAGE: ".issues/ not found — Inari did not create issues"
       - task: generic:test:count-files
         vars:
           TEST_DIR: ".issues"
@@ -363,9 +363,9 @@ tasks:
         vars:
           TEST_DIR: ".issues"
           TEST_PATTERN: "*-epic-*"
-          TEST_TEXT: 'author: "opencode:agent=hermes"'
+          TEST_TEXT: 'author: "opencode:agent=inari"'
           OK_MESSAGE: "Epic has author attribution"
-          ERR_MESSAGE: "Epic missing author: opencode:agent=hermes"
+          ERR_MESSAGE: "Epic missing author: opencode:agent=inari"
 
   # ── Test 11: Team Story has correct frontmatter ─────────────────────────────
   test:team-story-metadata:
@@ -404,9 +404,9 @@ tasks:
         vars:
           TEST_DIR: ".issues"
           TEST_PATTERN: "*-story-*"
-          TEST_TEXT: 'author: "opencode:agent=hermes"'
+          TEST_TEXT: 'author: "opencode:agent=inari"'
           OK_MESSAGE: "Story has author attribution"
-          ERR_MESSAGE: "Story missing author: opencode:agent=hermes"
+          ERR_MESSAGE: "Story missing author: opencode:agent=inari"
 
   # ── Test 12: Team Story references Epic via parent field ────────────────────
   test:team-story-links-to-epic:
@@ -431,7 +431,7 @@ tasks:
           TEST_PATH: ".ai.tmp/"
           TEST_FOLDER: 1
           OK_MESSAGE: ".ai.tmp/ directory exists (draft was created)"
-          ERR_MESSAGE: ".ai.tmp/ not found — Hermes skipped the draft step"
+          ERR_MESSAGE: ".ai.tmp/ not found — Inari skipped the draft step"
       - |
         COUNT=$(find ".ai.tmp" -maxdepth 1 -name "*.md" -type f 2>/dev/null | wc -l | tr -d ' ')
         [ "$COUNT" -ge 1 ] \
@@ -440,7 +440,7 @@ tasks:
 
   # ── Test 14: CVS mode — create GitHub issue then clean up ────────────────────
   test:cvs-mode:
-    desc: "Hermes creates issues on GitHub when instructed (requires gh CLI + git remote)"
+    desc: "Inari creates issues on GitHub when instructed (requires gh CLI + git remote)"
     cmds:
       - task: generic:clean
       - echo "▶ [14] CVS mode — GitHub issue creation"

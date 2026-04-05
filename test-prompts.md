@@ -4,7 +4,7 @@
 
 Describe your role. Summarize what you can and cannot do.
 
-## @Athena to use team for HLD
+## @Amaterasu to use team for HLD
 
 Write me a HLD for a logging system. Use the team for it.
 
@@ -20,7 +20,7 @@ Write me a HLD for a logging system. Use the team for it.
 - File rotation (size-based, time-based, retention policies)
 - Single process per log file (no multi-process safety needed)
 
-## @Athena to use team to extend HLD
+## @Amaterasu to use team to extend HLD
 
 Extend the logging system HLD with network transport. Use the team for it.
 
@@ -36,7 +36,7 @@ Extend the logging system HLD with network transport. Use the team for it.
 - No disk WAL, no collector HA/clustering, no service discovery, no log filtering at collector — durability is the file output's job
 - Single collector instance per environment, no multi-process concerns
 
-## @Athena to use team to write LLD for first HLD
+## @Amaterasu to use team to write LLD for first HLD
 
 Write an LLD for the @.specs/hld-00001-logging-system-v1.md document. Use the team. The target language is Golang and focus on existing solutions and enhancing them.
 

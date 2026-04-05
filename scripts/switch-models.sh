@@ -16,7 +16,7 @@ readonly SCRIPT_NAME="${0##*/}"
 
 # ── Model maps ────────────────────────────────────────────────
 # Each keyword defines two tiers:
-#   STRONG  = opus-class (minion-architect-lead, minion-tech-lead, minion-reviewer, agent-architect)
+#   STRONG  = opus-class (minion-daedalus-lead-architect, minion-odysseus-tech-lead, minion-argus-reviewer, agent-architect)
 #   FAST    = sonnet-class (architect, developers, devops, orchestrators)
 
 declare -A MODEL_STRONG MODEL_FAST
@@ -39,9 +39,9 @@ MODEL_FAST[free]="opencode/gpt-5-nano"
 
 # ── Agent tier assignments ────────────────────────────────────
 # STRONG-tier agents (need reasoning power)
-readonly STRONG_AGENTS="minion-architect-lead minion-tech-lead minion-reviewer agent-architect"
+readonly STRONG_AGENTS="minion-daedalus-lead-architect minion-odysseus-tech-lead minion-argus-reviewer tsukuyomi"
 # FAST-tier agents (volume work, orchestration)
-readonly FAST_AGENTS="minion-architect minion-developer-backend minion-developer-frontend minion-devops athena hephaestus clio"
+readonly FAST_AGENTS="minion-archimedes-architect minion-hector-developer-backend minion-orpheus-developer-frontend minion-atlas-devops amaterasu hephaestus benzaiten inari odin"
 
 # ── Functions ─────────────────────────────────────────────────
 

@@ -24,6 +24,7 @@
       "type": "local",
       "command": [
         "npx",
+        "-y",
         "@playwright/mcp@latest",
         "--browser",
         "chromium",
@@ -35,11 +36,7 @@
     "codeindex_cocoindex": {
       "type": "local",
       "command": [
-        "uv",
-        "run",
-        "--project",
-        "{env:COCOINDEX_PATH}/mcp-coco-index",
-        "mcp-coco-index"
+        "{env:HOME}/.local/bin/mcp-coco-index"
       ],
       "environment": {
         "COCOINDEX_DB_HOST": "{env:COCOINDEX_DB_HOST}",
@@ -53,8 +50,7 @@
     "codeindex_fastcode": {
       "type": "local",
       "command": [
-        "{env:FASTCODE_PATH}/.venv/bin/python",
-        "{env:FASTCODE_PATH}/mcp_server.py"
+        "{env:HOME}/.local/bin/fastcode"
       ],
       "environment": {
         "OPENAI_API_KEY": "{env:FASTCODE_API_KEY}",
@@ -62,6 +58,16 @@
         "BASE_URL": "{env:FASTCODE_BASE_URL}"
       },
       "enabled": false
+    },
+    "codeindex_gitnexus": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "gitnexus@latest",
+        "mcp"
+      ],
+      "enabled": true
     },
     "cvs_github": {
       "type": "remote",
@@ -100,6 +106,51 @@
       "type": "remote",
       "url": "https://mcp.grep.app",
       "enabled": true
+    },
+    "godot_editor": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@coding-solo/godot-mcp"
+      ],
+      "enabled": false
+    },
+    "godot_forge": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "godot-forge"
+      ],
+      "enabled": false
+    },
+    "godot_diagnostics": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "minimal-godot-mcp"
+      ],
+      "enabled": false
+    },
+    "godot_docs": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@nuskey8/godot-docs-mcp"
+      ],
+      "enabled": false
+    },
+    "godot_gopeak": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "gopeak"
+      ],
+      "enabled": false
     },
     "memory_json": {
       "type": "local",

@@ -1,15 +1,15 @@
 version: "3"
 
 includes:
-  athena:
-    taskfile: ./athena/Taskfile.yml
-    dir: ./athena
-  clio:
-    taskfile: ./clio/Taskfile.yml
-    dir: ./clio
-  hermes:
-    taskfile: ./hermes/Taskfile.yml
-    dir: ./hermes
+  amaterasu:
+    taskfile: ./amaterasu/Taskfile.yml
+    dir: ./amaterasu
+  benzaiten:
+    taskfile: ./benzaiten/Taskfile.yml
+    dir: ./benzaiten
+  inari:
+    taskfile: ./inari/Taskfile.yml
+    dir: ./inari
   # hephaestus:
   #   taskfile: ./hephaestus/Taskfile.yml
   #   dir: ./hephaestus
@@ -18,7 +18,7 @@ tasks:
   test:
     desc: "Run all agents' tests"
     cmds:
-      - task: hermes:test
-      - task: athena:test
+      - task: inari:test
+      - task: amaterasu:test
       # - task: hephaestus:test
-      - task: clio:test
+      - task: benzaiten:test

@@ -1,15 +1,29 @@
+<!--
+For Tsukuyomi: 
+- this document must me 400 works (max 500)
+-->
 ---
 description: "<Agent Name> — <Role> — <one-line summary>"
 mode: primary
+
 # model: github-copilot/claude-sonnet-4.6   — adjust per agent complexity
+
 # temperature: 0.2–0.5                       — lower for precision, higher for creativity
+
 # steps: 30–50                                — based on workflow complexity
+
 # color: "#hex"
+
 permission:
-  # edit: allow                               — if the agent writes files directly
-  # bash: deny                                — default deny unless needed
-  # task: allow                               — if the agent delegates to subagents
-  # skill: allow                              — if the agent loads skills
+
+# edit: allow                               — if the agent writes files directly
+
+# bash: deny                                — default deny unless needed
+
+# task: allow                               — if the agent delegates to subagents
+
+# skill: allow                              — if the agent loads skills
+
 ---
 
 # <Agent Name> — <Role>

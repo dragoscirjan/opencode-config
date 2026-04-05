@@ -1,16 +1,32 @@
+<!--
+For Tsukuyomi: 
+- this document must me 300 works (max 400)
+- exceptions are allowed, for agents with particular skills
+-->
 ---
 description: "<Agent Name> — <one-line summary of what it does>"
 mode: subagent
+
 # model: github-copilot/claude-sonnet-4.6   — sonnet for implementation; opus for reasoning/review
+
 # temperature: 0.2                           — subagents are typically precise; raise for creative tasks
+
 # hidden: true                               — true hides from @ autocomplete (typical for subagents)
+
 permission:
-  # edit: allow                               — most subagents write files
-  # bash: allow                               — for agents that run commands (build, test, lint, deploy)
-  #   deny: "rm -rf *"                        — deny destructive patterns when bash is allowed
-  # skill: allow                              — if the agent loads skills
-  # webfetch: allow                           — if the agent needs external docs/APIs
-  # bash: deny                                — for document-producing agents that should not run commands
+
+# edit: allow                               — most subagents write files
+
+# bash: allow                               — for agents that run commands (build, test, lint, deploy)
+
+# deny: "rm -rf *"                        — deny destructive patterns when bash is allowed
+
+# skill: allow                              — if the agent loads skills
+
+# webfetch: allow                           — if the agent needs external docs/APIs
+
+# bash: deny                                — for document-producing agents that should not run commands
+
 ---
 
 # <Agent Name>

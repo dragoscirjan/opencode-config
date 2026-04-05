@@ -1,6 +1,6 @@
 ---
 description: Design a new OpenCode agent — discovery, design, prompt crafting, and file creation
-agent: gea
+agent: tsukuyomi
 ---
 
 Design a new agent:

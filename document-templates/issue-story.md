@@ -1,6 +1,6 @@
 # <Epic Title> — Design
 
-@athena: design the architecture for this Epic.
+@amaterasu: design the architecture for this Epic.
 
 ## Design Scope
 

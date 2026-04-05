@@ -6,7 +6,7 @@ includes:
     dir: .
 
 vars:
-  OC_AGENT: clio
+  OC_AGENT: benzaiten
 
 tasks:
   docs:serve:
@@ -25,7 +25,7 @@ tasks:
       - uv run mkdocs gh-deploy --force
 
   test:
-    desc: "Run all Clio agent tests"
+    desc: "Run all Benzaiten agent tests"
     cmds:
       - task: clean
       - task: seed
@@ -47,16 +47,16 @@ tasks:
 
   # ── Cleanup helper ──────────────────────────────────────────────────────────
   clean:
-    desc: "Remove all Clio-generated artifacts"
+    desc: "Remove all Benzaiten-generated artifacts"
     cmds:
       - echo
       - rm -rf docs/ site/ .venv/ .ai.tmp/ .issues/ .specs/
       - rm -f pyproject.toml mise.toml mkdocs.yml uv.lock .python-version *.py
       - rm -f README.md
 
-  # ── Seed a minimal project for Clio to document ─────────────────────────────
+  # ── Seed a minimal project for Benzaiten to document ─────────────────────────────
   seed:
-    desc: "Create a minimal README.md as project context for Clio"
+    desc: "Create a minimal README.md as project context for Benzaiten"
     cmds:
       - |
         cat > README.md << 'EOF'
@@ -116,9 +116,9 @@ tasks:
         MIT
         EOF
 
-  # ── Run Clio ────────────────────────────────────────────────────────────────
+  # ── Run Benzaiten ────────────────────────────────────────────────────────────────
   prompt-solo-run:
-    desc: "Clio must scaffold toolchain and generate docs for the seeded project"
+    desc: "Benzaiten must scaffold toolchain and generate docs for the seeded project"
     cmds:
       - task: generic:run
         vars:
@@ -259,24 +259,24 @@ tasks:
 
   # ── Test 12: No .issues/ created ────────────────────────────────────────────
   test:no-issues-created:
-    desc: "Clio must NOT create .issues/ — that is Hermes' domain"
+    desc: "Benzaiten must NOT create .issues/ — that is Inari' domain"
     cmds:
       - echo "▶ [12] No .issues/ pollution"
       - task: generic:test:not-path
         vars:
           TEST_PATH: ".issues/"
           TEST_FOLDER: 1
-          OK_MESSAGE: ".issues/ does not exist (correct — Clio doesn't create issues)"
-          ERR_MESSAGE: ".issues/ exists — Clio created issues it shouldn't have"
+          OK_MESSAGE: ".issues/ does not exist (correct — Benzaiten doesn't create issues)"
+          ERR_MESSAGE: ".issues/ exists — Benzaiten created issues it shouldn't have"
 
   # ── Test 13: No .specs/ created ─────────────────────────────────────────────
   test:no-specs-created:
-    desc: "Clio must NOT create .specs/ — that is Athena's domain"
+    desc: "Benzaiten must NOT create .specs/ — that is Amaterasu's domain"
     cmds:
       - echo "▶ [13] No .specs/ pollution"
       - task: generic:test:not-path
         vars:
           TEST_PATH: ".specs/"
           TEST_FOLDER: 1
-          OK_MESSAGE: ".specs/ does not exist (correct — Clio doesn't write specs)"
-          ERR_MESSAGE: ".specs/ exists — Clio wrote specs it shouldn't have"
+          OK_MESSAGE: ".specs/ does not exist (correct — Benzaiten doesn't write specs)"
+          ERR_MESSAGE: ".specs/ exists — Benzaiten wrote specs it shouldn't have"
