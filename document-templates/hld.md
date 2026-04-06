@@ -1,3 +1,10 @@
+---
+```
+type: hld
+opencode-agent: <agent-name>
+```
+---
+
 # <Component> — High-Level Design
 
 ## Context
@@ -7,9 +14,11 @@
 ## Scope
 
 ### Goals
+
 - <Goal 1>
 
 ### Non-Goals
+
 - <Explicit exclusion 1>
 
 ## API Contracts

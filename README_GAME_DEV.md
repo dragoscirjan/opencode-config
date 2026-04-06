@@ -11,10 +11,10 @@ Inspired by [Godogen](https://github.com/AexLiworworthy/godogen) (Claude Code sk
 - [How It Works](#how-it-works)
 - [Workflow](#workflow)
 - [Agents](#agents)
-  - [Freya — Game Designer](#freya--game-designer)
-  - [Odin — Orchestrator](#odin--orchestrator)
-  - [Mimir — Godot API Lookup](#mimir--godot-api-lookup)
-  - [Heimdall — Visual QA](#heimdall--visual-qa)
+  - [Game Designer](#game-designer)
+  - [Game Director — Orchestrator](#game-director--orchestrator)
+  - [Godot Expert — API Lookup](#godot-expert--api-lookup)
+  - [Visual QA](#visual-qa)
 - [Pipeline](#pipeline)
 - [Skills](#skills)
 - [Tools](#tools)
@@ -40,8 +40,8 @@ Inspired by [Godogen](https://github.com/AexLiworworthy/godogen) (Claude Code sk
 
 ## How It Works
 
-- **Unified workflow** — game ideas flow through the same front door as software: Inari (Product Owner) refines the idea into an Epic, Amaterasu (Technical Advisor) orchestrates a Game Design Document via Freya (Game Designer), then Odin (Game Generator) builds the game from the GDD. You can also go directly to Odin for quick builds.
-- **Four game-specific agents** — Freya writes GDDs (what the game does), Odin builds it (visual target through delivery), Mimir handles Godot API lookup, Heimdall does visual QA. All in isolated contexts.
+- **Unified workflow** — game ideas flow through the same front door as software: Product Owner refines the idea into an Epic, Technical Advisor orchestrates a Game Design Document via Game Designer, then Game Director builds the game from the GDD. You can also go directly to Game Director for quick builds.
+- **Four game-specific agents** — Game Designer writes GDDs (what the game does), Game Director builds it (visual target through delivery), Godot Expert handles Godot API lookup, Visual QA does visual QA. All in isolated contexts.
 - **Godot 4 output** — real projects with proper scene trees, scripts, and asset organization. Handles 2D and 3D.
 - **Asset generation** — Gemini creates precise references and characters; xAI Grok handles textures, simple objects, and animated sprites via video generation; Tripo3D converts images to 3D models. Budget-aware: maximizes visual impact per cent spent.
 - **GDScript expertise** — custom-built language reference and lazy-loaded API docs for all 850+ Godot classes compensate for LLMs' thin training data on GDScript.
@@ -54,61 +54,61 @@ Inspired by [Godogen](https://github.com/AexLiworworthy/godogen) (Claude Code sk
 The game development workflow mirrors the software development workflow:
 
 ```
-Software:  Inari (Epic) → Amaterasu → Architect (HLD)  → Hephaestus (build)
-Game:      Inari (Epic) → Amaterasu → Freya (GDD)      → Odin (build)
+Software:  Product Owner (Epic) → Tech Advisor → Sys Architect (HLD)  → Lead Engineer (build)
+Game:      Product Owner (Epic) → Tech Advisor → Game Designer (GDD)  → Game Director (build)
 ```
 
 ```mermaid
 sequenceDiagram
     actor User
-    participant H as Inari
-    participant A as Amaterasu
-    participant F as Freya
-    participant O as Odin
+    participant PO as Product Owner
+    participant TA as Technical Advisor
+    participant GD as Game Designer
+    participant GDir as Game Director
 
     rect rgb(245, 158, 11, 0.1)
     note right of User: Scoping (optional)
-    User->>H: "Make a snowboarding game"
-    H->>User: Clarifying questions (scope, platforms, budget)
-    H->>User: Epic + Design Story for Amaterasu
+    User->>PO: "Make a snowboarding game"
+    PO->>User: Clarifying questions (scope, platforms, budget)
+    PO->>User: Epic + Design Story for Tech Advisor
     end
 
     rect rgb(99, 102, 241, 0.1)
     note right of User: Game Design
-    User->>A: Design the game (or pick up story)
-    A->>F: Write GDD
-    F->>A: GDD draft ready
-    A->>User: GDD in .specs/ + implementation story for Odin
+    User->>TA: Design the game (or pick up story)
+    TA->>GD: Write GDD
+    GD->>TA: GDD draft ready
+    TA->>User: GDD in .specs/ + implementation story for Game Director
     end
 
     rect rgb(79, 70, 229, 0.1)
     note right of User: Build
-    User->>O: Build the game (or pick up story)
-    O->>O: Read GDD from .specs/
-    O->>O: Full pipeline (visual target → code → visual QA)
-    O->>User: Playable Godot 4 project
+    User->>GDir: Build the game (or pick up story)
+    GDir->>GDir: Read GDD from .specs/
+    GDir->>GDir: Full pipeline (visual target → code → visual QA)
+    GDir->>User: Playable Godot 4 project
     end
 ```
 
-**Quick mode:** Skip Inari and Amaterasu — go directly to Odin with `/godogen`. Odin handles planning internally.
+**Quick mode:** Skip Product Owner and Tech Advisor — go directly to Game Director with `/godogen`. Game Director handles planning internally.
 
 ## Agents
 
-### Freya — Game Designer
+### Game Designer
 
-**Subagent** (`minion-freya-game-designer`). The Goddess of Love and Fertility — nurtures raw ideas into complete game designs. Writes Game Design Documents that describe WHAT a game does: mechanics, art direction, controls, player experience, scope, and asset requirements.
+**Subagent** (`worker-game-designer`). Nurtures raw ideas into complete game designs. Writes Game Design Documents that describe WHAT a game does: mechanics, art direction, controls, player experience, scope, and asset requirements.
 
 | Setting | Value | Rationale |
 |---|---|---|
 | Model | `claude-sonnet-4.6` | Creative writing + structured design |
 | Temperature | 0.4 | Balanced — creative for vision, structured for mechanics |
-| Hidden | true | Invoked by Amaterasu during the design workflow |
+| Hidden | true | Invoked by Tech Advisor during the design workflow |
 
-Freya does NOT write code, GDScript, or engine internals. She describes the game — Odin translates it into a Godot project. Loads the `game-design` skill and follows the GDD template at `document-templates/gdd.md`. Challenges vague mechanics, flags missing win/lose conditions, and pushes for specificity.
+Game Designer does NOT write code, GDScript, or engine internals. She describes the game — Game Director translates it into a Godot project. Loads the `game-design` skill and follows the GDD template at `document-templates/gdd.md`. Challenges vague mechanics, flags missing win/lose conditions, and pushes for specificity.
 
-### Odin — Orchestrator
+### Game Director — Orchestrator
 
-**Primary agent.** The All-Father. Runs the full pipeline from concept (or GDD) to playable build: visual target, risk decomposition, architecture, asset generation, task execution, visual QA, and delivery. Produces complete Godot 4 projects from natural language or from a Game Design Document in `.specs/`.
+**Primary agent.** Runs the full pipeline from concept (or GDD) to playable build: visual target, risk decomposition, architecture, asset generation, task execution, visual QA, and delivery. Produces complete Godot 4 projects from natural language or from a Game Design Document in `.specs/`.
 
 | Setting | Value | Rationale |
 |---|---|---|
@@ -116,41 +116,41 @@ Freya does NOT write code, GDScript, or engine internals. She describes the game
 | Temperature | 0.3 | Creative for game design, precise for code |
 | Steps | 100 | Multi-hour pipeline runs |
 
-Loads skills progressively — one per pipeline stage. Delegates API lookup to Mimir and visual QA to Heimdall. Uses `.specs/` for game plans (via `spec-create`), `.ai.tmp/` drafts for ephemeral working docs, and the knowledge graph (`memory` tools) for discoveries and quirks — all standard OpenCode document protocol.
+Loads skills progressively — one per pipeline stage. Delegates API lookup to Godot Expert and visual QA to Visual QA. Uses `.specs/` for game plans (via `spec-create`), `.ai.tmp/` drafts for ephemeral working docs, and the knowledge graph (`memory` tools) for discoveries and quirks — all standard OpenCode document protocol.
 
-When the game requires work beyond GDScript, Odin delegates to **shared software minions**:
+When the game requires work beyond GDScript, Game Director delegates to **shared software subagents**:
 
-| Agent | When Odin uses them |
-|-------|---------------------|
-| **Hector** (Developer Backend) | C/C++/Rust/C# GDExtension modules, native plugins, server-side game logic |
-| **Orpheus** (Developer Frontend) | Web-based launcher, HTML5 export UI, companion web app |
-| **Atlas** (DevOps) | CI/CD pipelines, automated builds, export workflows, itch.io/Steam deployment |
-| **Odysseus** (Tech Lead) | Complex architecture trade-offs (ECS vs scene-tree, networking), LLD review |
-| **Argus** (Reviewer) | Code review for GDExtension modules, large refactors, pre-release quality gates |
+| Agent | When Game Director uses them |
+|-------|------------------------------|
+| **Backend Dev** | C/C++/Rust/C# GDExtension modules, native plugins, server-side game logic |
+| **Frontend Dev** | Web-based launcher, HTML5 export UI, companion web app |
+| **Devops** | CI/CD pipelines, automated builds, export workflows, itch.io/Steam deployment |
+| **Tech Lead** | Complex architecture trade-offs (ECS vs scene-tree, networking), LLD review |
+| **Code Reviewer** | Code review for GDExtension modules, large refactors, pre-release quality gates |
 
-Odin writes all GDScript himself — shared minions handle non-GDScript languages and infrastructure only.
+Game Director writes all GDScript himself — shared subagents handle non-GDScript languages and infrastructure only.
 
-### Mimir — Godot API Lookup
+### Godot Expert — API Lookup
 
-**Subagent** (`minion-mimir-godot-api`). Guardian of the Well of Knowledge. Keeps 850+ class API docs out of Odin's context window.
+**Subagent** (`worker-godot-expert`). Keeps 850+ class API docs out of Game Director's context window.
 
 | Setting | Value | Rationale |
 |---|---|---|
 | Model | `claude-sonnet-4.6` | Lookup and synthesis |
 | Temperature | 0.1 | Precise retrieval |
-| Hidden | true | Invoked only by Odin |
+| Hidden | true | Invoked only by Game Director |
 
 Two-tier lazy loading: `_common.md` (~128 frequent classes) then `_other.md` (~730 remaining), then `{ClassName}.md` for the specific class. Also answers GDScript syntax questions.
 
-### Heimdall — Visual QA
+### Visual QA
 
-**Subagent** (`minion-heimdall-visual-qa`). The Watchman who sees all. Analyzes screenshots for defects, compares against reference images, evaluates motion in frame sequences.
+**Subagent** (`worker-visual-qa`). Analyzes screenshots for defects, compares against reference images, evaluates motion in frame sequences.
 
 | Setting | Value | Rationale |
 |---|---|---|
 | Model | `claude-sonnet-4.6` | Vision analysis |
 | Temperature | 0.2 | Analytical |
-| Hidden | true | Invoked only by Odin |
+| Hidden | true | Invoked only by Game Director |
 
 Three modes:
 - **Static** — one screenshot vs reference image (scenes without motion)
@@ -186,7 +186,7 @@ flowchart TD
     subgraph "Per Task"
         T1[Write scene builders + scripts] --> T2[Validate in Godot headless]
         T2 --> T3[Capture screenshots]
-        T3 --> T4[Heimdall: Visual QA]
+        T3 --> T4[Visual QA: Analysis]
         T4 -->|Fail| T1
         T4 -->|Pass| T5[Commit]
     end
@@ -194,7 +194,7 @@ flowchart TD
     G1 & G2 -.-> T1
 
     subgraph "On Demand"
-        M[Mimir: API Lookup]
+        M[Godot Expert: API Lookup]
     end
 
     T1 -.-> M
@@ -206,17 +206,17 @@ flowchart TD
 2. **Decomposition** — risk-first analysis. Isolates genuinely hard problems (procedural generation, custom physics, shaders) for separate verification. Routine features build together. Output: game plan spec in `.specs/`.
 3. **Architecture** — scene hierarchy, script responsibilities, signal flow, physics layers, input mapping. Produces a compilable Godot skeleton. Output: architecture notes in `.ai.tmp/`.
 4. **Asset Generation** — budget-aware dual-backend system. Gemini (5-15c) for precise work, xAI Grok (2c) for textures and video, Tripo3D (37c) for 3D models. Animated sprites via video generation with loop detection.
-5. **Task Execution** — inline in Odin's context. Risk tasks first (isolated verification), then main build. Generates scene builders (headless .tscn construction) and runtime scripts (game logic). Each task: write, validate, capture, QA.
-6. **Visual QA** — Heimdall analyzes screenshots against references. Catches z-fighting, missing textures, broken physics, placeholder remnants, implementation shortcuts.
+5. **Task Execution** — inline in Game Director's context. Risk tasks first (isolated verification), then main build. Generates scene builders (headless .tscn construction) and runtime scripts (game logic). Each task: write, validate, capture, QA.
+6. **Visual QA** — Visual QA analyzes screenshots against references. Catches z-fighting, missing textures, broken physics, placeholder remnants, implementation shortcuts.
 7. **Platform Export** — builds for requested target platforms (Android APK, iOS IPA, Windows EXE, macOS APP, Linux binary).
 
 ## Skills
 
-Loaded progressively by Odin — one per pipeline stage, keeping the context window focused.
+Loaded progressively by Game Director — one per pipeline stage, keeping the context window focused.
 
 | Skill | Contents | When Loaded |
 |---|---|---|
-| **godot-gdscript** | GDScript language reference, type system, patterns, idioms | By Mimir on every query |
+| **godot-gdscript** | GDScript language reference, type system, patterns, idioms | By Godot Expert on every query |
 | **godot-engine** | Engine quirks, scene builder patterns, OS-aware capture commands | Before writing code |
 | **game-design** | Visual target methodology, risk-first decomposition, architecture scaffolding | Planning stages |
 | **game-assets** | Budget optimization, dual-backend image gen, background removal, animated sprites | Asset generation |
@@ -252,7 +252,7 @@ The pipeline optionally integrates five complementary MCP servers for Godot edit
 
 | Server | Key | npm Package | Purpose | Godot Required? |
 |--------|-----|-------------|---------|-----------------|
-| **Editor & Runtime** | `godot_editor` | `@coding-solo/godot-mcp` | Launch editor, run/stop projects, scene CRUD, debug output, UID management | Yes |
+| **Editor & Runtime** | `godot_editor` | `@cgame-directorg-solo/godot-mcp` | Launch editor, run/stop projects, scene CRUD, debug output, UID management | Yes |
 | **Static Analysis & Testing** | `godot_forge` | `godot-forge` | Script pitfall detection (10 checks), scene antipattern analysis, GUT/GdUnit4 test runner, docs search with 3→4 migration | No (6/8 tools) |
 | **LSP Diagnostics** | `godot_diagnostics` | `minimal-godot-mcp` | Native LSP single-file and bulk diagnostics, DAP debug console | No (uses native LSP/DAP) |
 | **Online Documentation** | `godot_docs` | `@nuskey8/godot-docs-mcp` | Search docs.godotengine.org — tutorials, guides, and class reference | No |
@@ -260,7 +260,7 @@ The pipeline optionally integrates five complementary MCP servers for Godot edit
 
 **Relationship to custom tools:** The MCP servers handle **Godot editor/runtime interaction** (running projects, managing scenes, diagnostics, docs). The `godot-*` TypeScript tools handle **asset generation/processing** (image gen, background removal, visual QA, API docs). They are complementary with no overlap.
 
-**When Odin uses MCP tools vs bash:**
+**When Game Director uses MCP tools vs bash:**
 
 | Operation | Without MCP | With MCP |
 |-----------|-------------|----------|
@@ -279,7 +279,7 @@ The pipeline optionally integrates five complementary MCP servers for Godot edit
 
 | Command | Description | Agent |
 |---|---|---|
-| `/godogen` | Generate or update a Godot game from a natural language description | Odin |
+| `/godogen` | Generate or update a Godot game from a natural language description | Game Director |
 
 ## Platform Support
 
@@ -362,12 +362,10 @@ sudo apt install -y ffmpeg
 ```bash
 # Node.js
 brew install node
-
 # Godot 4
 brew install --cask godot
 # Ensure 'godot' is on PATH:
 sudo ln -sf /Applications/Godot.app/Contents/MacOS/Godot /usr/local/bin/godot
-
 # ffmpeg
 brew install ffmpeg
 ```
@@ -380,11 +378,9 @@ brew install ffmpeg
 ```powershell
 # Node.js
 winget install OpenJS.NodeJS.LTS
-
 # Godot 4
 # Download from https://godotengine.org/download/windows/
 # Add godot.exe to PATH (or use Scoop: scoop install godot)
-
 # ffmpeg
 winget install Gyan.FFmpeg
 # Or: scoop install ffmpeg
@@ -429,7 +425,7 @@ export TRIPO3D_API_KEY="your-key-here"    # Optional — 3D model gen (3D games 
 
 > **Note:** `GEMINI_API_KEY` and `GOOGLE_API_KEY` are interchangeable — the tools check both. Set whichever you prefer.
 
-> **Budget tracking:** The `godot-asset-gen` tool tracks spending in `assets/budget.json` within your game project. Use the `set_budget` / `get_budget` commands to manage it. Odin respects the budget automatically.
+> **Budget tracking:** The `godot-asset-gen` tool tracks spending in `assets/budget.json` within your game project. Use the `set_budget` / `get_budget` commands to manage it. Game Director respects the budget automatically.
 
 ### Step 6: Agents — what's involved
 
@@ -437,21 +433,21 @@ No agent configuration is needed — agents are pre-configured in `agents/`. Her
 
 | Agent | Role | When it activates |
 |-------|------|-------------------|
-| **Odin** | Game Generator — runs the full pipeline | You switch to Odin (<kbd>Tab</kbd>) and describe a game, or use `/godogen` |
-| **Inari** | Product Owner — refines game ideas into Epics | When you want structured requirements before building |
-| **Amaterasu** | Technical Advisor — orchestrates GDD via Freya | When you want a Game Design Document before building |
-| **Freya** | Game Designer — writes GDDs | Hidden subagent, invoked by Amaterasu automatically |
-| **Mimir** | Godot API lookup (850+ classes) | Hidden subagent, invoked by Odin when it needs API docs |
-| **Heimdall** | Visual QA — screenshot analysis | Hidden subagent, invoked by Odin during the QA phase |
-| **Hector** | Backend developer | Invoked by Odin for GDExtension modules (C/C++/Rust) |
-| **Atlas** | DevOps | Invoked by Odin for CI/CD pipelines, automated builds |
-| **Argus** | Code reviewer | Invoked by Odin for pre-release quality gates |
+| **Game Director** | Game Generator — runs the full pipeline | You switch to Game Director (<kbd>Tab</kbd>) and describe a game, or use `/godogen` |
+| **Product Owner** | Product Owner — refines game ideas into Epics | When you want structured requirements before building |
+| **Tech Advisor** | Technical Advisor — orchestrates GDD via Game Designer | When you want a Game Design Document before building |
+| **Game Designer** | Game Designer — writes GDDs | Hidden subagent, invoked by Tech Advisor automatically |
+| **Godot Expert** | Godot API lookup (850+ classes) | Hidden subagent, invoked by Game Director when it needs API docs |
+| **Visual QA** | Visual QA — screenshot analysis | Hidden subagent, invoked by Game Director during the QA phase |
+| **Backend Dev** | Backend developer | Invoked by Game Director for GDExtension modules (C/C++/Rust) |
+| **Devops** | DevOps | Invoked by Game Director for CI/CD pipelines, automated builds |
+| **Code Reviewer** | Code reviewer | Invoked by Game Director for pre-release quality gates |
 
 **Three ways to start:**
 
-1. **Quick mode** — go directly to Odin: `/godogen Make a tower defense game`. Odin handles everything.
-2. **Designed mode** — Amaterasu first: ask Amaterasu to design the game (produces a GDD in `.specs/`), then Odin builds from it.
-3. **Full pipeline** — Inari → Amaterasu → Odin: Inari writes the Epic with acceptance criteria, Amaterasu designs the GDD, Odin builds.
+1. **Quick mode** — go directly to Game Director: `/godogen Make a tower defense game`. Game Director handles everything.
+2. **Designed mode** — Tech Advisor first: ask Tech Advisor to design the game (produces a GDD in `.specs/`), then Game Director builds from it.
+3. **Full pipeline** — Product Owner → Tech Advisor → Game Director: Product Owner writes the Epic with acceptance criteria, Tech Advisor designs the GDD, Game Director builds.
 
 ### Step 7: Enable Godot MCP servers (optional)
 
@@ -468,7 +464,7 @@ To enable a server, edit `opencode.json`:
 
 | Server | Key | When to enable |
 |--------|-----|---------------|
-| `godot_editor` | `@coding-solo/godot-mcp` | You want Odin to launch/stop the editor, manage scenes interactively |
+| `godot_editor` | `@cgame-directorg-solo/godot-mcp` | You want Game Director to launch/stop the editor, manage scenes interactively |
 | `godot_forge` | `godot-forge` | You want script analysis, scene antipattern detection, test running (6/8 tools work without editor) |
 | `godot_diagnostics` | `minimal-godot-mcp` | You want LSP diagnostics from Godot's language server |
 | `godot_docs` | `@nuskey8/godot-docs-mcp` | You want live online docs search (complements offline `godot-api-docs` tool) |
@@ -491,7 +487,7 @@ To enable a server, edit `opencode.json`:
    opencode
    ```
 
-3. **Switch to Odin** by pressing <kbd>Tab</kbd> and selecting `odin`.
+3. **Switch to Game Director** by pressing <kbd>Tab</kbd> and selecting `game-director`.
 
 4. **Describe your game:**
 
@@ -500,7 +496,7 @@ To enable a server, edit `opencode.json`:
    and wall-jumping mechanics. 2D pixel art style.
    ```
 
-5. **Wait.** Odin runs the full pipeline autonomously:
+5. **Wait.** Game Director runs the full pipeline autonomously:
    - Generates a visual target (`reference.png`)
    - Decomposes the game into tasks
    - Designs the architecture
@@ -523,7 +519,7 @@ To enable a server, edit `opencode.json`:
 /godogen Export to Android APK and Windows EXE
 ```
 
-Odin loads the `platform-export` skill and handles export template installation, `export_presets.cfg` generation, and build commands. See [Export Targets](#export-targets) for per-platform requirements.
+Game Director loads the `platform-export` skill and handles export template installation, `export_presets.cfg` generation, and build commands. See [Export Targets](#export-targets) for per-platform requirements.
 
 ## Troubleshooting
 
@@ -533,12 +529,12 @@ Odin loads the `platform-export` skill and handles export template installation,
 | `GEMINI_API_KEY or GOOGLE_API_KEY not set` | Set `export GOOGLE_API_KEY="..."` in your shell profile and restart the terminal |
 | `XAI_API_KEY environment variable not set` | Set `export XAI_API_KEY="..."` — required for texture and video generation |
 | `TRIPO3D_API_KEY environment variable not set` | Only needed for 3D games. Set it or skip 3D model generation. |
-| Godot headless hangs | Scene builder is missing `quit(0)`. Odin handles this, but if you run manually: `timeout 60 godot --headless --script build_scene.gd` |
+| Godot headless hangs | Scene builder is missing `quit(0)`. Game Director handles this, but if you run manually: `timeout 60 godot --headless --script build_scene.gd` |
 | `Cannot infer the type of "x" variable` | Use `=` (not `:=`) with `load().instantiate()` — a common GDScript gotcha |
 | MCP server errors | Ensure `"enabled": true` in `opencode.json` and that Godot is installed/running (for servers that need it) |
 | `bun install` or `npm install` fails | Ensure Node.js 18+ is installed. Run from `~/.config/opencode/`. |
-| Visual QA finds no defects but game looks wrong | Heimdall relies on good reference images. Try regenerating the visual target. |
-| Asset generation costs too high | Use `godot-asset-gen set_budget` to cap spending. Odin respects budget limits. |
+| Visual QA finds no defects but game looks wrong | Visual QA relies on good reference images. Try regenerating the visual target. |
+| Asset generation costs too high | Use `godot-asset-gen set_budget` to cap spending. Game Director respects budget limits. |
 
 ## Architecture Decisions
 
@@ -546,7 +542,7 @@ Odin loads the `platform-export` skill and handles export template installation,
 Eliminates Python, pip, CUDA, and ImageMagick as dependencies. The entire toolchain runs on Node.js + Godot + ffmpeg — three dependencies that install in minutes on any OS. The `@imgly/background-removal` package replaces the heaviest Python dependency (rembg + onnxruntime-gpu) with a pure-JS ONNX runtime.
 
 **Why three agents instead of one?**
-Godot's API documentation for 850+ classes is too large for a single context window. Mimir isolates API lookup in a separate context. Heimdall isolates visual QA (which involves reading multiple large image files) from the main pipeline. Odin keeps its context focused on reasoning and code generation.
+Godot's API documentation for 850+ classes is too large for a single context window. Godot Expert isolates API lookup in a separate context. Visual QA isolates visual QA (which involves reading multiple large image files) from the main pipeline. Game Director keeps its context focused on reasoning and code generation.
 
 **Why progressive skill loading?**
 Loading all domain knowledge at once would consume the context window before any work begins. Each skill loads only when its pipeline stage starts — game-design during planning, godot-engine during implementation, platform-export only when the user requests a build. This mirrors the original Godogen architecture but uses OpenCode's native skill system.
@@ -555,7 +551,7 @@ Loading all domain knowledge at once would consume the context window before any
 Most game features are routine (movement, UI, cameras). Every task boundary is an integration risk. The decomposer isolates only genuinely hard problems (procedural generation, custom physics, complex shaders) for separate verification. Everything else builds in one pass, reducing integration bugs.
 
 **Why the standard document protocol?**
-Game plans live in `.specs/` (created via `spec-create`), ephemeral working docs (asset manifests, architecture notes) in `.ai.tmp/` (via `draft-create`), and accumulated discoveries in the knowledge graph (`memory` tools). This follows the same OpenCode conventions used by Amaterasu and Hephaestus — `.specs/` survives across sessions, the knowledge graph survives context compaction, and `.ai.tmp/` is transient. The pipeline can resume from any point by reading the spec and knowledge graph.
+Game plans live in `.specs/` (created via `spec-create`), ephemeral working docs (asset manifests, architecture notes) in `.ai.tmp/` (via `draft-create`), and accumulated discoveries in the knowledge graph (`memory` tools). This follows the same OpenCode conventions used by Tech Advisor and Lead Engineer — `.specs/` survives across sessions, the knowledge graph survives context compaction, and `.ai.tmp/` is transient. The pipeline can resume from any point by reading the spec and knowledge graph.
 
 **Why a Game Design Document?**
-Without a GDD, Odin must invent game mechanics, art direction, controls, and scope on the fly — conflating design decisions with engine implementation. Freya writes the GDD first, capturing WHAT the game does in plain English. Odin then translates a stable design into a Godot project. This mirrors the software path (Architect writes HLD → Hephaestus implements) and means non-technical stakeholders can review the game design before any code is written. For quick builds, `/godogen` skips the GDD and lets Odin handle everything inline.
+Without a GDD, Game Director must invent game mechanics, art direction, controls, and scope on the fly — conflating design decisions with engine implementation. Game Designer writes the GDD first, capturing WHAT the game does in plain English. Game Director then translates a stable design into a Godot project. This mirrors the software path (Sys Architect writes HLD → Lead Engineer implements) and means non-technical stakeholders can review the game design before any code is written. For quick builds, `/godogen` skips the GDD and lets Game Director handle everything inline.

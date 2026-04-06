@@ -1,3 +1,10 @@
+---
+```
+type: dd
+opencode-agent: <agent-name>
+```
+---
+
 # <Epic Title> — Design Overview
 
 ## Scope
@@ -5,9 +12,11 @@
 <System-level problem statement. What this design covers and why.>
 
 ### Goals
+
 - <Goal 1>
 
 ### Non-Goals
+
 - <Explicit exclusion 1>
 
 ## Components

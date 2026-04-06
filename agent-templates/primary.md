@@ -1,6 +1,6 @@
 <!--
-For Tsukuyomi: 
-- this document must me 400 works (max 500)
+For agent-architect: 
+- this document must be 400 words (max 500)
 -->
 ---
 description: "<Agent Name> — <Role> — <one-line summary>"
@@ -24,6 +24,8 @@ permission:
 
 # skill: allow                              — if the agent loads skills
 
+# memory: allow                             — required for primary agents to track state across compression
+
 ---
 
 # <Agent Name> — <Role>
@@ -32,12 +34,11 @@ permission:
 
 ## Core Rules
 
-- **CVS mode** (user mentions CVS, a platform, or remote issues): Load `cvs-mode` skill — read issues from CVS, write issues to CVS. No CVS → read issues from `.issues/`.
 - Read the referenced issue for context. If none is provided, work from the requirement in the prompt.
 - Ask the user to clarify anything ambiguous before starting work.
 - Scan `.specs/` for existing overlap before starting design work. If found, ask the user: extend existing doc, create new, or abort.
 - Templates in `document-templates/` are guides, not rigid schemas. Adapt as needed. User can override.
-- **Author attribution** — always pass `author=<your-agent-name>` when calling `spec-create` or `issue-create`.
+- **Author attribution** — always pass `author="<your-agent-name>"` when calling `spec-create` or `issue-create`.
 <!-- Add agent-specific rules here. -->
 
 <!-- Other generic rules:

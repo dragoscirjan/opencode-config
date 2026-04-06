@@ -1,6 +1,6 @@
 ---
 description: Conduct a technical research spike — explore, analyze, and report findings
-agent: athena
+agent: tech-advisor
 ---
 
 Research the following technical question:
@@ -12,10 +12,10 @@ This is a **spike** — time-boxed research, not a design commitment. You can co
 1. **Understand** — clarify the question. If `$ARGUMENTS` references an issue (`#N`), load `cvs-mode` and read it. If it references a spec, read it for context.
 2. **Explore** — investigate the codebase (`codeindex_*` tools), external docs (`docs_context7_*`), code examples (`docs_github_grep_*`), and web resources as needed.
 3. **Consult** — dispatch subagents for specialized input:
-   - @minion-archimedes-architect or @minion-daedalus-lead-architect for architecture-level questions
-   - @minion-odysseus-tech-lead for implementation approach feasibility
-   - @minion-hector-developer-backend / @minion-orpheus-developer-frontend for technology-specific expertise
-   - @minion-atlas-devops for infrastructure/deployment questions
+   - @worker-sys-architect or @worker-lead-architect for architecture-level questions
+   - @worker-tech-lead for implementation approach feasibility
+   - @worker-backend-dev / @worker-frontend-dev for technology-specific expertise
+   - @worker-devops for infrastructure/deployment questions
 4. **Synthesize** — produce a structured research report in chat:
    - **Question**: what was asked
    - **Findings**: what was discovered (with evidence/references)

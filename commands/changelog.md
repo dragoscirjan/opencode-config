@@ -1,6 +1,6 @@
 ---
 description: Generate or update CHANGELOG.md from git history and resolved issues
-agent: clio
+agent: tech-writer
 ---
 
 Generate or update the project changelog.

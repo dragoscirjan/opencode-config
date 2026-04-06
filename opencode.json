@@ -112,7 +112,7 @@
       "command": [
         "npx",
         "-y",
-        "@coding-solo/godot-mcp"
+        "@cgame-directorg-solo/godot-mcp"
       ],
       "enabled": false
     },
@@ -201,6 +201,36 @@
         "FIRECRAWL_API_KEY": "{env:FIRECRAWL_API_KEY}"
       },
       "enabled": false
+    }
+  },
+  "permission": {
+    "read": {
+      "**/.env": "deny",
+      "**/.env.ai": "allow",
+      "**/.env.local": "deny",
+      "**/.env.development": "deny",
+      "**/.env.production": "deny",
+      "**/.env.test": "deny",
+      "**/.env.staging": "deny",
+      "**/.npmrc": "deny",
+      "**/.pypirc": "deny",
+      "**/.docker/config.json": "deny",
+      "**/settings.xml": "deny",
+      "**/gradle.properties": "deny"
+    },
+    "edit": {
+      "**/.env": "deny",
+      "**/.env.ai": "deny",
+      "**/.env.local": "deny",
+      "**/.env.development": "deny",
+      "**/.env.production": "deny",
+      "**/.env.test": "deny",
+      "**/.env.staging": "deny",
+      "**/.npmrc": "deny",
+      "**/.pypirc": "deny",
+      "**/.docker/config.json": "deny",
+      "**/settings.xml": "deny",
+      "**/gradle.properties": "deny"
     }
   }
 }

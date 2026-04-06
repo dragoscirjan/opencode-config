@@ -9,7 +9,7 @@ description: Godot MCP servers reference — editor, diagnostics, testing, docs,
 
 Five complementary MCP servers cover different aspects of the Godot development workflow. The `godot-*` TypeScript tools handle asset generation, processing, and visual QA; the MCP servers handle **editor interaction, runtime, diagnostics, docs, and testing**.
 
-## `godot_editor` — Editor & Runtime (`@coding-solo/godot-mcp`)
+## `godot_editor` — Editor & Runtime (`@cgame-directorg-solo/godot-mcp`)
 
 MCP bridge to the Godot editor and runtime. Handles scene management and project execution.
 

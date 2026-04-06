@@ -1,12 +1,14 @@
 node_modules
-package.json
+#package.json
+package-lock.json
 bun.lock
 .memory.jsonl
-
+project.godot
+scenes/
 .ai.tmp/
-tests/**/.issues/
-tests/**/.specs/
-tests/**/.ai.tmp/
+.issues/
+.specs/
+
 tests/**/docs/
 tests/**/site/
 tests/**/.venv/
@@ -15,3 +17,6 @@ tests/**/mise.toml
 tests/**/mkdocs.yml
 tests/**/uv.lock
 tests/**/.python-version
+tests/logs/
+tests/workspace/
+

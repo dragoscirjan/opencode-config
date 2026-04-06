@@ -1,6 +1,6 @@
 ---
 description: Refine a rough idea into a structured Epic with stories, tasks, and acceptance criteria
-agent: hermes
+agent: product-owner
 ---
 
 Refine the following idea into a structured Epic:
@@ -11,7 +11,7 @@ Follow your full workflow:
 
 1. **Explore** — scan `.issues/` and `.specs/` for overlapping Epics or related design docs. Surface conflicts immediately.
 2. **Refine** — ask 2-4 clarifying questions at a time. Focus on problem, scope, value, acceptance criteria, dependencies, and risks. Typical: 3 rounds, max 5. If scope is too large, propose splitting.
-3. **Consult** (if needed) — use @minion-archimedes-architect for technical feasibility on uncertain aspects.
+3. **Consult** (if needed) — use @worker-sys-architect for technical feasibility on uncertain aspects.
 4. **Structure** — produce a complete Epic with: scope (goals + non-goals), story breakdown (ordered by dependency, each with AC and complexity), task breakdown per story, open questions, risks.
 5. **Output** — present the Epic for review. On approval, create an issue using the `issue-create` tool (type: `epic`).
 

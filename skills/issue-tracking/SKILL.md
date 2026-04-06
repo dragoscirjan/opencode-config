@@ -1,59 +1,46 @@
+---
+name: issue-tracking
+description: Manage tasks, epics, and bugs. Default to remote CVS platforms. Use local .issues/ ONLY if ISSUE_TRACKING_FS=1 in .env.ai. Require cvs skill.
+---
+
 # Issue Tracking
 
-Local FS conventions for `.issues/` (flat, no subfolders).
+Manage tasks, epics, and bugs. Default to remote CVS platforms. Use local `.issues/` ONLY if `ISSUE_TRACKING_FS=1` in `.env.ai`. Require `cvs` skill.
 
-## File Naming
+## Templates
 
-`<5-digit-id>-<type>-<title-kebab>.md` — types: `epic`, `story`, `task`, `spike`.
+- **Issues:** Base your markdown body on `skills/issue-tracking/issue.md`.
+- **Comments:** Format your updates using `skills/issue-tracking/comment.md`.
 
-**ID assignment**: scan `.issues/`, use highest ID + 1 (start 00001). Never reuse IDs.
+## Hierarchy & Emoticons
 
-## File Format
+Strictly follow this hierarchy. For CVS, you **MUST** prefix issue titles with the exact emoticon (e.g., `🚀 Q3 Goals`). Do **NOT** manage or use labels.
 
-```markdown
----
-id: "00003"
-type: task
-title: Add Auth Middleware
-status: open
-labels: [level/task, enhancement]
-parent: "00002"
-depends: ["00001"]
----
+* **🚀 Initiative** (`initiative`): Top-level business goal.
+  * **🏔️ Epic** (`epic`): Large project phase.
+    * **📖 Story** (`story`): User-facing feature.
+      * **🛠️ Task** (`task`): Atomic implementation step.
+      * **🐛 Bug** (`bug`): Defect in a story.
+    * **🐛 Bug** (`bug`): Defect in an epic.
 
-# Add Auth Middleware
+## CVS Mode Rules
+* **Links over Text:** Link to local `.specs/` files in comments instead of pasting large content.
+* **Hierarchy Links:** Use markdown (`#42`) to link parent/child and dependent issues.
+* **Report Failures:** Always post execution failures as CVS comments so humans can see them.
 
-Description — scope, goals, acceptance criteria. Epics contain story breakdowns, stories contain task lists, tasks are atomic.
+## FS Fallback Rules (`.issues/`)
+* **Naming:** `<5-digit-id>-<type>-<title-kebab>.md` (e.g., `00001-task-add-auth.md`). Use the `issue-create` tool to automatically generate the file and ID, then edit the body.
+* **Format:** YAML frontmatter followed by markdown body.
 
-## Comments
+**Frontmatter Schema:**
 
----
+```yaml
+id: "00001"     # 5-digit zero-padded
+type: task      # initiative | epic | story | task | bug
+title: Add Auth # Emoticons optional in FS
+status: open    # open | in_progress | done | closed
+parent: "00000" # Optional: Parent issue ID
+depends: []     # Optional: Array of blocking issue IDs
+author: name    # Optional: Author name
 ```
-opencode:agent=amaterasu
-```
----
 
-HLD complete. See `.specs/hld-00002-cvs-provider-v1.md`.
-
----
-```
-
-## Frontmatter
-
-| Field | Required | Values |
-|-------|----------|--------|
-| `id` | yes | 5-digit zero-padded string |
-| `type` | yes | `epic` \| `story` \| `task` \| `spike` |
-| `title` | yes | Human-readable |
-| `status` | yes | `open` \| `in_progress` \| `done` \| `closed` |
-| `labels` | yes | Array — must include `level/<type>` |
-| `parent` | no | Parent issue ID (story→epic, task→story) |
-| `depends` | no | Array of blocking issue IDs |
-| `author` | no | Attribution — `"opencode:agent=<name>"` or human name |
-
-## Comments
-
-Append under `## Comments`, separated by `---`.
-
-- **Agent**: wrap with `opencode:agent=<name>` attribution block (see example above)
-- **Human**: no attribution marker

@@ -13,8 +13,7 @@
 ## Table of Contents
 
 - [What's Inside](#whats-inside)
-- [Domains](#domains)
-- [Agents](#agents)
+- [Documentation](#documentation)
 - [MCP Servers](#mcp-servers)
 - [Plugin](#plugin)
 - [Testing](#testing)
@@ -33,10 +32,10 @@
 ├── AGENTS.md              # Global rules injected into all agents
 ├── agents/                # Agent definitions (16 agents: 6 primary + 10 subagents)
 ├── agent-templates/       # Reusable prompt templates (primary.md, subagent.md)
-├── commands/              # Slash commands (/design, /implement, /review, /godogen, …)
-├── document-templates/    # Templates for HLDs, LLDs, GDDs, epics, stories
-├── skills/                # Domain-specific instruction packs (17 skills)
-├── tools/                 # Custom TypeScript tools (11 tools)
+├── commands/              # Slash commands (/design, /implement, /review, …)
+├── document-templates/    # Templates for HLDs, LLDs, epics, stories
+├── skills/                # Domain-specific instruction packs (13 skills)
+├── tools/                 # Custom TypeScript tools (spec-create, issue-create, …)
 ├── scripts/               # Utility scripts (model switching)
 └── tests/                 # Agent integration tests (Taskfile-based)
 ```
@@ -50,57 +49,12 @@ Projects that use this config also produce:
 └── .ai.tmp/             # Ephemeral AI drafts (disposable working files)
 ```
 
-## Domains
+## Documentation
 
-This configuration covers two specialized domains, each with its own agents, skills, tools, and workflows:
+This configuration supports two primary development modes. Please refer to the specific documentation for your use case:
 
-| Domain | Agents | Skills | Tools | Commands | Docs |
-|--------|--------|--------|-------|----------|------|
-| **[Software Development](README_DEV.md)** | 5 primary + 7 subagents | 9 | 4 | 16 | Design-to-delivery workflows for any software project |
-| **[Game Development](README_GAME_DEV.md)** | 1 primary + 3 subagents | 7 | 7 | 1 | Autonomous Godot 4 game generation from natural language |
-
-### Software Development
-
-Inari (Product Owner) refines ideas into Epics. Amaterasu (Technical Advisor) designs architecture via HLDs. Hephaestus (Solution Engineer) implements features with optional team delegation. Benzaiten (Technical Writer) generates docs. Tsukuyomi (Agent Architect) designs new agents.
-
-All agents support **solo mode** (agent does all work) and **team mode** (delegates to specialized subagents with iterative review rounds).
-
-See **[README_DEV.md](README_DEV.md)** for full agent descriptions, workflow diagrams, skills, tools, and commands.
-
-### Game Development
-
-Same front door: Inari refines game ideas into Epics. Amaterasu designs games via GDDs (Game Design Documents), authored by Freya (Game Designer subagent). Odin (Game Generator) builds the game: visual target, architecture, asset generation, task execution, visual QA, and delivery. Mimir handles Godot API lookup. Heimdall handles visual QA.
-
-See **[README_GAME_DEV.md](README_GAME_DEV.md)** for the pipeline, agents, skills, tools, and platform support.
-
-## Agents
-
-| Agent | Domain | Role | Model |
-|-------|--------|------|-------|
-| **Inari** | Both | Product Owner — Epics, stories, acceptance criteria | `claude-sonnet-4.6` |
-| **Amaterasu** | Both | Technical Advisor — design overviews, HLDs, GDDs | `claude-sonnet-4.6` |
-| **Hephaestus** | Software | Solution Engineer — LLDs, implementation, team orchestration | `claude-sonnet-4.6` |
-| **Benzaiten** | Software | Technical Writer — MkDocs documentation | `claude-sonnet-4.6` |
-| **Tsukuyomi** | Meta | Agent Architect — designs agent/subagent definitions | `claude-opus-4.6` |
-| **Odin** | Game | Game Generator — full Godot 4 pipeline from GDD to build | `claude-opus-4.6` |
-
-<details>
-<summary>10 Subagents (hidden, invoked by orchestrators)</summary>
-
-| Agent | Domain | Role | Model | Invoked by |
-|-------|--------|------|-------|------------|
-| **Daedalus** (Lead Architect) | Both | Design overviews, scope review | `claude-opus-4.6` | Amaterasu, Inari |
-| **Archimedes** (Architect) | Software | HLDs — what, not how | `claude-sonnet-4.6` | Amaterasu |
-| **Freya** (Game Designer) | Game | GDDs — game vision, mechanics, art direction | `claude-sonnet-4.6` | Amaterasu |
-| **Odysseus** (Tech Lead) | Shared | LLDs, task breakdowns, design reviews | `claude-opus-4.6` | Amaterasu, Hephaestus, Odin |
-| **Hector** (Developer Backend) | Shared | Backend code, APIs, data layers, tests | `claude-sonnet-4.6` | Hephaestus, Odin |
-| **Orpheus** (Developer Frontend) | Shared | Frontend code, UI components, tests | `claude-sonnet-4.6` | Hephaestus, Odin |
-| **Atlas** (DevOps) | Shared | Infrastructure, CI/CD, deployment | `claude-sonnet-4.6` | Hephaestus, Odin |
-| **Argus** (Reviewer) | Shared | Code review — quality, security, correctness | `claude-opus-4.6` | Hephaestus, Odin |
-| **Mimir** | Game | Godot API lookup (850+ classes) | `claude-sonnet-4.6` | Odin |
-| **Heimdall** | Game | Visual QA — screenshot analysis, defect detection | `claude-sonnet-4.6` | Odin |
-
-</details>
+- **[Software Development](README_DEV.md)** — Workflows for building standard applications (web, backend, CLI, etc.). Includes agents like Product Owner, Technical Advisor, and Lead Engineer.
+- **[Game Development](README_GAME_DEV.md)** — Workflows for building games with Godot 4. Includes game-specific agents (Game Designer, Game Director, Visual QA) and asset generation pipelines.
 
 ## MCP Servers
 
@@ -129,31 +83,24 @@ Uses [`@tarquinen/opencode-dcp`](https://www.npmjs.com/package/@tarquinen/openco
 
 ## Testing
 
-Agent integration tests live in `tests/` and use [Task](https://taskfile.dev) as the test runner. Each agent suite follows a pattern: clean workspace, seed input, run agent via `opencode run`, then assert outputs.
+Agent integration tests live in `tests/` and use [Vitest](https://vitest.dev) as the test runner. Each agent suite follows a pattern: clean workspace, seed input, run agent via `opencode run`, then assert outputs.
 
 ```bash
 # Run all tests
-cd tests && task test
+cd tests && npm test
 
-# Run a specific agent's tests
-cd tests && task amaterasu:test
-cd tests && task inari:test
-cd tests && task benzaiten:test
+# Run tests in watch mode
+cd tests && npm run test:watch
 ```
 
-| Suite | Tests | What's verified |
-|-------|-------|-----------------|
-| **Amaterasu** | 11 | Solo: HLD in `.specs/` with correct metadata + story in `.issues/`. Team: HLD + draft in `.ai.tmp/` + story. |
-| **Inari** | 14 | Solo: Epic + Story in `.issues/` with parent links and ID sequencing. Team: + draft. CVS: GitHub issue creation. |
-| **Benzaiten** | 13 | Scaffold validation: pyproject.toml, mise.toml, mkdocs.yml, Taskfile.yml, docs/. Boundary: no `.issues/` or `.specs/`. |
-
-Reusable test helpers are defined in `tests/generic/Taskfile.yml` (path assertions, content checks, file counting).
+Reusable test helpers are defined in `tests/helpers.ts` (path assertions, content checks, file counting).
+Additionally, custom tools (such as asset generators, image utilities) are fully tested via `vitest` in `tests/tools/`.
 
 ## Scripts
 
 | Script | Purpose |
 |--------|---------|
-| `scripts/switch-models.sh` | Bulk model swap across all agent files. Supports keywords: `copilot`, `anthropic`, `openai`, `openrouter`, `free`. Strong tier (opus) for Daedalus (Lead Architect), Odysseus (Tech Lead), Argus (Reviewer), Tsukuyomi, Odin. Fast tier (sonnet) for all others. |
+| `scripts/switch-models.sh` | Bulk model swap across all agent files. Supports keywords: `copilot`, `anthropic`, `openai`, `openrouter`, `free`. Strong tier (opus) for architects and reviewers. Fast tier (sonnet) for all others. |
 
 ## Setup
 
@@ -181,11 +128,6 @@ Reusable test helpers are defined in `tests/generic/Taskfile.yml` (path assertio
    export GITHUB_TOKEN="..."
    export TAVILY_API_KEY="..."
    export FIRECRAWL_API_KEY="..."
-
-   # Game development (optional — only for Odin pipeline)
-   export GOOGLE_API_KEY="..."    # Gemini image gen + visual QA
-   export XAI_API_KEY="..."       # xAI Grok image/video gen
-   export TRIPO3D_API_KEY="..."   # Image-to-3D conversion
    ```
 
 5. **Enable/disable MCP servers** by toggling `"enabled"` in `opencode.json`.

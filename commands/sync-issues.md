@@ -1,6 +1,6 @@
 ---
 description: Sync issues between CVS platform and local .issues/ directory
-agent: hermes
+agent: product-owner
 ---
 
 Sync issues between the CVS platform and local `.issues/` files.

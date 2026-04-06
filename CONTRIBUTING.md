@@ -11,28 +11,28 @@ Thank you for contributing to opencode-config!
 ## Agent & Skill Conventions
 
 - New primary agents go in `agents/` and follow the template in `agent-templates/primary.md`.
-- New subagents go in `agents/` with a `minion-` prefix and follow `agent-templates/subagent.md`.
+- New subagents go in `agents/` with a `worker-` prefix and follow `agent-templates/subagent.md`.
 - New skills go in `skills/<skill-name>/SKILL.md`.
 - New commands go in `commands/<command-name>.md`.
 - New tools go in `tools/<tool-name>.ts`.
 
 ### Agent Naming Convention
 
-Agents follow a three-family mythology naming scheme:
+Agents follow a functional naming convention based on roles:
 
-| Family | Domain | Examples |
-|--------|--------|----------|
-| **Japanese gods** | Generic / cross-cutting (orchestration layer) | Amaterasu (Technical Advisor), Inari (Product Owner), Benzaiten (Technical Writer), Tsukuyomi (Agent Architect) |
-| **Greek heroes** | Software development | Hephaestus (Solution Engineer); subagents: Hector, Orpheus, Atlas, Odysseus, Argus, Archimedes, Daedalus |
-| **Norse gods** | Game development | Odin (Game Generator); subagents: Freya, Mimir, Heimdall |
+| Category | Domain | Examples |
+|----------|--------|----------|
+| **Orchestrators** | Generic / cross-cutting | `tech-advisor`, `product-owner`, `tech-writer`, `agent-architect` |
+| **Software Dev** | Application engineering | `lead-engineer`; subagents: `worker-backend-dev`, `worker-frontend-dev`, `worker-devops`, `worker-tech-lead`, `worker-code-reviewer`, `worker-sys-architect`, `worker-lead-architect` |
+| **Game Dev** | Godot / Game design | `game-director`; subagents: `worker-game-designer`, `worker-godot-expert`, `worker-visual-qa` |
 
-Primary agents use just the name (e.g., `odin.md`, `amaterasu.md`). Subagents follow `minion-<name>-<kebab-description>.md` (e.g., `minion-freya-game-designer.md`, `minion-hector-developer-backend.md`).
+Primary agents use just the role name (e.g., `game-director.md`, `tech-advisor.md`). Subagents follow `worker-<role>.md` (e.g., `worker-game-designer.md`, `worker-backend-dev.md`).
 
 ### Agent Definition Constraints
 
 - Primary agents must be defined within 400 (max 500) words
 - Sub agents must be defined within 300 (max 400) words
-- Tsukuyomi must be defined within 500 (max 600) words
+- Agent Architect must be defined within 500 (max 600) words
 - These limitations can be ignored in case of agents/sub-agents with very specific targets
 
 ## Tools

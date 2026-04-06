@@ -1,3 +1,10 @@
+---
+```
+type: gdd
+opencode-agent: <agent-name>
+```
+---
+
 # <Game Title> — Game Design Document
 
 ## Context
@@ -11,9 +18,11 @@
 ## Scope
 
 ### Goals
+
 - <Goal 1>
 
 ### Non-Goals
+
 - <Explicit exclusion 1>
 
 ## Genre & References
@@ -64,7 +73,7 @@
 
 ## Asset Requirements
 
-<High-level asset needs. Odin handles the technical asset pipeline — this section defines WHAT is needed, not how to create it.>
+<High-level asset needs. Game Director handles the technical asset pipeline — this section defines WHAT is needed, not how to create it.>
 
 | Category | Assets | Notes |
 |----------|--------|-------|

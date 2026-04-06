@@ -63,7 +63,7 @@ function buildFrontmatter(fields: {
     `status: ${fields.status}`,
   ]
   if (fields.parent) lines.push(`parent: "${fields.parent}"`)
-  if (fields.author) lines.push(`author: "opencode:agent=${fields.author}"`)
+  if (fields.author) lines.push(`opencode-agent: ${fields.author}`)
   lines.push("---")
   return lines.join("\n")
 }
@@ -97,7 +97,7 @@ export default tool({
       .optional(),
     author: tool.schema
       .string()
-      .describe("Agent or user name for attribution (e.g. athena, hephaestus)")
+      .describe("Agent or user name for attribution (e.g. tech-advisor, lead-engineer)")
       .optional(),
   },
   async execute(args, context) {

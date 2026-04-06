@@ -11,11 +11,11 @@ Multi-agent AI development team with orchestrated design-to-delivery workflows. 
   - [Subagents](#subagents)
 - [Workflows](#workflows)
   - [Standalone Agents](#standalone-agents)
-  - [Inari — Epic Refinement](#inari--epic-refinement)
-  - [Amaterasu — Solo Design](#amaterasu--solo-design)
-  - [Hephaestus — Solo Build](#hephaestus--solo-build)
-  - [Amaterasu — Team Design](#amaterasu--team-design)
-  - [Hephaestus — Team Build](#hephaestus--team-build)
+  - [Product Owner — Epic Refinement](#product-owner--epic-refinement)
+  - [Technical Advisor — Solo Design](#technical-advisor--solo-design)
+  - [Lead Engineer — Solo Build](#lead-engineer--solo-build)
+  - [Technical Advisor — Team Design](#technical-advisor--team-design)
+  - [Lead Engineer — Team Build](#lead-engineer--team-build)
 - [Skills](#skills)
   - [Developer Skills](#developer-skills)
   - [Workflow Skills](#workflow-skills)
@@ -32,11 +32,11 @@ User-facing agents, switchable with <kbd>Tab</kbd>:
 
 | Agent | Role | Model |
 |-------|------|-------|
-| **Inari** — Product Owner | Refines ideas into structured Epics with stories and acceptance criteria | `claude-sonnet-4.6` |
-| **Amaterasu** — Technical Advisor | Orchestrates architecture design — design overviews, HLDs, GDDs (via Freya for game projects) | `claude-sonnet-4.6` |
-| **Hephaestus** — Solution Engineer | Implements features solo or orchestrates a dev team for complex builds | `claude-sonnet-4.6` |
-| **Benzaiten** — Technical Writer | Generates and maintains MkDocs documentation sites | `claude-sonnet-4.6` |
-| **Tsukuyomi** — Agent Architect | Designs, writes, and refines agent/subagent definitions (meta-agent) | `claude-opus-4.6` |
+| **Product Owner** | Refines ideas into structured Epics with stories and acceptance criteria | `claude-sonnet-4.6` |
+| **Technical Advisor** | Orchestrates architecture design — design overviews, HLDs, GDDs (via Game Designer for game projects) | `claude-sonnet-4.6` |
+| **Lead Engineer** | Implements features solo or orchestrates a dev team for complex builds | `claude-sonnet-4.6` |
+| **Technical Writer** | Generates and maintains MkDocs documentation sites | `claude-sonnet-4.6` |
+| **Agent Architect** | Designs, writes, and refines agent/subagent definitions (meta-agent) | `claude-opus-4.6` |
 
 ### Subagents
 
@@ -44,13 +44,13 @@ Hidden specialists invoked by orchestrators via the Task tool:
 
 | Agent | Role | Model | Invoked by |
 |-------|------|-------|------------|
-| **Daedalus** (Lead Architect) | Design overviews — system scope, component boundaries | `claude-opus-4.6` | Amaterasu, Inari |
-| **Archimedes** (Architect) | HLDs — what a system does, not how | `claude-sonnet-4.6` | Amaterasu |
-| **Odysseus** (Tech Lead) | LLDs, task breakdowns, design reviews | `claude-opus-4.6` | Amaterasu, Hephaestus, Odin |
-| **Hector** (Developer Backend) | Backend code, APIs, data layers, tests | `claude-sonnet-4.6` | Hephaestus, Odin |
-| **Orpheus** (Developer Frontend) | Frontend code, UI components, tests | `claude-sonnet-4.6` | Hephaestus, Odin |
-| **Atlas** (DevOps) | Infrastructure, CI/CD, deployment configs | `claude-sonnet-4.6` | Hephaestus, Odin |
-| **Argus** (Reviewer) | Code review — quality, security, correctness | `claude-opus-4.6` | Hephaestus, Odin |
+| **Lead Architect** | Design overviews — system scope, component boundaries | `claude-opus-4.6` | Tech Advisor, Product Owner |
+| **Sys Architect** | HLDs — what a system does, not how | `claude-sonnet-4.6` | Tech Advisor |
+| **Tech Lead** | LLDs, task breakdowns, design reviews | `claude-opus-4.6` | Tech Advisor, Lead Engineer |
+| **Backend Dev** | Backend code, APIs, data layers, tests | `claude-sonnet-4.6` | Lead Engineer |
+| **Frontend Dev** | Frontend code, UI components, tests | `claude-sonnet-4.6` | Lead Engineer |
+| **Devops** | Infrastructure, CI/CD, deployment configs | `claude-sonnet-4.6` | Lead Engineer |
+| **Code Reviewer** | Code review — quality, security, correctness | `claude-opus-4.6` | Lead Engineer |
 
 All agents operate in two modes:
 
@@ -66,175 +66,175 @@ sequenceDiagram
     actor User
 
     rect rgb(16, 185, 129, 0.1)
-    note right of User: Benzaiten (Technical Writer)
-    User->>Benzaiten: Write docs for project
-    Benzaiten->>Benzaiten: Scaffold toolchain (uv, mise, mkdocs, Taskfile)
-    Benzaiten->>Benzaiten: Write documentation pages
-    Benzaiten->>User: Docs site (MkDocs + Material theme)
+    note right of User: Tech Writer
+    User->>Tech Writer: Write docs for project
+    Tech Writer->>Tech Writer: Scaffold toolchain (uv, mise, mkdocs, Taskfile)
+    Tech Writer->>Tech Writer: Write documentation pages
+    Tech Writer->>User: Docs site (MkDocs + Material theme)
     end
 
     rect rgb(139, 92, 246, 0.1)
-    note right of User: Tsukuyomi (Agent Architect)
-    User->>Tsukuyomi: Design a new agent
-    Tsukuyomi->>User: Agent definition (.md)
+    note right of User: Agent Architect
+    User->>Agent Architect: Design a new agent
+    Agent Architect->>User: Agent definition (.md)
     end
 ```
 
-### Inari — Epic Refinement
+### Product Owner — Epic Refinement
 
 ```mermaid
 sequenceDiagram
     actor User
-    participant H as Inari
+    participant PO as Product Owner
     participant LA as Lead Architect
 
     rect rgb(245, 158, 11, 0.1)
     note right of User: Epic Refinement
-    User->>H: Rough idea
-    H->>User: Clarifying questions
-    User->>H: Answers
-    H->>LA: Feasibility + story type?
-    LA->>H: DD story or HLD story
-    H->>User: Epic + child stories (.issues/)
+    User->>PO: Rough idea
+    PO->>User: Clarifying questions
+    User->>PO: Answers
+    PO->>LA: Feasibility + story type?
+    LA->>PO: DD story or HLD story
+    PO->>User: Epic + child stories (.issues/)
     end
 ```
 
-### Amaterasu — Solo Design
+### Technical Advisor — Solo Design
 
-> For game projects, Amaterasu dispatches to **Freya** (Game Designer) instead of writing an HLD herself. See [Game Development](README_GAME_DEV.md#workflow) for that workflow.
+> For game projects, the Technical Advisor dispatches to the **Game Designer** subagent instead of writing an HLD herself. See [Game Development](README_GAME_DEV.md#workflow) for that workflow.
 
 ```mermaid
 sequenceDiagram
     actor User
-    participant A as Amaterasu
+    participant TA as Technical Advisor
 
     rect rgb(99, 102, 241, 0.1)
     note right of User: Solo Design
-    User->>A: Design request
-    A->>A: Scan .specs/ and document-templates/
-    A->>A: Write HLD (.specs/)
-    A->>A: Create implementation story (.issues/)
-    A->>User: Present HLD + story
+    User->>TA: Design request
+    TA->>TA: Scan .specs/ and document-templates/
+    TA->>TA: Write HLD (.specs/)
+    TA->>TA: Create implementation story (.issues/)
+    TA->>User: Present HLD + story
     end
 ```
 
-### Hephaestus — Solo Build
+### Lead Engineer — Solo Build
 
 ```mermaid
 sequenceDiagram
     actor User
-    participant H as Hephaestus
-    participant Rev as Reviewer
+    participant LE as Lead Engineer
+    participant Rev as Code Reviewer
 
     rect rgb(234, 88, 12, 0.1)
     note right of User: Solo Build
     alt Direct request
-        User->>H: Implement feature
-    else Handoff from Amaterasu
-        User->>H: Continue with implementation
-        H->>H: Read specs from .specs/
+        User->>LE: Implement feature
+    else Handoff from Technical Advisor
+        User->>LE: Continue with implementation
+        LE->>LE: Read specs from .specs/
     end
-    H->>H: Write code + tests
-    H->>Rev: Request review
-    Rev->>H: Changes requested
-    H->>H: Fix issues
-    H->>Rev: Re-review
-    Rev->>H: Approved
-    H->>User: Done
+    LE->>LE: Write code + tests
+    LE->>Rev: Request review
+    Rev->>LE: Changes requested
+    LE->>LE: Fix issues
+    LE->>Rev: Re-review
+    Rev->>LE: Approved
+    LE->>User: Done
     end
 ```
 
-### Amaterasu — Team Design
+### Technical Advisor — Team Design
 
 ```mermaid
 sequenceDiagram
     actor User
-    participant A as Amaterasu
+    participant TA as Technical Advisor
     participant LA as Lead Architect
-    participant Arch as Architect
+    participant SA as Sys Architect
     participant TL as Tech Lead
     participant Devs as Developers
 
     rect rgb(99, 102, 241, 0.08)
     note right of User: Design Overview
-    User->>A: Design request
-    A->>LA: Write design overview
+    User->>TA: Design request
+    TA->>LA: Write design overview
     loop Review rounds (configurable limit)
-        LA->>A: Draft ready
-        A->>Arch: Review design overview
-        A->>TL: Review design overview
-        Arch->>A: Feedback
-        TL->>A: Feedback
-        A->>LA: Apply feedback
+        LA->>TA: Draft ready
+        TA->>SA: Review design overview
+        TA->>TL: Review design overview
+        SA->>TA: Feedback
+        TL->>TA: Feedback
+        TA->>LA: Apply feedback
     end
-    LA->>A: Finalized
-    A->>User: Design overview complete — ask me to write each HLD
+    LA->>TA: Finalized
+    TA->>User: Design overview complete — ask me to write each HLD
     end
 
     rect rgb(99, 102, 241, 0.15)
     note right of User: HLD (one at a time, user-initiated)
-    User->>A: Write HLD for component X
-    A->>Arch: Write HLD
+    User->>TA: Write HLD for component X
+    TA->>SA: Write HLD
     loop Review rounds (configurable limit)
-        Arch->>A: Draft ready
-        A->>TL: Review HLD
-        A->>Devs: Review HLD (feasibility)
-        TL->>A: Feedback
-        Devs->>A: Feedback
-        A->>Arch: Apply feedback
+        SA->>TA: Draft ready
+        TA->>TL: Review HLD
+        TA->>Devs: Review HLD (feasibility)
+        TL->>TA: Feedback
+        Devs->>TA: Feedback
+        TA->>SA: Apply feedback
     end
-    Arch->>A: Finalized
-    A->>User: HLD complete + implementation story created
+    SA->>TA: Finalized
+    TA->>User: HLD complete + implementation story created
     end
 ```
 
-### Hephaestus — Team Build
+### Lead Engineer — Team Build
 
 ```mermaid
 sequenceDiagram
     actor User
-    participant H as Hephaestus
+    participant LE as Lead Engineer
     participant TL as Tech Lead
     participant Devs as Developers
-    participant Rev as Reviewer
+    participant Rev as Code Reviewer
 
     rect rgb(234, 88, 12, 0.08)
     note right of User: Task Planning (per story)
-    User->>H: Plan story X
-    H->>TL: Create task breakdown
+    User->>LE: Plan story X
+    LE->>TL: Create task breakdown
     loop Review rounds (configurable limit)
-        TL->>H: Task plan
-        H->>Devs: Review feasibility
-        Devs->>H: Feedback
-        H->>TL: Apply feedback
+        TL->>LE: Task plan
+        LE->>Devs: Review feasibility
+        Devs->>LE: Feedback
+        LE->>TL: Apply feedback
     end
-    TL->>H: Write Tasks
-    H->>User: Present plan for approval
-    User->>H: Approved
+    TL->>LE: Write Tasks
+    LE->>User: Present plan for approval
+    User->>LE: Approved
     end
 
     rect rgb(234, 88, 12, 0.15)
     note right of User: Implementation (user chooses scope)
-    User->>H: Implement task X (or tasks X, Y in parallel)
+    User->>LE: Implement task X (or tasks X, Y in parallel)
     alt Multiple tasks requested
-        H->>TL: Confirm implementation order
-        TL->>H: Order / parallelism advice
+        LE->>TL: Confirm implementation order
+        TL->>LE: Order / parallelism advice
     end
-    H->>Devs: Implement tasks
-    Devs->>H: Code + tests ready
+    LE->>Devs: Implement tasks
+    Devs->>LE: Code + tests ready
     end
 
     rect rgb(234, 88, 12, 0.22)
     note right of User: Review (per task or parallel batch)
-    H->>Rev: Review changes
+    LE->>Rev: Review changes
     loop Review rounds (configurable limit)
-        Rev->>H: Changes requested
-        H->>Devs: Apply fixes
-        Devs->>H: Fixes ready
-        H->>Rev: Re-review
+        Rev->>LE: Changes requested
+        LE->>Devs: Apply fixes
+        Devs->>LE: Fixes ready
+        LE->>Rev: Re-review
     end
-    Rev->>H: Approved
-    H->>User: Done
+    Rev->>LE: Approved
+    LE->>User: Done
     end
 ```
 
@@ -268,25 +268,24 @@ TypeScript tools extending agent capabilities (built with `@opencode-ai/plugin`)
 | **spec-create** | Creates `.specs/<type>-<id>-<slug>-v<ver>.md` with auto-incrementing ID and versioning. Types: `hld`, `lld`, `task`. |
 | **issue-create** | Creates `.issues/<id>-<type>-<slug>.md` with auto-incrementing ID. Types: `epic`, `story`, `task`, `spike`. |
 | **draft-create** | Creates `.ai.tmp/<slug>-<hash>.md` for ephemeral working drafts. |
-| **enable-cvs-labels** | Creates labels on GitHub/GitLab/Forgejo. Presets: types, priority, status, scope. Auto-detects platform from git remote. |
 
 ## Commands
 
 | Command | Description | Agent |
 |---------|-------------|-------|
-| `/design` | Start an architecture design session — design overviews, HLDs | Amaterasu |
-| `/review-design` | Dispatch reviewers to evaluate an existing design document | Amaterasu |
-| `/spike` | Conduct a technical research spike — explore, analyze, report | Amaterasu |
-| `/implement` | Implement a feature from a spec, issue, or direct instructions | Hephaestus |
-| `/fix` | Investigate and fix a bug from a description or issue reference | Hephaestus |
-| `/review` | Trigger a code review on specific files or recent changes | Hephaestus |
-| `/tdd` | Implement a feature using Test-Driven Development | Hephaestus |
-| `/pr` | Create a pull request with auto-generated description | Hephaestus |
-| `/refine` | Refine a rough idea into a structured Epic with stories and acceptance criteria | Inari |
-| `/backlog` | Review and prioritize the backlog — scan issues, suggest next actions | Inari |
-| `/sync-issues` | Sync issues between CVS platform and local `.issues/` directory | Inari |
-| `/docs` | Generate or update MkDocs documentation for the current project | Benzaiten |
-| `/changelog` | Generate or update CHANGELOG.md from git history and resolved issues | Benzaiten |
-| `/new-agent` | Design a new OpenCode agent — discovery, design, prompt crafting | Tsukuyomi |
-| `/refine-agent` | Analyze and refine an existing agent — improve prompt, permissions, design | Tsukuyomi |
-| `/new-skill` | Design a new OpenCode skill — domain-specific instructions for agents | Tsukuyomi |
+| `/design` | Start an architecture design session — design overviews, HLDs | Technical Advisor |
+| `/review-design` | Dispatch reviewers to evaluate an existing design document | Technical Advisor |
+| `/spike` | Conduct a technical research spike — explore, analyze, report | Technical Advisor |
+| `/implement` | Implement a feature from a spec, issue, or direct instructions | Lead Engineer |
+| `/fix` | Investigate and fix a bug from a description or issue reference | Lead Engineer |
+| `/review` | Trigger a code review on specific files or recent changes | Lead Engineer |
+| `/tdd` | Implement a feature using Test-Driven Development | Lead Engineer |
+| `/pr` | Create a pull request with auto-generated description | Lead Engineer |
+| `/refine` | Refine a rough idea into a structured Epic with stories and acceptance criteria | Product Owner |
+| `/backlog` | Review and prioritize the backlog — scan issues, suggest next actions | Product Owner |
+| `/sync-issues` | Sync issues between CVS platform and local `.issues/` directory | Product Owner |
+| `/docs` | Generate or update MkDocs documentation for the current project | Technical Writer |
+| `/changelog` | Generate or update CHANGELOG.md from git history and resolved issues | Technical Writer |
+| `/new-agent` | Design a new OpenCode agent — discovery, design, prompt crafting | Agent Architect |
+| `/refine-agent` | Analyze and refine an existing agent — improve prompt, permissions, design | Agent Architect |
+| `/new-skill` | Design a new OpenCode skill — domain-specific instructions for agents | Agent Architect |

@@ -1,6 +1,6 @@
 <!--
-For Tsukuyomi: 
-- this document must me 300 works (max 400)
+For agent-architect: 
+- this document must be 300 words (max 400)
 - exceptions are allowed, for agents with particular skills
 -->
 ---
@@ -83,16 +83,3 @@ Common patterns:
 - If something in the plan seems wrong, flag it — but implement unless you have a strong technical reason not to
 -->
 
-## CVS Awareness
-
-If the orchestrator provides a CVS reference (e.g., `#42`, a PR link):
-
-- Load `cvs-mode` skill — it tells you which tools to use for the detected platform
-- **Read from CVS**: use CVS tools to read issues, PRs, or comments when referenced — they may be your primary input
-- When blocked, post a concise comment to the issue explaining the blocker
-- Include visible attribution block on any CVS-posted content (see `cvs-mode` skill)
-<!-- Add role-specific CVS behavior here. Examples:
-- Post review summaries as CVS issue comments (reviewer)
-- Destructive operations ALWAYS require human approval (devops)
-- Submit PR reviews (approve/request changes) via CVS tools when instructed (reviewer)
-  -->

@@ -68,7 +68,7 @@ Analyze the game for implementation risks and define verification criteria. Outp
 2. **Read the game description** — core technical requirements.
 3. **Scan for risks** — identify features needing isolation (see taxonomy).
 4. **Define verification criteria** — risk-specific, general, and final.
-5. **Write the game plan spec** (via `spec-create` with `type=task`, `author=odin`).
+5. **Write the game plan spec** (via `spec-create` with `type=task`, `author=game-director`).
 
 ### Risk Taxonomy
 
