@@ -1,6 +1,6 @@
 ---
 description: Create a pull request from the current branch with auto-generated description
-agent: hephaestus
+agent: lead-engineer
 ---
 
 Create a pull request for the current work.

@@ -1,3 +1,9 @@
+---
+```
+type: lld opencode-agent: <agent-name>
+```
+---
+
 # <Component> — Low-Level Design
 
 ## Context

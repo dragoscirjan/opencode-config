@@ -1,16 +1,32 @@
+<!--
+For agent-architect: 
+- this document must be 300 words (max 400)
+- exceptions are allowed, for agents with particular skills
+-->
 ---
 description: "<Agent Name> — <one-line summary of what it does>"
 mode: subagent
+
 # model: github-copilot/claude-sonnet-4.6   — sonnet for implementation; opus for reasoning/review
+
 # temperature: 0.2                           — subagents are typically precise; raise for creative tasks
+
 # hidden: true                               — true hides from @ autocomplete (typical for subagents)
+
 permission:
-  # edit: allow                               — most subagents write files
-  # bash: allow                               — for agents that run commands (build, test, lint, deploy)
-  #   deny: "rm -rf *"                        — deny destructive patterns when bash is allowed
-  # skill: allow                              — if the agent loads skills
-  # webfetch: allow                           — if the agent needs external docs/APIs
-  # bash: deny                                — for document-producing agents that should not run commands
+
+# edit: allow                               — most subagents write files
+
+# bash: allow                               — for agents that run commands (build, test, lint, deploy)
+
+# deny: "rm -rf *"                        — deny destructive patterns when bash is allowed
+
+# skill: allow                              — if the agent loads skills
+
+# webfetch: allow                           — if the agent needs external docs/APIs
+
+# bash: deny                                — for document-producing agents that should not run commands
+
 ---
 
 # <Agent Name>
@@ -67,16 +83,3 @@ Common patterns:
 - If something in the plan seems wrong, flag it — but implement unless you have a strong technical reason not to
 -->
 
-## CVS Awareness
-
-If the orchestrator provides a CVS reference (e.g., `#42`, a PR link):
-
-- Load `cvs-mode` skill — it tells you which tools to use for the detected platform
-- **Read from CVS**: use CVS tools to read issues, PRs, or comments when referenced — they may be your primary input
-- When blocked, post a concise comment to the issue explaining the blocker
-- Include visible attribution block on any CVS-posted content (see `cvs-mode` skill)
-<!-- Add role-specific CVS behavior here. Examples:
-- Post review summaries as CVS issue comments (reviewer)
-- Destructive operations ALWAYS require human approval (devops)
-- Submit PR reviews (approve/request changes) via CVS tools when instructed (reviewer)
-  -->

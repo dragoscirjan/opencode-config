@@ -1,6 +1,6 @@
 ---
 description: Design a new OpenCode agent — discovery, design, prompt crafting, and file creation
-agent: gea
+agent: agent-architect
 ---
 
 Design a new agent:

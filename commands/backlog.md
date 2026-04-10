@@ -1,6 +1,6 @@
 ---
 description: Review and prioritize the backlog — scan issues, suggest priorities and next actions
-agent: hermes
+agent: product-owner
 ---
 
 Review the current backlog.

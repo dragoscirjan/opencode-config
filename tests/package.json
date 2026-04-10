@@ -1,0 +1,14 @@
+{
+  "name": "opencode-tests",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run --reporter=verbose --fileParallelism=false --sequence.concurrent=false --testTimeout=300000",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@templ-project/vitest": "latest",
+    "vitest": "latest"
+  }
+}

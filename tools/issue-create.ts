@@ -2,7 +2,7 @@ import { tool } from "@opencode-ai/plugin"
 import { existsSync, mkdirSync, readdirSync, writeFileSync } from "fs"
 import { join } from "path"
 
-const VALID_TYPES = ["epic", "story", "task", "spike"] as const
+const VALID_TYPES = ["initiative", "epic", "story", "task", "bug"] as const
 type IssueType = (typeof VALID_TYPES)[number]
 
 const VALID_STATUSES = ["open", "in_progress", "done", "closed"] as const
@@ -34,7 +34,6 @@ function buildFrontmatter(fields: {
   type: IssueType
   title: string
   status: IssueStatus
-  labels: string[]
   parent?: string
   depends?: string[]
   author?: string
@@ -45,14 +44,13 @@ function buildFrontmatter(fields: {
     `type: ${fields.type}`,
     `title: "${fields.title}"`,
     `status: ${fields.status}`,
-    `labels: [${fields.labels.map((l) => `"${l}"`).join(", ")}]`,
   ]
   if (fields.parent) lines.push(`parent: "${fields.parent}"`)
   if (fields.depends?.length) {
     const deps = fields.depends.map((d) => `"${d}"`).join(", ")
     lines.push(`depends: [${deps}]`)
   }
-  if (fields.author) lines.push(`author: "opencode:agent=${fields.author}"`)
+  if (fields.author) lines.push(`opencode-agent: ${fields.author}`)
   lines.push("---")
   return lines.join("\n")
 }
@@ -64,7 +62,7 @@ export default tool({
   args: {
     type: tool.schema
       .string()
-      .describe("Issue type: epic, story, task, or spike"),
+      .describe("Issue type: initiative, epic, story, task, or bug"),
     title: tool.schema.string().describe("Human-readable issue title"),
     status: tool.schema
       .string()
@@ -78,13 +76,9 @@ export default tool({
       .string()
       .describe("Comma-separated blocking issue IDs (e.g. 00001,00002)")
       .optional(),
-    labels: tool.schema
-      .string()
-      .describe("Comma-separated extra labels. level/<type> is auto-added.")
-      .optional(),
     author: tool.schema
       .string()
-      .describe("Agent or user name for attribution (e.g. hermes, athena)")
+      .describe("Agent or user name for attribution (e.g. product-owner, tech-advisor)")
       .optional(),
   },
   async execute(args, context) {
@@ -105,16 +99,6 @@ export default tool({
     if (!VALID_STATUSES.includes(status)) {
       return `Error: invalid status "${args.status}". Must be one of: ${VALID_STATUSES.join(", ")}`
     }
-
-    // Build labels
-    const autoLabel = `level/${issueType}`
-    const extraLabels = args.labels
-      ? args.labels
-        .split(",")
-        .map((l) => l.trim())
-        .filter(Boolean)
-      : []
-    const labels = [autoLabel, ...extraLabels]
 
     // Validate parent ID
     const ID_PATTERN = /^\d{5}$/
@@ -152,7 +136,6 @@ export default tool({
       type: issueType,
       title,
       status,
-      labels,
       parent: parentId,
       depends,
       author: args.author?.trim() || undefined,
