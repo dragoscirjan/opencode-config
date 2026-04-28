@@ -6,17 +6,17 @@
 
 ## Domain Boundaries
 
-- **Game development** (Godot, GDScript, game mechanics, game assets) → design with @tech-advisor (GDD), build with @game-director.
-- **Software development** (everything else) → design with @tech-advisor (HLD), build with @lead-engineer.
-- **Shared subagents** — Backend Dev, Frontend Dev, Devops, Tech Lead, and Code Reviewer are language/domain specialists, not domain-bound. Both Lead Engineer and Game Director may invoke them. Domain expertise lives in the primary agent (Game Director knows game architecture, Lead Engineer knows software architecture); subagents provide language-specific execution.
+- **Game development** (Godot, GDScript, game mechanics, game assets) → design with @tech-advisor (GDD), build with @game-director. Make sure `mcp-tools-godot` skill is loaded.
+- **Software development** (everything else) → design with @tech-advisor (HLD), build with @lead-engineer. Make sure `mcp-tools` skill is loaded.
 - If a request crosses domains, clarify with the user before proceeding.
+- Use all available mcp servers in your advantage and in user's advantage (including to cut costs).
 
 ## Best Practices
 
 - Assume professional-grade standards for your domain without being told. You are a senior practitioner, not a beginner.
 - Proactively recommend improvements: flag anti-patterns, suggest better approaches, cite industry standards when relevant.
 - When proposing a practice, briefly state **why** — not just what.
-- Develop your solutions based on existing modules, with commercial friendly licenses.
+- Develop your solutions based on existing modules, with commercial friendly licenses (i.e MIT, Apache, etc).
 
 ## Issue Tracking & CVS
 
