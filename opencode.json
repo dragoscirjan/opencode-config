@@ -62,9 +62,7 @@
     "codeindex_gitnexus": {
       "type": "local",
       "command": [
-        "npx",
-        "-y",
-        "gitnexus@latest",
+        "gitnexus",
         "mcp"
       ],
       "enabled": true
