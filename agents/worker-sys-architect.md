@@ -34,4 +34,3 @@ Senior Software Architect. Produces HLD drafts — WHAT a system does, not HOW. 
 6. Finalization (when told): expand draft to full readable English → write to **provided path**
 
 Skip formal docs if trivially small — tell orchestrator directly.
-

@@ -1,6 +1,5 @@
+import { readFileSync, writeFileSync, existsSync, readdirSync } from 'node:fs';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 'fs';
-import { join } from 'path';
 import godotApiDocsTool from '../../tools/godot-api-docs.js';
 
 vi.mock('fs', () => ({
@@ -15,7 +14,7 @@ const mockXmlParser = vi.fn();
 vi.mock('fast-xml-parser', () => ({
   XMLParser: class {
     parse = mockXmlParser;
-  }
+  },
 }));
 
 const mockGitClone = vi.fn();
@@ -26,7 +25,7 @@ const mockSimpleGit = vi.fn().mockReturnValue({
 });
 
 vi.mock('simple-git', () => ({
-  simpleGit: mockSimpleGit
+  simpleGit: mockSimpleGit,
 }));
 
 describe('godot-api-docs tool', () => {
@@ -34,17 +33,20 @@ describe('godot-api-docs tool', () => {
     vi.clearAllMocks();
   });
 
-  const runTool = (args: any, directory = '/mock/dir') => 
-    godotApiDocsTool.execute(args, { directory } as any);
+  const runTool = (args: Parameters<typeof godotApiDocsTool.execute>[0], directory = '/mock/dir') =>
+    godotApiDocsTool.execute(args, { directory } as Parameters<typeof godotApiDocsTool.execute>[1]);
 
   it('should validate invalid command', async () => {
     const result = await runTool({ command: 'invalid' });
-    expect(JSON.parse(result)).toEqual({ ok: false, error: 'Unknown command: "invalid". Use "lookup", "build", "list", or "ensure"' });
+    expect(JSON.parse(result)).toEqual({
+      ok: false,
+      error: 'Unknown command: "invalid". Use "lookup", "build", "list", or "ensure"',
+    });
   });
 
   it('should execute "ensure" and clone if not exists', async () => {
     (existsSync as unknown as ReturnType<typeof vi.fn>).mockReturnValue(false); // xmlDir missing
-    
+
     mockGitClone.mockResolvedValueOnce(undefined);
     mockGitRaw.mockResolvedValueOnce(undefined);
 
@@ -56,7 +58,7 @@ describe('godot-api-docs tool', () => {
     expect(mockGitClone).toHaveBeenCalledWith(
       'https://github.com/godotengine/godot.git',
       expect.stringContaining('.godot-docs/godot'),
-      expect.arrayContaining(['--sparse'])
+      expect.arrayContaining(['--sparse']),
     );
     expect(mockGitRaw).toHaveBeenCalledWith(['sparse-checkout', 'set', 'doc/classes']);
   });
@@ -89,19 +91,21 @@ describe('godot-api-docs tool', () => {
       return true;
     });
 
-    (readFileSync as unknown as ReturnType<typeof vi.fn>).mockReturnValue('<class name="Node" inherits="Object"></class>');
-    
+    (readFileSync as unknown as ReturnType<typeof vi.fn>).mockReturnValue(
+      '<class name="Node" inherits="Object"></class>',
+    );
+
     mockXmlParser.mockReturnValue({
       class: {
         '@_name': 'Node',
         '@_inherits': 'Object',
         brief_description: { '#text': 'Base class for all scene objects.' },
-        methods: { method: [] }
-      }
+        methods: { method: [] },
+      },
     });
 
     const result = await runTool({ command: 'lookup', className: 'Node' });
-    
+
     // Result is directly markdown, not JSON
     expect(result).toContain('# Node');
     expect(result).toContain('## Node <- Object');
@@ -120,7 +124,7 @@ describe('godot-api-docs tool', () => {
         '@_name': 'Node',
         '@_inherits': 'Object',
         brief_description: { '#text': 'Base class for all scene objects.' },
-      }
+      },
     });
 
     const resultStr = await runTool({ command: 'build', filter: 'scene' });
@@ -128,13 +132,7 @@ describe('godot-api-docs tool', () => {
 
     expect(result.ok).toBe(true);
     expect(result.converted).toBe(1);
-    expect(writeFileSync).toHaveBeenCalledWith(
-      expect.stringContaining('Node.md'),
-      expect.any(String)
-    );
-    expect(writeFileSync).toHaveBeenCalledWith(
-      expect.stringContaining('_index.md'),
-      expect.any(String)
-    );
+    expect(writeFileSync).toHaveBeenCalledWith(expect.stringContaining('Node.md'), expect.any(String));
+    expect(writeFileSync).toHaveBeenCalledWith(expect.stringContaining('_index.md'), expect.any(String));
   });
 });

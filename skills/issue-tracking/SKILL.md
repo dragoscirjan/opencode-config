@@ -5,8 +5,10 @@ description: Manage tasks, epics, and bugs. Default to remote CVS platforms. Use
 
 # Issue Tracking
 
-Read `.env.ai` from the project folder, if the file existsi
-Manage tasks, epics, and bugs. Default to remote CVS platforms. Use local `.issues/` ONLY if `ISSUE_TRACKING_FS=1` in `.env.ai`. Require `cvs` skill.
+- Read `.env.ai` from the project folder, if the file exists.
+- If `ISSUE_TRACKING_FS` variable is not present under `.env.ai` load the `cvs` skill as well.
+- Manage initiatives, epics, stories, tasks and bugs (see bellow). Default to remote CVS platforms.
+- Use local `.issues/` ONLY if `ISSUE_TRACKING_FS=1` is present in `.env.ai`.
 
 ## Templates
 
@@ -25,22 +27,24 @@ Strictly follow this hierarchy. For CVS, you **MUST** prefix issue titles with t
     - **🐛 Bug** (`bug`): Defect in an epic.
 
 ## CVS Mode Rules
+
 - **Links over Text:** Link to local `.specs/` files in comments instead of pasting large content.
 - **Hierarchy Links:** Use markdown (`#42`) to link parent/child and dependent issues.
 - **Report Failures:** Always post execution failures as CVS comments so humans can see them.
 
 ## FS Fallback Rules (`.issues/`)
+
 - **Naming:** `<5-digit-id>-<type>-<title-kebab>.md` (e.g., `00001-task-add-auth.md`). Use the `issue-create` tool to automatically generate the file and ID, then edit the body.
 - **Format:** YAML frontmatter followed by markdown body.
 
 **Frontmatter Schema:**
 
 ```yaml
-id: "00001"     # 5-digit zero-padded
-type: task      # initiative | epic | story | task | bug
+id: "00001" # 5-digit zero-padded
+type: task # initiative | epic | story | task | bug
 title: Add Auth # Emoticons optional in FS
-status: open    # open | in_progress | done | closed
+status: open # open | in_progress | done | closed
 parent: "00000" # Optional: Parent issue ID
-depends: []     # Optional: Array of blocking issue IDs
-author: name    # Optional: Author name
+depends: [] # Optional: Array of blocking issue IDs
+author: name # Optional: Author name
 ```

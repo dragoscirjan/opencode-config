@@ -74,4 +74,3 @@ Then read XML files directly from `/tmp/godot-doc-source/godot/doc/classes/{Clas
 - Do NOT return the entire class doc when the caller asked a specific question. Extract the relevant portion.
 - Do NOT guess inheritance chains. Read the doc — it shows `ClassName <- ParentClass`.
 - If a class has virtual methods the caller should override (e.g., `_ready`, `_process`, `_physics_process`), mention them even if the caller didn't ask — these are critical for correct implementation.
-

@@ -1,6 +1,6 @@
+import { existsSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { existsSync, mkdirSync, readdirSync, writeFileSync } from 'fs';
-import { join } from 'path';
 import issueCreateTool from '../../tools/issue-create.js';
 
 vi.mock('fs', () => ({
@@ -15,8 +15,8 @@ describe('issue-create tool', () => {
     vi.clearAllMocks();
   });
 
-  const runTool = (args: any, directory = '/mock/dir') => 
-    issueCreateTool.execute(args, { directory } as any);
+  const runTool = (args: Parameters<typeof issueCreateTool.execute>[0], directory = '/mock/dir') =>
+    issueCreateTool.execute(args, { directory } as Parameters<typeof issueCreateTool.execute>[1]);
 
   it('should validate issue type', async () => {
     const result = await runTool({ type: 'invalid', title: 'Test' });
@@ -49,10 +49,10 @@ describe('issue-create tool', () => {
     const result = await runTool({ type: 'task', title: 'My First Task' });
 
     expect(mkdirSync).toHaveBeenCalledWith(join('/mock/dir', '.issues'), { recursive: true });
-    
+
     const expectedFilename = '00001-task-my-first-task.md';
     const expectedFilepath = join('/mock/dir', '.issues', expectedFilename);
-    
+
     expect(writeFileSync).toHaveBeenCalled();
     const [path, content] = (writeFileSync as unknown as ReturnType<typeof vi.fn>).mock.calls[0];
     expect(path).toBe(expectedFilepath);
@@ -72,35 +72,31 @@ describe('issue-create tool', () => {
     (readdirSync as unknown as ReturnType<typeof vi.fn>).mockReturnValue([
       '00042-task-foo.md',
       '00005-bug-bar.md',
-      'not-an-issue.md'
+      'not-an-issue.md',
     ]);
 
-    const result = await runTool({ type: 'epic', title: 'Next Epic' });
+    await runTool({ type: 'epic', title: 'Next Epic' });
 
     const expectedFilename = '00043-epic-next-epic.md';
     const expectedFilepath = join('/mock/dir', '.issues', expectedFilename);
-    
-    expect(writeFileSync).toHaveBeenCalledWith(
-      expectedFilepath,
-      expect.stringContaining('id: "00043"'),
-      'utf-8'
-    );
+
+    expect(writeFileSync).toHaveBeenCalledWith(expectedFilepath, expect.stringContaining('id: "00043"'), 'utf-8');
   });
 
   it('should include optional fields in frontmatter', async () => {
     (existsSync as unknown as ReturnType<typeof vi.fn>).mockReturnValue(false);
 
-    await runTool({ 
-      type: 'story', 
+    await runTool({
+      type: 'story',
       title: 'Detailed Story',
       status: 'in_progress',
       parent: '00010',
       depends: '00005, 00006',
-      author: 'opencode-agent-1'
+      author: 'opencode-agent-1',
     });
 
-    const [_, content] = (writeFileSync as unknown as ReturnType<typeof vi.fn>).mock.calls[0];
-    
+    const [, content] = (writeFileSync as unknown as ReturnType<typeof vi.fn>).mock.calls[0];
+
     expect(content).toContain('status: in_progress');
     expect(content).toContain('parent: "00010"');
     expect(content).toContain('depends: ["00005", "00006"]');

@@ -3,6 +3,7 @@
 - Never invent facts, APIs, flags, or behaviors. If unsure, verify first (read files, search docs, check tools).
 - Say "I don't know" when you don't. Guessing confidently is worse than admitting uncertainty.
 - Any credentials that you need can be found under `.env.ai` (this file and this file only).
+- When instructed to use a skill, DO NOT assume or hallucinate its content. You MUST use the `read` or `skill` tools to load its dependencies before providing your analysis.
 
 ## Domain Boundaries
 

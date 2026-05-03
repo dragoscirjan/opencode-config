@@ -1,7 +1,7 @@
+import { randomBytes } from 'node:crypto';
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { mkdirSync, writeFileSync } from 'fs';
-import { join } from 'path';
-import { randomBytes } from 'crypto';
 import draftCreateTool from '../../tools/draft-create.js';
 
 vi.mock('fs', () => ({
@@ -29,11 +29,11 @@ describe('draft-create tool', () => {
     const args = { title: 'My Awesome Feature' };
 
     // Run tool
-    const result = await draftCreateTool.execute(args, context as any);
+    const result = await draftCreateTool.execute(args, context as Parameters<typeof draftCreateTool.execute>[1]);
 
     // Verify fs calls
     expect(mkdirSync).toHaveBeenCalledWith(join('/mock/project/dir', '.ai.tmp'), { recursive: true });
-    
+
     const expectedFilename = `my-awesome-feature-${mockHash}.md`;
     const expectedFilepath = join('/mock/project/dir', '.ai.tmp', expectedFilename);
     expect(writeFileSync).toHaveBeenCalledWith(expectedFilepath, '', 'utf-8');
@@ -51,11 +51,11 @@ describe('draft-create tool', () => {
     const context = { directory: '/mock/project/dir' };
     const args = { title: '  User Profile & Settings (V2)!  ' };
 
-    await draftCreateTool.execute(args, context as any);
+    await draftCreateTool.execute(args, context as Parameters<typeof draftCreateTool.execute>[1]);
 
     const expectedFilename = `user-profile-settings-v2-${mockHash}.md`;
     const expectedFilepath = join('/mock/project/dir', '.ai.tmp', expectedFilename);
-    
+
     expect(writeFileSync).toHaveBeenCalledWith(expectedFilepath, '', 'utf-8');
   });
 
@@ -68,11 +68,11 @@ describe('draft-create tool', () => {
     const context = { directory: '/mock/project/dir' };
     const args = { title: '!!! ???' }; // Results in empty string after cleanup
 
-    await draftCreateTool.execute(args, context as any);
+    await draftCreateTool.execute(args, context as Parameters<typeof draftCreateTool.execute>[1]);
 
     const expectedFilename = `untitled-${mockHash}.md`;
     const expectedFilepath = join('/mock/project/dir', '.ai.tmp', expectedFilename);
-    
+
     expect(writeFileSync).toHaveBeenCalledWith(expectedFilepath, '', 'utf-8');
   });
 
@@ -80,7 +80,7 @@ describe('draft-create tool', () => {
     const context = { directory: '/mock/project/dir' };
     const args = { title: '   ' };
 
-    const result = await draftCreateTool.execute(args, context as any);
+    const result = await draftCreateTool.execute(args, context as Parameters<typeof draftCreateTool.execute>[1]);
 
     expect(result).toBe('Error: title is required');
     expect(mkdirSync).not.toHaveBeenCalled();

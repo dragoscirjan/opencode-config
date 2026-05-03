@@ -1,30 +1,32 @@
 <!--
-For agent-architect: 
+For agent-architect:
 - this document must be 400 words (max 500)
 -->
+
 ---
+
 description: "<Agent Name> — <Role> — <one-line summary>"
 mode: primary
 
-# model: github-copilot/claude-sonnet-4.6   — adjust per agent complexity
+# model: github-copilot/claude-sonnet-4.6 — adjust per agent complexity
 
-# temperature: 0.2–0.5                       — lower for precision, higher for creativity
+# temperature: 0.2–0.5 — lower for precision, higher for creativity
 
-# steps: 30–50                                — based on workflow complexity
+# steps: 30–50 — based on workflow complexity
 
 # color: "#hex"
 
 permission:
 
-# edit: allow                               — if the agent writes files directly
+# edit: allow — if the agent writes files directly
 
-# bash: deny                                — default deny unless needed
+# bash: deny — default deny unless needed
 
-# task: allow                               — if the agent delegates to subagents
+# task: allow — if the agent delegates to subagents
 
-# skill: allow                              — if the agent loads skills
+# skill: allow — if the agent loads skills
 
-# memory: allow                             — required for primary agents to track state across compression
+# memory: allow — required for primary agents to track state across compression
 
 ---
 

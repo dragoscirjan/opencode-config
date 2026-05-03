@@ -9,19 +9,19 @@ Always load `clean-code` alongside this skill.
 
 ## Tooling Reference
 
-| Technology | Style Guide | Linter | Formatter | Testing |
-|-----------|------------|--------|-----------|---------|
-| HTML | [Google HTML/CSS](https://google.github.io/styleguide/htmlcssguide.html) | `HTMLHint` | `prettier` | — |
-| CSS | [Google HTML/CSS](https://google.github.io/styleguide/htmlcssguide.html) | `Stylelint` | `prettier` | — |
-| JavaScript | [Google JS](https://google.github.io/styleguide/jsguide.html) | `ESLint` | `Prettier` | Vitest / Jest |
-| TypeScript | [Google TS](https://google.github.io/styleguide/tsguide.html) | `ESLint` + `typescript-eslint` | `Prettier` | Vitest / Jest |
-| Angular | [Angular Style Guide](https://angular.dev/style-guide) | `angular-eslint` | `Prettier` | Karma+Jasmine / Jest, Playwright e2e |
-| React | [React docs](https://react.dev) | `eslint-plugin-react`, `eslint-plugin-react-hooks` | `Prettier` | Vitest/Jest + RTL, Playwright e2e |
-| Vue | [Vue Style Guide](https://vuejs.org/style-guide/) | `eslint-plugin-vue` | `Prettier` | Vitest + Vue Test Utils, Playwright e2e |
-| Svelte | [Svelte docs](https://svelte.dev/docs) | `eslint-plugin-svelte` | `Prettier` | Vitest + Svelte Testing Library, Playwright e2e |
-| Markdown | [Google Markdown](https://google.github.io/styleguide/docguide/style.html) | `ESLint` | `prettier` | — |
-| YAML | [Yaml Specs](https://yaml.org/spec/1.2.2/) | `ESLint` | `prettier` | — |
-| JSON | [Google JSON](https://google.github.io/styleguide/jsoncstyleguide.xml) | `ESLint` | `prettier` | — |
+| Technology | Style Guide                                                                | Linter                                             | Formatter  | Testing                                         |
+| ---------- | -------------------------------------------------------------------------- | -------------------------------------------------- | ---------- | ----------------------------------------------- |
+| HTML       | [Google HTML/CSS](https://google.github.io/styleguide/htmlcssguide.html)   | `HTMLHint`                                         | `prettier` | —                                               |
+| CSS        | [Google HTML/CSS](https://google.github.io/styleguide/htmlcssguide.html)   | `Stylelint`                                        | `prettier` | —                                               |
+| JavaScript | [Google JS](https://google.github.io/styleguide/jsguide.html)              | `ESLint`                                           | `Prettier` | Vitest / Jest                                   |
+| TypeScript | [Google TS](https://google.github.io/styleguide/tsguide.html)              | `ESLint` + `typescript-eslint`                     | `Prettier` | Vitest / Jest                                   |
+| Angular    | [Angular Style Guide](https://angular.dev/style-guide)                     | `angular-eslint`                                   | `Prettier` | Karma+Jasmine / Jest, Playwright e2e            |
+| React      | [React docs](https://react.dev)                                            | `eslint-plugin-react`, `eslint-plugin-react-hooks` | `Prettier` | Vitest/Jest + RTL, Playwright e2e               |
+| Vue        | [Vue Style Guide](https://vuejs.org/style-guide/)                          | `eslint-plugin-vue`                                | `Prettier` | Vitest + Vue Test Utils, Playwright e2e         |
+| Svelte     | [Svelte docs](https://svelte.dev/docs)                                     | `eslint-plugin-svelte`                             | `Prettier` | Vitest + Svelte Testing Library, Playwright e2e |
+| Markdown   | [Google Markdown](https://google.github.io/styleguide/docguide/style.html) | `ESLint`                                           | `prettier` | —                                               |
+| YAML       | [Yaml Specs](https://yaml.org/spec/1.2.2/)                                 | `ESLint`                                           | `prettier` | —                                               |
+| JSON       | [Google JSON](https://google.github.io/styleguide/jsoncstyleguide.xml)     | `ESLint`                                           | `prettier` | —                                               |
 
 ## Key Rules
 

@@ -1,6 +1,6 @@
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { existsSync, readFileSync, writeFileSync } from 'fs';
-import { join } from 'path';
 import { cleanEnvironment, runAgent, TEST_WORKSPACE } from '../helpers.js';
 
 describe('tech-writer (formerly benzaiten)', () => {

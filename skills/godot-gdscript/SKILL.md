@@ -12,7 +12,7 @@ description: GDScript 4.x syntax reference — types, operators, classes, signal
 
 ## Identifiers
 
-- Letters/digits/_; cannot start with a digit; case-sensitive.
+- Letters/digits/\_; cannot start with a digit; case-sensitive.
 - Unicode letters per UAX#31 are allowed; no emoji or confusable characters.
 
 ## Types
@@ -73,6 +73,7 @@ as                           # Type cast
 ```
 
 Operator notes:
+
 - `**` is left-associative; ternary is right-associative.
 - `/` does integer division when both operands are `int`.
 - `%` only works on `int`; use `fmod()` for floats. Use `posmod()`/`fposmod()` for math-style remainders.
@@ -121,6 +122,7 @@ State.values()           # [0, 1, 2]
 ```
 
 Initialization order (members):
+
 - Default value by type (or `null` for untyped/Objects).
 - Declaration order initializers.
 - `_init()`.
@@ -176,6 +178,7 @@ func sum(...values: Array) -> int:
 ```
 
 Variadic notes:
+
 - Only one rest parameter, and it must be last.
 - Rest parameter cannot be `Array[Type]` (use `Array`).
 - You cannot unpack/rest-spread arguments on call sites (use `callv`).
@@ -340,6 +343,7 @@ var result = await some_async_func()
 ```
 
 Annotations:
+
 - Multiple annotations can be stacked; they apply to the next non-annotation line.
 - `@onready` with `@export` is not recommended; `@onready` overwrites exported values
   and triggers the `ONREADY_WITH_EXPORT` warning.
@@ -357,6 +361,7 @@ func generate_lakes():
 ```
 
 Editor highlights markers (case-sensitive):
+
 - Critical (red): `ALERT`, `ATTENTION`, `CAUTION`, `CRITICAL`, `DANGER`, `SECURITY`
 - Warning (yellow): `BUG`, `DEPRECATED`, `FIXME`, `HACK`, `TASK`, `TODO`, `WARNING`
 - Notice (green): `INFO`, `NOTE`, `NOTICE`, `TEST`
@@ -452,6 +457,7 @@ dict.merge(other_dict)       # Merge in place
 ```
 
 Array/dict notes:
+
 - `Array` == `Array[Variant]`. `Dictionary` == `Dictionary[Variant, Variant]`.
 - Dictionary/array access returns `Variant`, so `:=` inference can fail.
 
@@ -703,7 +709,7 @@ func _physics_process(_delta: float) -> void:
 var path = NavigationServer3D.map_get_path(nav_map, start, target, true)
 ```
 
-## RigidBody _integrate_forces
+## RigidBody \_integrate_forces
 
 ```gdscript
 func _integrate_forces(state: PhysicsDirectBodyState2D) -> void:

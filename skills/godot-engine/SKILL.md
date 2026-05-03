@@ -10,6 +10,7 @@ description: Godot 4 engine quirks, known bugs, workarounds, scene builder patte
 GDScript files in this pipeline fall into two categories. Confusing them is a major bug source.
 
 ### Scene Builders (build-time, headless)
+
 - `extends SceneTree` with `_initialize()` entry point
 - Run via `godot --headless --script build_scene.gd`
 - Build node hierarchy, set owners, pack, validate, save `.tscn`, then `quit()`
@@ -17,6 +18,7 @@ GDScript files in this pipeline fall into two categories. Confusing them is a ma
 - `_process()` signature: `func _process(delta: float) -> bool:` (returns bool, not void)
 
 ### Runtime Scripts (game logic)
+
 - `extends Node2D/3D`, `CharacterBody3D`, etc.
 - Use `_ready()`, `_process()`, `_physics_process()`, signals, `@onready`
 - Attached to scene nodes via `set_script()` in builders or editor
@@ -24,6 +26,7 @@ GDScript files in this pipeline fall into two categories. Confusing them is a ma
 ## Known Quirks
 
 ### Headless / Scene Builder Specific
+
 - **RID leak errors on exit** — headless builders always produce these. Harmless; ignore.
 - **`add_to_group()` in builders** — groups set at build-time persist in saved `.tscn` files.
 - **`_ready()` skipped in `_initialize()`** — `_ready()` on instantiated scene nodes does NOT fire during `_initialize()`. Call init methods manually after `root.add_child()`.
@@ -32,11 +35,13 @@ GDScript files in this pipeline fall into two categories. Confusing them is a ma
 - **No spatial methods in `_initialize()`** — `look_at()`, `to_global()` fail because nodes aren't in the tree yet. Use `rotation_degrees` or compute transforms manually.
 
 ### Serialization
+
 - **MultiMeshInstance3D + GLBs** — does NOT render after pack+save (mesh resource reference lost). Use individual GLB instances instead.
 - **GLB `material_override` doesn't serialize** — setting `material_override` on GLB-internal MeshInstance3D nodes does NOT persist in `.tscn` because `set_owner_on_new_nodes()` skips GLB children. Use procedural ArrayMesh when custom material is required.
 - **MultiMeshInstance3D `Mesh.duplicate()`** — needed before freeing the source GLB instance, otherwise the mesh resource is garbage-collected.
 
 ### Physics
+
 - **`free()` vs `queue_free()` in test harnesses** — `queue_free()` leaves the node in `root.get_children()` until frame end, blocking name reuse. Use `free()` when immediately replacing scenes.
 - **BoxShape3D on trimesh** — snags on collision edges (Godot/Jolt bug). Use CapsuleShape3D for objects that slide across trimesh surfaces.
 - **Default collision mask misses non-default layers** — new bodies get `collision_mask = 1`. If terrain/walls use layer 2+, player falls through. Always set mask to include all needed layers.
@@ -47,15 +52,18 @@ GDScript files in this pipeline fall into two categories. Confusing them is a ma
 - **2D collision shape sizing** — slightly smaller than tile (e.g., 48px in 64px grid) allows smooth cornering through 1-tile corridors.
 
 ### Camera
+
 - **Camera2D has no `current` property** — use `make_current()`, only after node is in scene tree.
 - **Camera lerp from origin** — cameras using `lerp()` in `_physics_process()` will swoop from (0,0,0) on first frame. Use an `_initialized` flag to snap position on first frame, then lerp.
 - **Chase camera `current` re-assertion** — game cameras that set `current = true` in `_physics_process()` override the test harness camera every frame. Test harnesses must disable the game camera EVERY frame.
 
 ### Video/Movie Writer
+
 - **`--write-movie` frame 0** — first frame renders before `_process()` runs. Camera position set in `_process()` won't appear until frame 1. Pre-position camera in `_initialize()` via `position`/`rotation_degrees` (NOT `look_at()`).
 - **`await` during `--write-movie`** — `await get_tree().process_frame` advances the movie frame counter each tick. Use `_init_frames` counter in `_physics_process()` instead of await chains.
 
 ### Visual / Material
+
 - **Frame-rate dependent drag** — `speed *= (1 - drag)` per tick is exponential decay tied to tick rate. Use `speed *= exp(-rate * delta)` for frame-rate independent damping.
 - **ProceduralSkyMaterial sun disc** — uses DirectionalLight3D direction/color. Set `sky_mode = SKY_MODE_LIGHT_AND_SKY` on sun, `SKY_MODE_LIGHT_ONLY` on fill lights — otherwise multiple sun discs appear.
 - **Smooth yaw tracking 360 spin** — `lerp()` on raw angles causes 360-degree spin-arounds. Wrap difference to [-PI, PI]: `var diff: float = fmod(target_yaw - current_yaw + 3.0 * PI, TAU) - PI`.
@@ -67,6 +75,7 @@ GDScript files in this pipeline fall into two categories. Confusing them is a ma
 - **MultiMeshInstance3D materials** — has no `set_surface_override_material()`. Use `material_override` or keep materials from source mesh.
 
 ### Timing / Signals
+
 - **Sibling signal timing in `_ready()`** — `_ready()` fires on children in tree order. If sibling A emits in its `_ready()`, sibling B hasn't connected yet. Fix: after connecting, check if the emitter already has data and call the handler manually.
 - **`get_path()` is a built-in Node method** — returns NodePath. Cannot override. Name yours `get_track_path()`, `get_road_path()`, etc.
 - **Spawn immunity for revealed items** — items spawned inside an active Area2D get `area_entered` immediately → destroyed same frame. Track `_alive_time` in `_process()`, ignore `area_entered` for ~0.8s.
@@ -180,6 +189,7 @@ Call `set_owner_on_new_nodes(root, root)` ONCE at the end, after ALL `add_child(
 **GLB OWNERSHIP BUG** — Never recurse unconditionally. If you recurse into instantiated GLB models, ALL internal mesh/material nodes get serialized inline, causing 100MB+ `.tscn` files. The template's `scene_file_path.is_empty()` check prevents this.
 
 **WRONG patterns:**
+
 ```gdscript
 # WRONG: Setting owner only on direct children
 terrain.owner = root  # Terrain's children have NO owner!
@@ -191,6 +201,7 @@ set_owner_on_new_nodes(track_container, root)  # track_container itself has NO o
 ## Common Node Compositions
 
 **3D Physics Object:**
+
 ```gdscript
 var body := RigidBody3D.new()
 var collision := CollisionShape3D.new()
@@ -203,12 +214,14 @@ body.add_child(mesh)
 ```
 
 **Script Attachment:**
+
 ```gdscript
 var script := load("res://scripts/player_controller.gd")
 player_node.set_script(script)
 ```
 
 **3D Model Loading (GLB):**
+
 ```gdscript
 var model_scene: PackedScene = load("res://assets/glb/car.glb")
 var model = model_scene.instantiate()
@@ -301,6 +314,7 @@ tex.bump_strength = 2.0
 ## StandardMaterial3D Extended
 
 Beyond basic albedo:
+
 - `normal_enabled = true` + `normal_texture` + `normal_scale = 2.0`
 - `rim_enabled = true` + `rim_tint = 1.0` — silhouette glow
 - `emission_enabled = true` + `emission_texture` — self-illumination

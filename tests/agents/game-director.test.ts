@@ -1,10 +1,9 @@
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { existsSync, readdirSync, readFileSync } from 'fs';
-import { join } from 'path';
 import { cleanEnvironment, runAgent, TEST_WORKSPACE } from '../helpers.js';
 
 const SPECS_DIR = join(TEST_WORKSPACE, '.specs');
-const TMP_DIR = join(TEST_WORKSPACE, '.ai.tmp');
 
 describe('game-director', () => {
   beforeEach(() => {
@@ -36,7 +35,7 @@ describe('game-director', () => {
       expect(existsSync(SPECS_DIR)).toBe(true);
       const specFiles = readdirSync(SPECS_DIR);
       expect(specFiles.length).toBeGreaterThanOrEqual(1);
-      
+
       const specPath = join(SPECS_DIR, specFiles[0]);
       const content = readFileSync(specPath, 'utf8');
 

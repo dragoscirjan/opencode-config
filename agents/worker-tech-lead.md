@@ -41,4 +41,3 @@ Skip formal docs if trivially small — tell orchestrator directly.
 - Do NOT implement code — design the approach
 - Do NOT rubber-stamp — challenge assumptions, flag risks
 - Do NOT relay content through orchestrator — write to disk, return brief status only
-

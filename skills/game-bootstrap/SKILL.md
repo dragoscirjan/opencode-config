@@ -5,7 +5,7 @@ description: Godot 4 project scaffolding — project.godot, architecture notes, 
 
 # Game Bootstrap — Architecture & Scaffolding
 
-Design game architecture and produce a compilable Godot project skeleton: `project.godot`, architecture notes (written to a draft via `draft-create`), script stubs, and scene builder stubs. Defines *what exists and how it connects* — not behavior.
+Design game architecture and produce a compilable Godot project skeleton: `project.godot`, architecture notes (written to a draft via `draft-create`), script stubs, and scene builder stubs. Defines _what exists and how it connects_ — not behavior.
 
 Works for both fresh projects and incremental changes.
 
@@ -87,6 +87,7 @@ move_forward={
 **Key physical keycodes:** W=87, A=65, S=83, D=68, Up=4194320, Down=4194322, Left=4194319, Right=4194321, Space=32, Enter=4194309, Escape=4194305, Shift=4194325, Ctrl=4194326, Alt=4194328.
 
 **Mouse buttons** use InputEventMouseButton with button_index (1=left, 2=right) and matching button_mask:
+
 ```ini
 fire={
 "deadzone": 0.2,
@@ -105,36 +106,39 @@ Complete architecture reference. Written to a draft path provided by the orchest
 
 ## Input Actions
 
-| Action | Keys |
-|--------|------|
+| Action       | Keys  |
+| ------------ | ----- |
 | move_forward | W, Up |
-| jump | Space |
+| jump         | Space |
 
 ## Scenes
 
 ### Main
+
 - **File:** res://scenes/main.tscn
 - **Root type:** Node3D
 - **Children:** Player, Enemy
 
 ### Player
+
 - **File:** res://scenes/player.tscn
 - **Root type:** CharacterBody3D
 
 ## Scripts
 
 ### PlayerController
+
 - **File:** res://scripts/player_controller.gd
 - **Extends:** CharacterBody3D
 - **Attaches to:** Player:Player
 - **Signals emitted:** died, scored
-- **Signals received:** HurtBox.area_entered -> _on_hurt_entered
+- **Signals received:** HurtBox.area_entered -> \_on_hurt_entered
 - **Instantiates:** Bullet
 
 ## Signal Map
 
-- Player:HurtBox.area_entered -> PlayerController._on_hurt_entered
-- Main:GoalArea.body_entered -> LevelManager._on_goal_reached
+- Player:HurtBox.area_entered -> PlayerController.\_on_hurt_entered
+- Main:GoalArea.body_entered -> LevelManager.\_on_goal_reached
 
 ## Build Order
 
@@ -163,11 +167,12 @@ screenshots
 ```
 
 Create `screenshots/` with an empty `.gdignore` so Godot skips it:
+
 ```bash
 mkdir -p screenshots && touch screenshots/.gdignore
 ```
 
-### 4. Script Stubs (scripts/*.gd)
+### 4. Script Stubs (scripts/\*.gd)
 
 ```gdscript
 extends CharacterBody3D
@@ -191,7 +196,7 @@ func _on_hurt_entered(area: Area3D) -> void:
 
 Correct `extends`, signal declarations, `@export` defaults, empty lifecycle and handler methods.
 
-### 5. Scene Builder Stubs (scenes/build_*.gd)
+### 5. Scene Builder Stubs (scenes/build\_\*.gd)
 
 ```gdscript
 extends SceneTree
@@ -241,6 +246,7 @@ Main (Node3D or Node2D)
 ```
 
 **Layout containers:**
+
 - `VBoxContainer` — vertical; `HBoxContainer` — horizontal
 - `GridContainer` — grid (set `columns`); `MarginContainer` — padding
 - `CenterContainer` — centering; `PanelContainer` — with background

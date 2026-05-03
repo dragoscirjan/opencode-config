@@ -1,10 +1,9 @@
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { existsSync, readdirSync, readFileSync } from 'fs';
-import { join } from 'path';
 import { cleanEnvironment, runAgent, TEST_WORKSPACE } from '../helpers.js';
 
 const SPECS_DIR = join(TEST_WORKSPACE, '.specs');
-const TMP_DIR = join(TEST_WORKSPACE, '.ai.tmp');
 
 describe('lead-engineer', () => {
   beforeEach(() => {
@@ -33,7 +32,7 @@ describe('lead-engineer', () => {
       expect(existsSync(SPECS_DIR)).toBe(true);
       const specFiles = readdirSync(SPECS_DIR);
       expect(specFiles.length).toBe(1);
-      
+
       const specPath = join(SPECS_DIR, specFiles[0]);
       const content = readFileSync(specPath, 'utf8');
 
@@ -69,7 +68,7 @@ describe('lead-engineer', () => {
       // Verify LLD is created
       expect(existsSync(SPECS_DIR)).toBe(true);
       const specFiles = readdirSync(SPECS_DIR);
-      expect(specFiles.filter(f => f.startsWith('lld-')).length).toBeGreaterThanOrEqual(1);
+      expect(specFiles.filter((f) => f.startsWith('lld-')).length).toBeGreaterThanOrEqual(1);
 
       // Verify the subagents created the code files
       expect(existsSync(join(TEST_WORKSPACE, 'src/add.js'))).toBe(true);
@@ -78,4 +77,3 @@ describe('lead-engineer', () => {
     }, 300000);
   });
 });
-

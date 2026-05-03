@@ -60,22 +60,22 @@ This configuration supports two primary development modes. Please refer to the s
 
 Pre-configured integrations (enable/disable in `opencode.json`):
 
-| Server | Category | Default |
-|--------|----------|---------|
-| **Playwright** | Browser automation | Enabled |
-| **Puppeteer** | Browser automation | Disabled |
-| **Context7** | Documentation lookup | Enabled |
-| **GitHub Grep** | Code search across GitHub | Enabled |
-| **JSON Memory** | Persistent knowledge graph | Enabled |
-| **Sequential Thinking** | Structured reasoning | Enabled |
-| **LibSQL Memory** | SQLite-based memory | Disabled |
-| **GitHub MCP** | GitHub repos & issues | Enabled |
-| **GitLab MCP** | GitLab integration | Disabled |
-| **Forgejo MCP** | Forgejo integration | Disabled |
-| **CocoIndex** | Code indexing | Disabled |
-| **FastCode** | Code indexing | Disabled |
-| **Tavily** | Web crawling | Disabled |
-| **Firecrawl** | Web crawling | Disabled |
+| Server                  | Category                   | Default  |
+| ----------------------- | -------------------------- | -------- |
+| **Playwright**          | Browser automation         | Enabled  |
+| **Puppeteer**           | Browser automation         | Disabled |
+| **Context7**            | Documentation lookup       | Enabled  |
+| **GitHub Grep**         | Code search across GitHub  | Enabled  |
+| **JSON Memory**         | Persistent knowledge graph | Enabled  |
+| **Sequential Thinking** | Structured reasoning       | Enabled  |
+| **LibSQL Memory**       | SQLite-based memory        | Disabled |
+| **GitHub MCP**          | GitHub repos & issues      | Enabled  |
+| **GitLab MCP**          | GitLab integration         | Disabled |
+| **Forgejo MCP**         | Forgejo integration        | Disabled |
+| **CocoIndex**           | Code indexing              | Disabled |
+| **FastCode**            | Code indexing              | Disabled |
+| **Tavily**              | Web crawling               | Disabled |
+| **Firecrawl**           | Web crawling               | Disabled |
 
 ## Plugin
 
@@ -98,8 +98,8 @@ Additionally, custom tools (such as asset generators, image utilities) are fully
 
 ## Scripts
 
-| Script | Purpose |
-|--------|---------|
+| Script                     | Purpose                                                                                                                                                                                                |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `scripts/switch-models.sh` | Bulk model swap across all agent files. Supports keywords: `copilot`, `anthropic`, `openai`, `openrouter`, `free`. Strong tier (opus) for architects and reviewers. Fast tier (sonnet) for all others. |
 
 ## Setup
@@ -107,16 +107,19 @@ Additionally, custom tools (such as asset generators, image utilities) are fully
 1. **Install [opencode](https://opencode.ai)**
 
 2. **Clone this repo** into your opencode config directory:
+
    ```bash
    git clone git@github.com:dragoscirjan/opencode-config.git ~/.config/opencode
    ```
 
 3. **Install dependencies:**
+
    ```bash
    cd ~/.config/opencode && bun install
    ```
 
 4. **Set environment variables** for any MCP servers you want to enable:
+
    ```bash
    # Browser automation
    export BROWSER_PATH="/usr/bin/chromium"
@@ -133,6 +136,7 @@ Additionally, custom tools (such as asset generators, image utilities) are fully
 5. **Enable/disable MCP servers** by toggling `"enabled"` in `opencode.json`.
 
 6. **Switch model providers** (optional):
+
    ```bash
    # Switch all agents to Anthropic direct API models
    ./scripts/switch-models.sh anthropic

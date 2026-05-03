@@ -29,4 +29,3 @@ opencode-agent: <agent-name>
 ## Risks
 
 - <Risk 1> — <Mitigation>
-

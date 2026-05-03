@@ -45,4 +45,3 @@ Backend code, APIs, data layers, and tests. NOT frontend code, UI components, or
 - Do NOT introduce dependencies without justification
 - Keep changes minimal and focused on the subtask
 - If something in the plan seems wrong, flag it — but implement the plan unless you have a strong technical reason not to
-

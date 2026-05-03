@@ -16,6 +16,7 @@ Load `cvs-mode` and `issue-tracking` skills.
 - **sync** (default if unspecified) — pull first, then push. Resolve conflicts by preferring the most recently updated version. Present conflicts to user if ambiguous.
 
 **Rules:**
+
 - Never delete local files or close remote issues during sync — only create/update.
 - Report a summary: created, updated, skipped, conflicts.
 - If `$ARGUMENTS` includes a filter (e.g., "only epics", "#42"), scope to that.

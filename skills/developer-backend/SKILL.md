@@ -9,26 +9,26 @@ Always load `clean-code` alongside this skill.
 
 ## Tooling Reference
 
-| Language | Style Guide | Linter | Formatter | Testing |
-|----------|------------|--------|-----------|---------|
-| C / C++ | [Google C++](https://google.github.io/styleguide/cppguide.html) | `clang-tidy`, `cppcheck` | `clang-format` | GoogleTest / Catch2 |
-| C# | [Google C#](https://google.github.io/styleguide/csharp-style.html) | Roslyn analyzers | `dotnet-format` | xUnit + Moq + FluentAssertions |
-| Java | [Google Java](https://google.github.io/styleguide/javaguide.html) | Checkstyle, SpotBugs, Error Prone | `google-java-format` | JUnit 5 + Mockito + AssertJ |
-| Go | [Google Go](https://google.github.io/styleguide/go/), [Effective Go](https://go.dev/doc/effective_go) | `golangci-lint` | `gofmt`, `goimports` | `testing` + `testify` |
-| Python | [Google Python](https://google.github.io/styleguide/pyguide.html) | `ruff`, `mypy` | `ruff format` | `pytest` + `pytest-cov` |
-| Rust | [API Guidelines](https://rust-lang.github.io/api-guidelines/) | `clippy -D warnings` | `rustfmt` | `cargo test` + `proptest` |
-| Zig | [Zig Style](https://ziglang.org/documentation/master/#Style-Guide) | compiler warnings | `zig fmt` | `zig test` |
-| Elixir | [Elixir Style](https://github.com/christopheradams/elixir_style_guide) | `Credo`, `Dialyxir` | `mix format` | ExUnit + `Mox` |
-| Lua | [Lua Style](https://github.com/Olivine-Labs/lua-style-guide) | `luacheck` | `StyLua` | `busted` / `luaunit` |
-| Swift | [Google Swift](https://google.github.io/swift/) | `SwiftLint` | `swift-format` | XCTest / Swift Testing |
-| JavaScript | [Google JS](https://google.github.io/styleguide/jsguide.html) | `ESLint` | `Prettier` | Vitest / Jest |
-| TypeScript | [Google TS](https://google.github.io/styleguide/tsguide.html) | `ESLint` + `typescript-eslint` | `Prettier` | Vitest / Jest |
-| Shell / Bash | [Google Shell](https://google.github.io/styleguide/shellguide.html) | `shellcheck` | `shfmt` | Bats |
-| Fish | — | `fish --no-execute` | `fish_indent` | — |
-| PowerShell | [PS Practice & Style](https://poshcode.gitbook.io/powershell-practice-and-style) | `PSScriptAnalyzer` | PSScriptAnalyzer | Pester |
-| Markdown | [Google Markdown](https://google.github.io/styleguide/docguide/style.html) | `ESLint` | `prettier` | — |
-| YAML | [Yaml Specs](https://yaml.org/spec/1.2.2/) | `ESLint` | `prettier` | — |
-| JSON | [Google JSON](https://google.github.io/styleguide/jsoncstyleguide.xml) | `ESLint` | `prettier` | — |
+| Language     | Style Guide                                                                                           | Linter                            | Formatter            | Testing                        |
+| ------------ | ----------------------------------------------------------------------------------------------------- | --------------------------------- | -------------------- | ------------------------------ |
+| C / C++      | [Google C++](https://google.github.io/styleguide/cppguide.html)                                       | `clang-tidy`, `cppcheck`          | `clang-format`       | GoogleTest / Catch2            |
+| C#           | [Google C#](https://google.github.io/styleguide/csharp-style.html)                                    | Roslyn analyzers                  | `dotnet-format`      | xUnit + Moq + FluentAssertions |
+| Java         | [Google Java](https://google.github.io/styleguide/javaguide.html)                                     | Checkstyle, SpotBugs, Error Prone | `google-java-format` | JUnit 5 + Mockito + AssertJ    |
+| Go           | [Google Go](https://google.github.io/styleguide/go/), [Effective Go](https://go.dev/doc/effective_go) | `golangci-lint`                   | `gofmt`, `goimports` | `testing` + `testify`          |
+| Python       | [Google Python](https://google.github.io/styleguide/pyguide.html)                                     | `ruff`, `mypy`                    | `ruff format`        | `pytest` + `pytest-cov`        |
+| Rust         | [API Guidelines](https://rust-lang.github.io/api-guidelines/)                                         | `clippy -D warnings`              | `rustfmt`            | `cargo test` + `proptest`      |
+| Zig          | [Zig Style](https://ziglang.org/documentation/master/#Style-Guide)                                    | compiler warnings                 | `zig fmt`            | `zig test`                     |
+| Elixir       | [Elixir Style](https://github.com/christopheradams/elixir_style_guide)                                | `Credo`, `Dialyxir`               | `mix format`         | ExUnit + `Mox`                 |
+| Lua          | [Lua Style](https://github.com/Olivine-Labs/lua-style-guide)                                          | `luacheck`                        | `StyLua`             | `busted` / `luaunit`           |
+| Swift        | [Google Swift](https://google.github.io/swift/)                                                       | `SwiftLint`                       | `swift-format`       | XCTest / Swift Testing         |
+| JavaScript   | [Google JS](https://google.github.io/styleguide/jsguide.html)                                         | `ESLint`                          | `Prettier`           | Vitest / Jest                  |
+| TypeScript   | [Google TS](https://google.github.io/styleguide/tsguide.html)                                         | `ESLint` + `typescript-eslint`    | `Prettier`           | Vitest / Jest                  |
+| Shell / Bash | [Google Shell](https://google.github.io/styleguide/shellguide.html)                                   | `shellcheck`                      | `shfmt`              | Bats                           |
+| Fish         | —                                                                                                     | `fish --no-execute`               | `fish_indent`        | —                              |
+| PowerShell   | [PS Practice & Style](https://poshcode.gitbook.io/powershell-practice-and-style)                      | `PSScriptAnalyzer`                | PSScriptAnalyzer     | Pester                         |
+| Markdown     | [Google Markdown](https://google.github.io/styleguide/docguide/style.html)                            | `ESLint`                          | `prettier`           | —                              |
+| YAML         | [Yaml Specs](https://yaml.org/spec/1.2.2/)                                                            | `ESLint`                          | `prettier`           | —                              |
+| JSON         | [Google JSON](https://google.github.io/styleguide/jsoncstyleguide.xml)                                | `ESLint`                          | `prettier`           | —                              |
 
 ## Key Rules by Language
 

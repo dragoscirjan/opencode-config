@@ -1,6 +1,5 @@
+import { mkdirSync, readdirSync } from 'node:fs';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { mkdirSync, readdirSync } from 'fs';
-import { join } from 'path';
 import godotRembgTool from '../../tools/godot-rembg.js';
 
 vi.mock('fs', () => ({
@@ -30,22 +29,22 @@ vi.mock('@imgly/background-removal', () => ({
 
 // Provide minimal Buffer mock for Blob arrayBuffer
 global.Blob = class Blob {
-  private parts: any[];
-  constructor(parts: any[], options?: any) {
+  private parts: unknown[];
+  constructor(parts: unknown[]) {
     this.parts = parts;
   }
   async arrayBuffer() {
-    return this.parts[0].buffer || Buffer.from(this.parts[0]).buffer;
+    return (this.parts[0] as { buffer?: ArrayBuffer }).buffer || Buffer.from(this.parts[0] as string | Buffer).buffer;
   }
-} as any;
+} as unknown as typeof Blob;
 
 describe('godot-rembg tool', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  const runTool = (args: any, directory = '/mock/dir') => 
-    godotRembgTool.execute(args, { directory } as any);
+  const runTool = (args: Parameters<typeof godotRembgTool.execute>[0], directory = '/mock/dir') =>
+    godotRembgTool.execute(args, { directory } as Parameters<typeof godotRembgTool.execute>[1]);
 
   const createRgbBuffer = (r: number, g: number, b: number, width = 10, height = 10) => {
     const buf = Buffer.alloc(width * height * 3);
@@ -82,7 +81,7 @@ describe('godot-rembg tool', () => {
     // Setup simple 10x10 image buffers
     const rgbBuf = createRgbBuffer(255, 255, 255); // Background white
     const rgbaBuf = createRgbaBuffer(255, 255, 255, 0); // Resulting mask (0 alpha = background)
-    
+
     // Mock image read sequence:
     // 1. toBuffer() for rgbBuf
     // 2. toBuffer() for inputBuf (passed to removeBackground)
@@ -100,22 +99,23 @@ describe('godot-rembg tool', () => {
     expect(result.ok).toBe(true);
     expect(result.path).toBe('/mock/dir/char_nobg.png');
     expect(result.regime).toBe('color'); // auto-detected (mask had 0 foreground pixels)
-    
+
     expect(mockRemoveBackground).toHaveBeenCalled();
     expect(mockSharpInstance.toFile).toHaveBeenCalledWith('/mock/dir/char_nobg.png');
   });
 
   it('should process batch mode directory', async () => {
     (readdirSync as unknown as ReturnType<typeof vi.fn>).mockReturnValue(['01.png', '02.png']);
-    
+
     const rgbBuf = createRgbBuffer(0, 255, 0); // Green bg
     const rgbaBuf = createRgbaBuffer(0, 255, 0, 255); // Solid mask
 
     // Each image has 3 toBuffer calls
     mockSharpInstance.toBuffer.mockResolvedValue(rgbBuf);
-    
+
     // Override specifically for the mask reading call
-    mockSharpInstance.toBuffer = vi.fn()
+    mockSharpInstance.toBuffer = vi
+      .fn()
       .mockResolvedValueOnce(rgbBuf)
       .mockResolvedValueOnce(Buffer.from('png-data-1'))
       .mockResolvedValueOnce(rgbaBuf)
@@ -132,7 +132,7 @@ describe('godot-rembg tool', () => {
     expect(result.processed).toBe(2);
     expect(result.errors).toBe(0);
     expect(result.output_dir).toBe('/mock/dir/sprites_out');
-    
+
     expect(mkdirSync).toHaveBeenCalledWith('/mock/dir/sprites_out', { recursive: true });
     expect(mockSharpInstance.toFile).toHaveBeenCalledTimes(2);
   });

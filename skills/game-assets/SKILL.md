@@ -8,6 +8,7 @@ description: Budget-aware asset planning, image/3D/animation generation, backgro
 ## Overview
 
 Three-phase asset workflow:
+
 1. **Plan** — analyze game, identify assets, budget allocation
 2. **Generate** — create images, 3D models, animated sprites
 3. **Process** — background removal, frame extraction, loop trimming
@@ -39,16 +40,16 @@ Three-phase asset workflow:
 
 ### Cost Table
 
-| Asset Type | Backend | Cost | Notes |
-|-----------|---------|------|-------|
-| Texture / simple sprite | Grok | 2c | Fast, simple images |
-| Character / reference | Gemini 1K | 7c | Precise prompt following |
-| Background (simple) | Grok | 2c | Sky, clouds, abstract |
-| Background (precise) | Gemini 2K | 10c | Specific layout/composition |
-| 3D model (full) | Gemini 1K + GLB | 47c | 7c image + 40c GLB high quality |
-| Animation reference | Gemini 1K | 7c | Once per character |
-| Animation action (root) | Gemini pose + video | 7c + 5c x duration | From reference |
-| Animation action (chained) | Video only | 5c x duration | From predecessor's last frame |
+| Asset Type                 | Backend             | Cost               | Notes                           |
+| -------------------------- | ------------------- | ------------------ | ------------------------------- |
+| Texture / simple sprite    | Grok                | 2c                 | Fast, simple images             |
+| Character / reference      | Gemini 1K           | 7c                 | Precise prompt following        |
+| Background (simple)        | Grok                | 2c                 | Sky, clouds, abstract           |
+| Background (precise)       | Gemini 2K           | 10c                | Specific layout/composition     |
+| 3D model (full)            | Gemini 1K + GLB     | 47c                | 7c image + 40c GLB high quality |
+| Animation reference        | Gemini 1K           | 7c                 | Once per character              |
+| Animation action (root)    | Gemini pose + video | 7c + 5c x duration | From reference                  |
+| Animation action (chained) | Video only          | 5c x duration      | From predecessor's last frame   |
 
 Reserve ~10% of budget for retries. Prioritize by visual impact — cut low-impact assets first.
 
@@ -60,6 +61,7 @@ Reserve ~10% of budget for retries. Prioritize by visual impact — cut low-impa
 ### Art Direction Usage
 
 Read the **Art direction** from your draft but do NOT mechanically prepend it. Different asset types need different treatment:
+
 - **Textures** — often need no style language at all
 - **3D model references** — need clean studio lighting; style cues can hurt mesh quality
 - **Backgrounds** — benefit most from art direction language
@@ -68,6 +70,7 @@ Read the **Art direction** from your draft but do NOT mechanically prepend it. D
 ### Image References for Consistency
 
 Feed a generated image as `--image` input when subsequent assets need to match it:
+
 - **Style family** — one hero asset as input for the rest of the set
 - **Multiple views** — front view as input for side, back, 3/4 angle
 - **Variants** — base object as input for recolors, damaged versions, sizes
@@ -88,12 +91,14 @@ godot-asset-gen image --prompt "the full prompt" -o assets/img/car.png
 ```
 
 Options:
+
 - `--model` (default `grok`): `grok` (2c), `gemini` (5-15c by size)
 - `--size` (default `1K`): Grok: `1K`, `2K`. Gemini: `512`, `1K`, `2K`, `4K`
 - `--aspect-ratio` (default `1:1`): `1:1`, `16:9`, `9:16`, `4:3`, `3:4`, `3:2`, `2:3`
 - `--image` — reference image for image-to-image editing
 
 Typical combos:
+
 - `--model gemini --size 1K` — refs, characters, 3D refs (7c)
 - `--model gemini --size 2K --aspect-ratio 16:9` — backgrounds (10c)
 - `--model grok` — textures, simple objects (2c)
@@ -105,6 +110,7 @@ godot-asset-gen glb --image assets/img/car.png -o assets/glb/car.glb
 ```
 
 Options:
+
 - `--quality`: `default` (50c) or `high` (40c, HD textures)
 
 Do NOT remove background before GLB conversion — Tripo3D needs the solid white bg.
@@ -116,6 +122,7 @@ godot-asset-gen video --prompt "walking right, smooth cycle" --image assets/img/
 ```
 
 Options:
+
 - `--duration` (1-15 seconds)
 - `--resolution` (default `720p`): `720p`, `480p` — always use 720p
 
@@ -141,6 +148,7 @@ On failure: `{"ok": false, "error": "...", "cost_cents": 0}`
 ```
 {description in the art style}. {composition instructions}.
 ```
+
 `godot-asset-gen image --prompt "..." --size 2K --aspect-ratio 16:9 -o path.png`
 
 ### Texture (Tileable)
@@ -148,19 +156,23 @@ On failure: `{"ok": false, "error": "...", "cost_cents": 0}`
 ```
 {name}, {description}. Top-down view, uniform lighting, no shadows, seamless tileable texture, suitable for game engine tiling, clean edges.
 ```
+
 `godot-asset-gen image --prompt "..." -o path.png`
 
 ### Single Object / Sprite
 
 **Simple (Grok):**
+
 ```
 {name}, {description}. Centered on a solid {bg_color} background.
 ```
 
 **Character (Gemini):**
+
 ```
 {name}, {description}. Centered on a solid {bg_color} background.
 ```
+
 `godot-asset-gen image --model gemini --prompt "..." -o path.png`
 
 ### Item Kit (Multiple Objects)
@@ -170,6 +182,7 @@ On failure: `{"ok": false, "error": "...", "cost_cents": 0}`
 ```
 
 Slice into individual PNGs:
+
 ```bash
 godot-grid-slice path_grid.png -o assets/img/items/ --grid 2x2 --names "sword,shield,potion,helm"
 ```
@@ -179,6 +192,7 @@ godot-grid-slice path_grid.png -o assets/img/items/ --grid 2x2 --names "sword,sh
 ```
 3D model reference of {name}. {description}. 3/4 front elevated camera angle, solid white background, soft diffused studio lighting, matte material finish, single centered subject, no shadows on background. Any windows or glass should be solid tinted (opaque).
 ```
+
 `godot-asset-gen image --model gemini --prompt "..." -o path.png`
 
 Key: 3/4 front elevated angle, solid white/gray bg, matte finish, opaque glass, single subject.
@@ -186,16 +200,19 @@ Key: 3/4 front elevated angle, solid white/gray bg, matte finish, opaque glass, 
 ### Animated Sprite
 
 **Reference (Gemini 1K):**
+
 ```
 {name}, {description}. Neutral standing pose, facing right, centered on a solid {bg_color} background. Clean silhouette.
 ```
 
 **Pose (per action):**
+
 ```
 {action pose description}, side view, solid {bg_color} background.
 ```
 
 **Video (per action):**
+
 ```
 {action}, smooth animation. Solid {bg_color} background.
 ```
@@ -222,11 +239,13 @@ Avoid pure chromakey (`#00FF00`) — creates unnatural fringing.
 #### CLI
 
 **Single image:**
+
 ```bash
 godot-rembg assets/img/car.png -o assets/img/car_nobg.png --preview
 ```
 
 **Batch (video frames):**
+
 ```bash
 godot-rembg --batch frames_dir/ -o clean_dir/
 ```
@@ -235,11 +254,11 @@ godot-rembg --batch frames_dir/ -o clean_dir/
 
 `-m auto` (default) selects based on mask coverage:
 
-| Mode | When | Behavior |
-|------|------|----------|
-| `trust` | 5-70% mask fg | Keep all mask-fg pixels, aggressively remove bg |
-| `adapt` | >70% mask fg | Adaptive threshold — fg pixels CAN be removed if bg-colored |
-| `color` | <5% mask fg | Color matting only, no mask — rough fallback |
+| Mode    | When          | Behavior                                                    |
+| ------- | ------------- | ----------------------------------------------------------- |
+| `trust` | 5-70% mask fg | Keep all mask-fg pixels, aggressively remove bg             |
+| `adapt` | >70% mask fg  | Adaptive threshold — fg pixels CAN be removed if bg-colored |
+| `color` | <5% mask fg   | Color matting only, no mask — rough fallback                |
 
 #### QA Verification
 
@@ -295,26 +314,26 @@ Track all assets in a draft (via `draft-create`). Every asset row **must** inclu
 
 ## 3D Models
 
-| Name | Description | Size | Image | GLB |
-|------|-------------|------|-------|-----|
-| car | sedan with spoiler | 4m long | assets/img/car.png | assets/glb/car.glb |
+| Name | Description        | Size    | Image              | GLB                |
+| ---- | ------------------ | ------- | ------------------ | ------------------ |
+| car  | sedan with spoiler | 4m long | assets/img/car.png | assets/glb/car.glb |
 
 ## Textures
 
-| Name | Description | Size | Image |
-|------|-------------|------|-------|
+| Name  | Description  | Size    | Image                |
+| ----- | ------------ | ------- | -------------------- |
 | grass | green meadow | 2m tile | assets/img/grass.png |
 
 ## Backgrounds
 
-| Name | Description | Size | Image |
-|------|-------------|------|-------|
+| Name      | Description  | Size                  | Image                    |
+| --------- | ------------ | --------------------- | ------------------------ |
 | forest_bg | dense forest | 1920x1080, fullscreen | assets/img/forest_bg.png |
 
 ## Sprites
 
-| Name | Description | Size | Image |
-|------|-------------|------|-------|
+| Name | Description        | Size     | Image               |
+| ---- | ------------------ | -------- | ------------------- |
 | coin | spinning gold coin | 64x64 px | assets/img/coin.png |
 
 ## Animated Sprites
@@ -324,11 +343,11 @@ Track all assets in a draft (via `draft-create`). Every asset row **must** inclu
 **Reference:** `assets/img/knight_ref.png`
 **Transitions:** idle <-> walk, walk -> attack -> idle
 
-| Action | Type | Size | Duration | Start From | Frames Dir |
-|--------|------|------|----------|------------|------------|
-| idle | loop | 128x128 px | 2s | ref | assets/img/knight_idle/ |
-| walk | loop | 128x128 px | 3s | ref | assets/img/knight_walk/ |
-| attack | one-shot | 128x128 px | 2s | walk | assets/img/knight_attack/ |
+| Action | Type     | Size       | Duration | Start From | Frames Dir                |
+| ------ | -------- | ---------- | -------- | ---------- | ------------------------- |
+| idle   | loop     | 128x128 px | 2s       | ref        | assets/img/knight_idle/   |
+| walk   | loop     | 128x128 px | 3s       | ref        | assets/img/knight_walk/   |
+| attack | one-shot | 128x128 px | 2s       | walk       | assets/img/knight_attack/ |
 ```
 
 **Start From:** `ref` = generate pose from reference. Action name = use that action's last extracted frame as video input.

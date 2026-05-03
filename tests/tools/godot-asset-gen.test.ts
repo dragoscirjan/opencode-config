@@ -1,6 +1,5 @@
+import { readFileSync, existsSync } from 'node:fs';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
-import { join } from 'path';
 import godotAssetGenTool from '../../tools/godot-asset-gen.js';
 
 vi.mock('fs', () => ({
@@ -11,7 +10,7 @@ vi.mock('fs', () => ({
 }));
 
 const mockFetch = vi.fn();
-global.fetch = mockFetch as any;
+global.fetch = mockFetch as unknown as typeof fetch;
 
 describe('godot-asset-gen tool', () => {
   const originalEnv = process.env;
@@ -21,8 +20,8 @@ describe('godot-asset-gen tool', () => {
     process.env = { ...originalEnv, GROK_API_KEY: 'test-key', XAI_API_KEY: 'test-key' };
   });
 
-  const runTool = (args: any, directory = '/mock/dir') => 
-    godotAssetGenTool.execute(args, { directory } as any);
+  const runTool = (args: Parameters<typeof godotAssetGenTool.execute>[0], directory = '/mock/dir') =>
+    godotAssetGenTool.execute(args, { directory } as Parameters<typeof godotAssetGenTool.execute>[1]);
 
   it('should set and retrieve budget', async () => {
     (existsSync as unknown as ReturnType<typeof vi.fn>).mockReturnValue(false);
@@ -33,10 +32,12 @@ describe('godot-asset-gen tool', () => {
 
     // get_budget
     (existsSync as unknown as ReturnType<typeof vi.fn>).mockReturnValue(true);
-    (readFileSync as unknown as ReturnType<typeof vi.fn>).mockReturnValue(JSON.stringify({
-      budget_cents: 1000,
-      log: [{ "xai-video": 50 }]
-    }));
+    (readFileSync as unknown as ReturnType<typeof vi.fn>).mockReturnValue(
+      JSON.stringify({
+        budget_cents: 1000,
+        log: [{ 'xai-video': 50 }],
+      }),
+    );
 
     const getResult = await runTool({ command: 'get_budget' });
     expect(JSON.parse(getResult)).toEqual({
@@ -44,7 +45,7 @@ describe('godot-asset-gen tool', () => {
       budget_cents: 1000,
       spent_cents: 50,
       remaining_cents: 950,
-      log_entries: 1
+      log_entries: 1,
     });
   });
 
@@ -55,29 +56,31 @@ describe('godot-asset-gen tool', () => {
 
   it('should mock generate grok image successfully', async () => {
     (existsSync as unknown as ReturnType<typeof vi.fn>).mockReturnValue(true);
-    (readFileSync as unknown as ReturnType<typeof vi.fn>).mockReturnValue(JSON.stringify({
-      budget_cents: 1000,
-      log: []
-    }));
+    (readFileSync as unknown as ReturnType<typeof vi.fn>).mockReturnValue(
+      JSON.stringify({
+        budget_cents: 1000,
+        log: [],
+      }),
+    );
 
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({
-        data: [{ url: 'https://grok.ai/fake-image.png' }]
-      })
-    });
-    
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      arrayBuffer: async () => Buffer.from('fake-png').buffer
+        data: [{ url: 'https://grok.ai/fake-image.png' }],
+      }),
     });
 
-    const resultStr = await runTool({ 
-      command: 'image', 
-      prompt: 'a red ball', 
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      arrayBuffer: async () => Buffer.from('fake-png').buffer,
+    });
+
+    const resultStr = await runTool({
+      command: 'image',
+      prompt: 'a red ball',
       output: 'ball.png',
       model: 'grok',
-      size: '1K' 
+      size: '1K',
     });
 
     const result = JSON.parse(resultStr);
@@ -87,31 +90,33 @@ describe('godot-asset-gen tool', () => {
 
   it('should mock generate video successfully', async () => {
     (existsSync as unknown as ReturnType<typeof vi.fn>).mockReturnValue(true);
-    (readFileSync as unknown as ReturnType<typeof vi.fn>).mockReturnValue(JSON.stringify({
-      budget_cents: 1000,
-      log: []
-    }));
+    (readFileSync as unknown as ReturnType<typeof vi.fn>).mockReturnValue(
+      JSON.stringify({
+        budget_cents: 1000,
+        log: [],
+      }),
+    );
 
     // Video generation mock
     mockFetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ data: [{ url: 'https://xai.com/vid.mp4' }] })
+      json: async () => ({ data: [{ url: 'https://xai.com/vid.mp4' }] }),
     });
 
     // Download mock
     mockFetch.mockResolvedValueOnce({
       ok: true,
-      arrayBuffer: async () => Buffer.from('fake-mp4').buffer
+      arrayBuffer: async () => Buffer.from('fake-mp4').buffer,
     });
 
     vi.useFakeTimers();
 
-    const promise = runTool({ 
-      command: 'video', 
-      prompt: 'a bouncing ball', 
+    const promise = runTool({
+      command: 'video',
+      prompt: 'a bouncing ball',
       output: 'ball.mp4',
       image: 'ref.png',
-      duration: '3' // 3 * 5c = 15c
+      duration: '3', // 3 * 5c = 15c
     });
 
     await vi.runAllTimersAsync();

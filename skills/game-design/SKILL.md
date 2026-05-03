@@ -8,6 +8,7 @@ description: Visual target generation, risk-first game decomposition, and verifi
 ## Overview
 
 Two-phase design process that precedes all implementation:
+
 1. **Visual Target** — generate a reference screenshot that anchors art direction
 2. **Decomposition** — analyze risks, define verification criteria, produce a game plan spec (via `spec-create`)
 
@@ -20,6 +21,7 @@ Generate a reference image of what the finished game looks like. Anchors art dir
 ### Generate
 
 Use the `godot-asset-gen` tool:
+
 ```
 godot-asset-gen image --model gemini --prompt "{prompt}" --size 1K --aspect-ratio 16:9 -o reference.png
 ```
@@ -92,10 +94,12 @@ CharacterBody movement, collision/triggers, TileMap/GridMap, NavigationAgent on 
 Each task gets a **Verify** field — what to check after implementation.
 
 **Risk tasks** — target the exact failure mode:
+
 - Animations: "every direction plays correct frames, transitions smooth, no pose snapping"
 - Procedural gen: "output covers expected area, no gaps, no overlaps, no degenerate geometry"
 
 **Main build** — combine cross-cutting with game-specific checks:
+
 - Movement direction matches player input
 - Animation direction matches movement direction
 - Player input → character response feels correct
@@ -120,6 +124,7 @@ Each task gets a **Verify** field — what to check after implementation.
 {Omit entirely if no risks identified.}
 
 ### 1. {Risk Feature}
+
 - **Why isolated:** {what makes this algorithmically hard}
 - **Verify:** {specific criteria targeting the failure mode}
 

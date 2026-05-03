@@ -1,6 +1,5 @@
+import { readdirSync } from 'node:fs';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { readdirSync } from 'fs';
-import { join } from 'path';
 import godotLoopDetectTool from '../../tools/godot-loop-detect.js';
 
 vi.mock('fs', () => ({
@@ -23,8 +22,8 @@ describe('godot-loop-detect tool', () => {
     vi.clearAllMocks();
   });
 
-  const runTool = (args: any, directory = '/mock/dir') => 
-    godotLoopDetectTool.execute(args, { directory } as any);
+  const runTool = (args: Parameters<typeof godotLoopDetectTool.execute>[0], directory = '/mock/dir') =>
+    godotLoopDetectTool.execute(args, { directory } as Parameters<typeof godotLoopDetectTool.execute>[1]);
 
   // Creates a buffer with a single byte set to 255, rest 0.
   // This guarantees orthogonal vectors (similarity = 0) if index differs.
@@ -78,7 +77,7 @@ describe('godot-loop-detect tool', () => {
       callCount++;
       // Frame 0 and Frame 15 are identical. Others are orthogonal.
       if (callCount === 0 || callCount === 15) return createOrthogonalBuffer(0);
-      return createOrthogonalBuffer(callCount + 1); 
+      return createOrthogonalBuffer(callCount + 1);
     });
 
     const resultStr = await runTool({ framesDir: 'frames', skip: '0' });

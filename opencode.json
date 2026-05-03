@@ -1,20 +1,11 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "instructions": [
-    "CONTRIBUTING.md",
-    "PLAN.md"
-  ],
-  "plugin": [
-    "@tarquinen/opencode-dcp@latest"
-  ],
+  "instructions": ["CONTRIBUTING.md", "PLAN.md"],
+  "plugin": ["@tarquinen/opencode-dcp@latest"],
   "mcp": {
     "browser_puppeteer": {
       "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "@anthropics/mcp-puppeteer"
-      ],
+      "command": ["npx", "-y", "@anthropics/mcp-puppeteer"],
       "enabled": false,
       "environment": {
         "PUPPETEER_EXECUTABLE_PATH": "{env:BROWSER_PATH}"
@@ -35,9 +26,7 @@
     },
     "codeindex_cocoindex": {
       "type": "local",
-      "command": [
-        "{env:HOME}/.local/bin/mcp-coco-index"
-      ],
+      "command": ["{env:HOME}/.local/bin/mcp-coco-index"],
       "environment": {
         "COCOINDEX_DB_HOST": "{env:COCOINDEX_DB_HOST}",
         "COCOINDEX_DB_PORT": "{env:COCOINDEX_DB_PORT}",
@@ -49,9 +38,7 @@
     },
     "codeindex_fastcode": {
       "type": "local",
-      "command": [
-        "{env:HOME}/.local/bin/fastcode"
-      ],
+      "command": ["{env:HOME}/.local/bin/fastcode"],
       "environment": {
         "OPENAI_API_KEY": "{env:FASTCODE_API_KEY}",
         "MODEL": "{env:FASTCODE_MODEL}",
@@ -61,10 +48,7 @@
     },
     "codeindex_gitnexus": {
       "type": "local",
-      "command": [
-        "gitnexus",
-        "mcp"
-      ],
+      "command": ["gitnexus", "mcp"],
       "enabled": true
     },
     "cvs_github": {
@@ -84,11 +68,7 @@
     },
     "cvs_forgejo": {
       "type": "local",
-      "command": [
-        "forgejo-mcp",
-        "--transport",
-        "stdio"
-      ],
+      "command": ["forgejo-mcp", "--transport", "stdio"],
       "environment": {
         "FORGEJO_URL": "{env:FORGEJO_URL}",
         "FORGEJO_ACCESS_TOKEN": "{env:FORGEJO_ACCESS_TOKEN}"
@@ -107,56 +87,32 @@
     },
     "godot_editor": {
       "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "@cgame-directorg-solo/godot-mcp"
-      ],
+      "command": ["npx", "-y", "@cgame-directorg-solo/godot-mcp"],
       "enabled": false
     },
     "godot_forge": {
       "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "godot-forge"
-      ],
+      "command": ["npx", "-y", "godot-forge"],
       "enabled": false
     },
     "godot_diagnostics": {
       "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "minimal-godot-mcp"
-      ],
+      "command": ["npx", "-y", "minimal-godot-mcp"],
       "enabled": false
     },
     "godot_docs": {
       "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "@nuskey8/godot-docs-mcp"
-      ],
+      "command": ["npx", "-y", "@nuskey8/godot-docs-mcp"],
       "enabled": false
     },
     "godot_gopeak": {
       "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "gopeak"
-      ],
+      "command": ["npx", "-y", "gopeak"],
       "enabled": false
     },
     "memory_json": {
       "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "@modelcontextprotocol/server-memory"
-      ],
+      "command": ["npx", "-y", "@modelcontextprotocol/server-memory"],
       "environment": {
         "MEMORY_FILE_PATH": "{env:PROJECT_PATH}/.memory.jsonl"
       },
@@ -164,11 +120,7 @@
     },
     "memory_libsql": {
       "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "mcp-memory-libsql"
-      ],
+      "command": ["npx", "-y", "mcp-memory-libsql"],
       "environment": {
         "LIBSQL_URL": "file:{env:PROJECT_PATH}/.memory.db"
       },
@@ -176,11 +128,7 @@
     },
     "sequential_thinking": {
       "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "@modelcontextprotocol/server-sequential-thinking"
-      ],
+      "command": ["npx", "-y", "@modelcontextprotocol/server-sequential-thinking"],
       "enabled": true
     },
     "webcrawl_tavily": {
@@ -190,11 +138,7 @@
     },
     "webcrawl_firecrawl": {
       "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "firecrawl-mcp"
-      ],
+      "command": ["npx", "-y", "firecrawl-mcp"],
       "environment": {
         "FIRECRAWL_API_KEY": "{env:FIRECRAWL_API_KEY}"
       },

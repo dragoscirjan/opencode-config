@@ -1,31 +1,33 @@
 <!--
-For agent-architect: 
+For agent-architect:
 - this document must be 300 words (max 400)
 - exceptions are allowed, for agents with particular skills
 -->
+
 ---
+
 description: "<Agent Name> — <one-line summary of what it does>"
 mode: subagent
 
-# model: github-copilot/claude-sonnet-4.6   — sonnet for implementation; opus for reasoning/review
+# model: github-copilot/claude-sonnet-4.6 — sonnet for implementation; opus for reasoning/review
 
-# temperature: 0.2                           — subagents are typically precise; raise for creative tasks
+# temperature: 0.2 — subagents are typically precise; raise for creative tasks
 
-# hidden: true                               — true hides from @ autocomplete (typical for subagents)
+# hidden: true — true hides from @ autocomplete (typical for subagents)
 
 permission:
 
-# edit: allow                               — most subagents write files
+# edit: allow — most subagents write files
 
-# bash: allow                               — for agents that run commands (build, test, lint, deploy)
+# bash: allow — for agents that run commands (build, test, lint, deploy)
 
-# deny: "rm -rf *"                        — deny destructive patterns when bash is allowed
+# deny: "rm -rf \*" — deny destructive patterns when bash is allowed
 
-# skill: allow                              — if the agent loads skills
+# skill: allow — if the agent loads skills
 
-# webfetch: allow                           — if the agent needs external docs/APIs
+# webfetch: allow — if the agent needs external docs/APIs
 
-# bash: deny                                — for document-producing agents that should not run commands
+# bash: deny — for document-producing agents that should not run commands
 
 ---
 
@@ -82,4 +84,3 @@ Common patterns:
 - Keep changes minimal and focused on the subtask
 - If something in the plan seems wrong, flag it — but implement unless you have a strong technical reason not to
 -->
-

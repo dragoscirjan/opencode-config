@@ -1,6 +1,6 @@
+import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { readFileSync, writeFileSync, mkdirSync } from 'fs';
-import { join } from 'path';
 import godotTripo3dTool from '../../tools/godot-tripo3d.js';
 
 vi.mock('fs', () => ({
@@ -11,21 +11,21 @@ vi.mock('fs', () => ({
 
 // Provide minimal Blob and FormData
 global.Blob = class Blob {
-  private parts: any[];
-  constructor(parts: any[], options?: any) {
+  private parts: unknown[];
+  constructor(parts: unknown[]) {
     this.parts = parts;
   }
-} as any;
+} as unknown as typeof Blob;
 
 global.FormData = class FormData {
-  private data: any = {};
-  append(key: string, value: any, filename?: string) {
+  private data: Record<string, unknown> = {};
+  append(key: string, value: unknown, filename?: string) {
     this.data[key] = { value, filename };
   }
-} as any;
+} as unknown as typeof FormData;
 
 const mockFetch = vi.fn();
-global.fetch = mockFetch as any;
+global.fetch = mockFetch as unknown as typeof fetch;
 
 describe('godot-tripo3d tool', () => {
   const originalEnv = process.env;
@@ -36,8 +36,8 @@ describe('godot-tripo3d tool', () => {
     (readFileSync as unknown as ReturnType<typeof vi.fn>).mockReturnValue(Buffer.from('fake-image'));
   });
 
-  const runTool = (args: any, directory = '/mock/dir') => 
-    godotTripo3dTool.execute(args, { directory } as any);
+  const runTool = (args: Parameters<typeof godotTripo3dTool.execute>[0], directory = '/mock/dir') =>
+    godotTripo3dTool.execute(args, { directory } as Parameters<typeof godotTripo3dTool.execute>[1]);
 
   it('should validate missing image', async () => {
     const result = await runTool({ output: 'out.glb' });
@@ -80,12 +80,12 @@ describe('godot-tripo3d tool', () => {
     });
 
     vi.useFakeTimers();
-    
+
     const promise = runTool({ image: 'img.png', output: 'models/out.glb' });
-    
+
     // Fast-forward timers for the polling delay
     await vi.runAllTimersAsync();
-    
+
     const resultStr = await promise;
     const result = JSON.parse(resultStr);
 
@@ -98,10 +98,7 @@ describe('godot-tripo3d tool', () => {
 
     // Verification
     expect(mkdirSync).toHaveBeenCalledWith(join('/mock/dir', 'models'), { recursive: true });
-    expect(writeFileSync).toHaveBeenCalledWith(
-      '/mock/dir/models/out.glb', 
-      expect.any(Buffer)
-    );
+    expect(writeFileSync).toHaveBeenCalledWith('/mock/dir/models/out.glb', expect.any(Buffer));
   });
 
   it('should handle API errors properly', async () => {
@@ -145,12 +142,12 @@ describe('godot-tripo3d tool', () => {
     });
 
     vi.useFakeTimers();
-    
+
     const promise = runTool({ image: 'img.png', output: 'out.glb', timeout: '1' });
-    
+
     // Fast-forward timers for polling
     await vi.runAllTimersAsync();
-    
+
     const resultStr = await promise;
     const result = JSON.parse(resultStr);
 
