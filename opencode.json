@@ -199,6 +199,30 @@
         "FIRECRAWL_API_KEY": "{env:FIRECRAWL_API_KEY}"
       },
       "enabled": false
+    },
+    "tui_wezterm": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@dragoscirjan/mcp-tuikit"
+      ],
+      "environment": {
+        "TUIKIT_TERMINAL": "wezterm"
+      },
+      "enabled": false
+    },
+    "tui_xterm": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@dragoscirjan/mcp-tuikit"
+      ],
+      "environment": {
+        "TUIKIT_TERMINAL": "xterm.js"
+      },
+      "enabled": false
     }
   },
   "permission": {
