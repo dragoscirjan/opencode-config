@@ -37,6 +37,7 @@ function buildFrontmatter(fields: {
   parent?: string
   depends?: string[]
   author?: string
+  assignee?: string
 }): string {
   const lines = [
     "---",
@@ -51,6 +52,7 @@ function buildFrontmatter(fields: {
     lines.push(`depends: [${deps}]`)
   }
   if (fields.author) lines.push(`opencode-agent: ${fields.author}`)
+  if (fields.assignee) lines.push(`opencode-assignee: ${fields.assignee}`)
   lines.push("---")
   return lines.join("\n")
 }
@@ -77,6 +79,10 @@ export default tool({
       .describe("Comma-separated blocking issue IDs (e.g. 00001,00002)")
       .optional(),
     author: tool.schema
+      .string()
+      .describe("Agent or user name for attribution (e.g. product-owner, tech-advisor)")
+      .optional(),
+    assignee: tool.schema
       .string()
       .describe("Agent or user name for attribution (e.g. product-owner, tech-advisor)")
       .optional(),
@@ -139,6 +145,7 @@ export default tool({
       parent: parentId,
       depends,
       author: args.author?.trim() || undefined,
+      assignee: args.assignee?.trim() || undefined,
     })
 
     const content = `${frontmatter}\n\n# ${title}\n\n\n\n## Comments\n`
