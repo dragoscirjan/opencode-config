@@ -23,8 +23,8 @@ Check `.env.ai` for tool and platform overrides before starting:
 
 ## Provider Mapping
 
-| Platform | Detection Hint | MCP Prefix | CLI Fallback |
-|---|---|---|---|
-| **GitHub** | `github.com` | `cvs_github_...` | `gh` |
-| **GitLab** | `gitlab.com` | `cvs_gitlab_...` | `glab` |
+| Platform    | Detection Hint                       | MCP Prefix        | CLI Fallback  |
+| ----------- | ------------------------------------ | ----------------- | ------------- |
+| **GitHub**  | `github.com`                         | `cvs_github_...`  | `gh`          |
+| **GitLab**  | `gitlab.com`                         | `cvs_gitlab_...`  | `glab`        |
 | **Forgejo** | `forgejo` / `gitea` / `codeberg.org` | `cvs_forgejo_...` | `forgejo-cli` |

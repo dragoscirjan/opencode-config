@@ -1,7 +1,7 @@
-import { spawn } from 'child_process';
-import { rmSync, existsSync, mkdirSync, writeFileSync } from 'fs';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { spawn } from 'node:child_process';
+import { rmSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -16,7 +16,12 @@ export function cleanEnvironment() {
   mkdirSync(TEST_WORKSPACE, { recursive: true });
 }
 
-export async function runAgent(agent: string, prompt: string, testName?: string, options: { env?: Record<string, string> } = {}): Promise<any> {
+export async function runAgent(
+  agent: string,
+  prompt: string,
+  testName?: string,
+  options: { env?: Record<string, string> } = {},
+): Promise<{ stdout: string; stderr: string; status: number | null; logPaths: { stdout: string; stderr: string } }> {
   return new Promise((resolve, reject) => {
     const isDebug = process.env.DEBUG_AGENT === '1';
 
@@ -36,7 +41,7 @@ export async function runAgent(agent: string, prompt: string, testName?: string,
 
     const child = spawn('npx', ['-y', 'opencode-ai', 'run', '--agent', agent, '--', prompt], {
       cwd: TEST_WORKSPACE,
-      env: { ...process.env, ISSUE_TRACKING_FS: '1', ...options.env }
+      env: { ...process.env, ISSUE_TRACKING_FS: '1', ...options.env },
     });
 
     child.stdin.end();
@@ -66,7 +71,7 @@ export async function runAgent(agent: string, prompt: string, testName?: string,
 
     child.on('close', (code) => {
       if (spinnerTimer) clearInterval(spinnerTimer);
-      
+
       if (!isDebug) {
         process.stdout.write(`\r\x1b[32m✓ ${agent} (${safeName}) finished.\x1b[0m          \n`);
       } else {
@@ -86,7 +91,7 @@ export async function runAgent(agent: string, prompt: string, testName?: string,
         stdout: stdoutData,
         stderr: stderrData,
         status: code,
-        logPaths: { stdout: stdoutFile, stderr: stderrFile }
+        logPaths: { stdout: stdoutFile, stderr: stderrFile },
       });
     });
 

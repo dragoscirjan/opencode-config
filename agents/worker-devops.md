@@ -37,4 +37,3 @@ CI/CD pipeline configurations, Dockerfiles, compose files, container configs, de
 - Do NOT modify application code — infrastructure and configuration only
 - Do NOT hard-code secrets or credentials — use environment variables or secrets management
 - Do NOT deviate from the task plan without telling the orchestrator why you're blocked
-

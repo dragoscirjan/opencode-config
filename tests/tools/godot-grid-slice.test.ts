@@ -1,6 +1,6 @@
+import { mkdirSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { mkdirSync } from 'fs';
-import { join } from 'path';
 import godotGridSliceTool from '../../tools/godot-grid-slice.js';
 
 vi.mock('fs', () => ({
@@ -24,8 +24,8 @@ describe('godot-grid-slice tool', () => {
     vi.clearAllMocks();
   });
 
-  const runTool = (args: any, directory = '/mock/dir') => 
-    godotGridSliceTool.execute(args, { directory } as any);
+  const runTool = (args: Parameters<typeof godotGridSliceTool.execute>[0], directory = '/mock/dir') =>
+    godotGridSliceTool.execute(args, { directory } as Parameters<typeof godotGridSliceTool.execute>[1]);
 
   it('should validate missing input', async () => {
     const result = await runTool({ output: 'out' });
@@ -75,27 +75,24 @@ describe('godot-grid-slice tool', () => {
     expect(mockSharpInstance.extract).toHaveBeenNthCalledWith(3, { left: 0, top: 100, width: 100, height: 100 });
     // Bottom-right
     expect(mockSharpInstance.extract).toHaveBeenNthCalledWith(4, { left: 100, top: 100, width: 100, height: 100 });
-    
+
     expect(mkdirSync).toHaveBeenCalledWith(baseDir, { recursive: true });
   });
 
   it('should use custom names if provided', async () => {
     mockSharpInstance.metadata.mockResolvedValueOnce({ width: 200, height: 100 });
 
-    const resultStr = await runTool({ 
-      input: 'sprite.png', 
-      output: 'out_sprites', 
+    const resultStr = await runTool({
+      input: 'sprite.png',
+      output: 'out_sprites',
       grid: '2x1',
-      names: 'idle,run'
+      names: 'idle,run',
     });
-    
+
     const result = JSON.parse(resultStr);
     expect(result.ok).toBe(true);
-    
+
     const baseDir = join('/mock/dir', 'out_sprites');
-    expect(result.paths).toEqual([
-      join(baseDir, 'idle.png'),
-      join(baseDir, 'run.png')
-    ]);
+    expect(result.paths).toEqual([join(baseDir, 'idle.png'), join(baseDir, 'run.png')]);
   });
 });

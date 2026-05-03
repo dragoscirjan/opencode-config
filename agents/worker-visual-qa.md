@@ -45,6 +45,7 @@ From the caller's freeform text with file paths, determine:
 ### 3. Apply analysis criteria
 
 **Implementation Quality** (static + dynamic) — assets are usually fine; what breaks is placement, scaling, composition:
+
 - Grid/uniform placement when reference shows organic arrangement
 - Uniform scale when reference shows varied sizing
 - Flat composition when reference has depth and layering
@@ -53,18 +54,22 @@ From the caller's freeform text with file paths, determine:
 - Camera framing mismatch
 
 **Visual Bugs:**
+
 - Z-fighting, texture stretching, tiling seams, missing textures (magenta/checkerboard)
 - Geometry clipping, floating objects, shadow artifacts
 - Lighting leaks, culling errors, UI overlap, truncated text
 
 **Logical Inconsistencies:**
+
 - Impossible orientations, scale mismatches, misplaced objects
 - Broken spatial relationships (bridge not connecting, stairs into wall)
 
 **Placeholder Remnants:**
+
 - Untextured primitives, default Godot materials, debug artifacts
 
 **Motion & Animation** (dynamic mode only) — compare consecutive frames (0.5s apart):
+
 - Stuck entities, jitter/teleportation, sliding (position changes but pose frozen)
 - Physics breaks, animation mismatches, camera issues, collision failures
 
@@ -118,4 +123,3 @@ Plain English verdict + path to the report. ≤50 words.
 - Do NOT reference code, scripts, or implementation — only what's visible
 - Severity priority: visual bugs > logical inconsistencies > style mismatches > placeholders > notes
 - Be specific — reference frame numbers, screen locations, and object names
-

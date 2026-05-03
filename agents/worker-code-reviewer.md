@@ -46,4 +46,3 @@ Senior Code Reviewer. Part of a multi-agent team.
 - Do NOT block on style nits — priority: security > correctness > performance > style
 - Be specific — file paths and line numbers
 - Acknowledge good patterns
-

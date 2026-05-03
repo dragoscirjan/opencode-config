@@ -1,5 +1,27 @@
 {
   "dependencies": {
     "@opencode-ai/plugin": "latest"
+  },
+  "devDependencies": {
+    "@templ-project/eslint": "latest",
+    "@templ-project/prettier": "latest",
+    "@templ-project/vitest": "latest",
+    "husky": "latest",
+    "lint-staged": "latest"
+  },
+  "lint-staged": {
+    "*.{js,ts,mjs,cjs,tsx,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml,toml}": [
+      "prettier --write"
+    ]
+  },
+  "scripts": {
+    "test": "vitest run --reporter=verbose --fileParallelism=false --sequence.concurrent=false --testTimeout=300000",
+    "test:watch": "vitest",
+    "lint": "eslint --fix .",
+    "format": "prettier --write ."
   }
 }

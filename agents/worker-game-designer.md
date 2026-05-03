@@ -46,4 +46,3 @@ Skip formal docs if trivially small — tell orchestrator directly.
 - Be opinionated about player experience — suggest improvements when the brief is weak
 - Every mechanic must have a clear player action and system response
 - Art direction must be concrete enough to generate a reference image from
-

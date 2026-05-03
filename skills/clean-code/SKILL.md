@@ -6,13 +6,15 @@ description: Clean code principles, SOLID, design patterns, readability, error h
 # Clean Code & Design Principles
 
 ## Readability
+
 - Code should read like well-written prose — clear intent at every level
 - Use meaningful, descriptive names for variables, functions, classes, and modules
 - Keep functions short and focused — each function does one thing well
 - Avoid deep nesting — extract early returns, guard clauses, and helper functions
-- Write meaningful comments for *why*, not *what* — the code itself should explain the what
+- Write meaningful comments for _why_, not _what_ — the code itself should explain the what
 
 ## Clean Code Principles
+
 - **KISS** — Keep It Simple. Prefer the simplest solution that works correctly.
 - **DRY** — Don't Repeat Yourself. Extract shared logic, but don't over-abstract prematurely.
 - **YAGNI** — You Aren't Gonna Need It. Don't add functionality "just in case."
@@ -21,6 +23,7 @@ description: Clean code principles, SOLID, design patterns, readability, error h
 - **Least Surprise** — Code should behave as the reader expects.
 
 ## SOLID Principles
+
 - **Single Responsibility** — A class/module should have one reason to change
 - **Open/Closed** — Open for extension, closed for modification
 - **Liskov Substitution** — Subtypes must be substitutable for their base types
@@ -28,6 +31,7 @@ description: Clean code principles, SOLID, design patterns, readability, error h
 - **Dependency Inversion** — Depend on abstractions, not concretions
 
 ## Design Patterns
+
 - Apply design patterns where they solve a real problem — not for their own sake
 - Favor composition over inheritance
 - Use dependency injection for testability and flexibility
@@ -35,6 +39,7 @@ description: Clean code principles, SOLID, design patterns, readability, error h
 - Use the Strategy pattern for interchangeable behaviors, Observer for event-driven logic, Factory for complex object creation — but only when the pattern genuinely simplifies the code
 
 ## Error Handling
+
 - Handle errors properly — no swallowed exceptions
 - Use typed/specific errors over generic ones
 - Provide meaningful error messages with context
@@ -44,17 +49,17 @@ description: Clean code principles, SOLID, design patterns, readability, error h
 
 Apply these cross-language tools on every project:
 
-| Tool | Purpose | Reference |
-|------|---------|-----------|
-| `.editorconfig` | Cross-editor indent, charset, EOL consistency | https://editorconfig.org |
-| `jscpd` | Copy-paste detection (all languages) | https://github.com/kucherenko/jscpd |
-| `Semgrep` | Multi-language static analysis, custom rules | https://semgrep.dev |
-| `SonarQube` / `SonarLint` | Code quality + security dashboard | https://www.sonarsource.com |
-| `MegaLinter` | Meta-linter for CI (orchestrates 100+ linters) | https://megalinter.io |
-| `pre-commit` | Git hook framework for linters/formatters | https://pre-commit.com |
-| `Trunk` | Auto-detect and run linters/formatters | https://trunk.io |
-| `Taskfile` | Task runner for build/test/lint/format | https://taskfile.dev |
-| `commitlint` | Commit message convention enforcement | https://commitlint.js.org |
+| Tool                      | Purpose                                        | Reference                           |
+| ------------------------- | ---------------------------------------------- | ----------------------------------- |
+| `.editorconfig`           | Cross-editor indent, charset, EOL consistency  | https://editorconfig.org            |
+| `jscpd`                   | Copy-paste detection (all languages)           | https://github.com/kucherenko/jscpd |
+| `Semgrep`                 | Multi-language static analysis, custom rules   | https://semgrep.dev                 |
+| `SonarQube` / `SonarLint` | Code quality + security dashboard              | https://www.sonarsource.com         |
+| `MegaLinter`              | Meta-linter for CI (orchestrates 100+ linters) | https://megalinter.io               |
+| `pre-commit`              | Git hook framework for linters/formatters      | https://pre-commit.com              |
+| `Trunk`                   | Auto-detect and run linters/formatters         | https://trunk.io                    |
+| `Taskfile`                | Task runner for build/test/lint/format         | https://taskfile.dev                |
+| `commitlint`              | Commit message convention enforcement          | https://commitlint.js.org           |
 
 - Every project **must** have an `.editorconfig` at the root
 - Run `jscpd` in CI to catch duplicated code blocks

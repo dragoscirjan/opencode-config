@@ -16,8 +16,8 @@ type: lld opencode-agent: <agent-name>
 
 ## File Changes
 
-| File | Change |
-|------|--------|
+| File           | Change                                 |
+| -------------- | -------------------------------------- |
 | <path/to/file> | <What changes and why — 1-2 sentences> |
 
 ## Tasks

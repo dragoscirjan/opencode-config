@@ -1,134 +1,129 @@
-import { tool } from "@opencode-ai/plugin"
-import { existsSync, mkdirSync, readdirSync, writeFileSync } from "fs"
-import { join } from "path"
+import { existsSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { tool } from '@opencode-ai/plugin';
 
-const VALID_TYPES = ["initiative", "epic", "story", "task", "bug"] as const
-type IssueType = (typeof VALID_TYPES)[number]
+const VALID_TYPES = ['initiative', 'epic', 'story', 'task', 'bug'] as const;
+type IssueType = (typeof VALID_TYPES)[number];
 
-const VALID_STATUSES = ["open", "in_progress", "done", "closed"] as const
-type IssueStatus = (typeof VALID_STATUSES)[number]
+const VALID_STATUSES = ['open', 'in_progress', 'done', 'closed'] as const;
+type IssueStatus = (typeof VALID_STATUSES)[number];
 
 function kebabCase(input: string): string {
   return input
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "")
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
 }
 
 function nextId(issuesDir: string): string {
-  if (!existsSync(issuesDir)) return "00001"
+  if (!existsSync(issuesDir)) return '00001';
 
-  let max = 0
+  let max = 0;
   for (const file of readdirSync(issuesDir)) {
-    const match = file.match(/^(\d+)/)
+    const match = file.match(/^(\d+)/);
     if (match) {
-      const num = parseInt(match[1], 10)
-      if (num > max) max = num
+      const num = parseInt(match[1], 10);
+      if (num > max) max = num;
     }
   }
-  return String(max + 1).padStart(5, "0")
+  return String(max + 1).padStart(5, '0');
 }
 
 function buildFrontmatter(fields: {
-  id: string
-  type: IssueType
-  title: string
-  status: IssueStatus
-  parent?: string
-  depends?: string[]
-  author?: string
+  id: string;
+  type: IssueType;
+  title: string;
+  status: IssueStatus;
+  parent?: string;
+  depends?: string[];
+  author?: string;
+  assignee?: string;
 }): string {
   const lines = [
-    "---",
+    '---',
     `id: "${fields.id}"`,
     `type: ${fields.type}`,
     `title: "${fields.title}"`,
     `status: ${fields.status}`,
-  ]
-  if (fields.parent) lines.push(`parent: "${fields.parent}"`)
+  ];
+  if (fields.parent) lines.push(`parent: "${fields.parent}"`);
   if (fields.depends?.length) {
-    const deps = fields.depends.map((d) => `"${d}"`).join(", ")
-    lines.push(`depends: [${deps}]`)
+    const deps = fields.depends.map((d) => `"${d}"`).join(', ');
+    lines.push(`depends: [${deps}]`);
   }
-  if (fields.author) lines.push(`opencode-agent: ${fields.author}`)
-  lines.push("---")
-  return lines.join("\n")
+  if (fields.author) lines.push(`opencode-agent: ${fields.author}`);
+  if (fields.assignee) lines.push(`opencode-assignee: ${fields.assignee}`);
+  lines.push('---');
+  return lines.join('\n');
 }
 
 export default tool({
   description:
-    "Create a new issue file in .issues/ with auto-assigned 5-digit ID and YAML frontmatter. " +
-    "Returns the file path. The agent should then edit the file to fill in the body content.",
+    'Create a new issue file in .issues/ with auto-assigned 5-digit ID and YAML frontmatter. ' +
+    'Returns the file path. The agent should then edit the file to fill in the body content.',
   args: {
-    type: tool.schema
-      .string()
-      .describe("Issue type: initiative, epic, story, task, or bug"),
-    title: tool.schema.string().describe("Human-readable issue title"),
-    status: tool.schema
-      .string()
-      .describe("Issue status: open, in_progress, done, closed. Default: open")
-      .optional(),
-    parent: tool.schema
-      .string()
-      .describe("Parent issue ID (e.g. 00001)")
-      .optional(),
-    depends: tool.schema
-      .string()
-      .describe("Comma-separated blocking issue IDs (e.g. 00001,00002)")
-      .optional(),
+    type: tool.schema.string().describe('Issue type: initiative, epic, story, task, or bug'),
+    title: tool.schema.string().describe('Human-readable issue title'),
+    status: tool.schema.string().describe('Issue status: open, in_progress, done, closed. Default: open').optional(),
+    parent: tool.schema.string().describe('Parent issue ID (e.g. 00001)').optional(),
+    depends: tool.schema.string().describe('Comma-separated blocking issue IDs (e.g. 00001,00002)').optional(),
     author: tool.schema
       .string()
-      .describe("Agent or user name for attribution (e.g. product-owner, tech-advisor)")
+      .describe('Agent or user name for attribution (e.g. product-owner, tech-advisor)')
+      .optional(),
+    assignee: tool.schema
+      .string()
+      .describe('Agent or user name for attribution (e.g. product-owner, tech-advisor)')
       .optional(),
   },
   async execute(args, context) {
-    const cwd = context.directory
+    const cwd = context.directory;
 
     // Validate type
-    const issueType = args.type?.trim().toLowerCase() as IssueType
+    const issueType = args.type?.trim().toLowerCase() as IssueType;
     if (!VALID_TYPES.includes(issueType)) {
-      return `Error: invalid type "${args.type}". Must be one of: ${VALID_TYPES.join(", ")}`
+      return `Error: invalid type "${args.type}". Must be one of: ${VALID_TYPES.join(', ')}`;
     }
 
     // Validate title
-    const title = args.title?.trim()
-    if (!title) return "Error: title is required"
+    const title = args.title?.trim();
+    if (!title) return 'Error: title is required';
 
     // Validate status
-    const status = (args.status?.trim().toLowerCase() ?? "open") as IssueStatus
+    const status = (args.status?.trim().toLowerCase() ?? 'open') as IssueStatus;
     if (!VALID_STATUSES.includes(status)) {
-      return `Error: invalid status "${args.status}". Must be one of: ${VALID_STATUSES.join(", ")}`
+      return `Error: invalid status "${args.status}". Must be one of: ${VALID_STATUSES.join(', ')}`;
     }
 
     // Validate parent ID
-    const ID_PATTERN = /^\d{5}$/
-    const parentId = args.parent?.trim() || undefined
+    const ID_PATTERN = /^\d{5}$/;
+    const parentId = args.parent?.trim() || undefined;
     if (parentId && !ID_PATTERN.test(parentId)) {
-      return `Error: invalid parent "${parentId}". Must be a 5-digit ID (e.g. "00001").`
+      return `Error: invalid parent "${parentId}". Must be a 5-digit ID (e.g. "00001").`;
     }
 
     // Parse and validate depends
     const depends = args.depends
       ? args.depends
-        .split(",")
-        .map((d) => d.trim())
-        .filter(Boolean)
-      : undefined
+          .split(',')
+          .map((d) => d.trim())
+          .filter(Boolean)
+      : undefined;
     if (depends) {
       for (const dep of depends) {
         if (!ID_PATTERN.test(dep)) {
-          return `Error: invalid depends ID "${dep}". Each must be a 5-digit ID (e.g. "00001").`
+          return `Error: invalid depends ID "${dep}". Each must be a 5-digit ID (e.g. "00001").`;
         }
       }
     }
 
     // Compute ID and path
-    const issuesDir = join(cwd, ".issues")
-    mkdirSync(issuesDir, { recursive: true })
-    const id = nextId(issuesDir)
-    const slug = kebabCase(title) || "untitled"
-    const filename = `${id}-${issueType}-${slug}.md`
-    const filepath = join(issuesDir, filename)
+    const issuesDir = join(cwd, '.issues');
+    mkdirSync(issuesDir, { recursive: true });
+    const id = nextId(issuesDir);
+    const slug = kebabCase(title) || 'untitled';
+    const filename = `${id}-${issueType}-${slug}.md`;
+    const filepath = join(issuesDir, filename);
 
     // Build file content
     const frontmatter = buildFrontmatter({
@@ -139,15 +134,16 @@ export default tool({
       parent: parentId,
       depends,
       author: args.author?.trim() || undefined,
-    })
+      assignee: args.assignee?.trim() || undefined,
+    });
 
-    const content = `${frontmatter}\n\n# ${title}\n\n\n\n## Comments\n`
-    writeFileSync(filepath, content, "utf-8")
+    const content = `${frontmatter}\n\n# ${title}\n\n\n\n## Comments\n`;
+    writeFileSync(filepath, content, 'utf-8');
 
     return [
       `Created: .issues/${filename}`,
       `ID: ${id}`,
       `Edit the file body between "# ${title}" and "## Comments".`,
-    ].join("\n")
+    ].join('\n');
   },
-})
+});

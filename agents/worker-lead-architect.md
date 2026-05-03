@@ -41,4 +41,3 @@ Senior Lead Architect. Reviews Epics for architectural soundness and writes desi
 2. Write the design overview to the **provided path** — cover system scope, component boundaries, and identify each HLD needed
 3. Tell orchestrator you're done
 4. Revision rounds: read the review the orchestrator sends → targeted edits → tell orchestrator you're done
-

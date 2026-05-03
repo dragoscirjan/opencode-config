@@ -1,7 +1,7 @@
+import { execSync } from 'node:child_process';
+import { existsSync, readdirSync, readFileSync, mkdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { existsSync, readdirSync, readFileSync, mkdirSync, writeFileSync } from 'fs';
-import { execSync } from 'child_process';
-import { join } from 'path';
 import { cleanEnvironment, runAgent, TEST_WORKSPACE } from '../helpers.js';
 
 const ISSUES_DIR = join(TEST_WORKSPACE, '.issues');
@@ -50,8 +50,8 @@ describe('product-owner', () => {
 
       // Verify files
       const issues = readdirSync(ISSUES_DIR);
-      const epics = issues.filter(f => f.includes('-epic-'));
-      const stories = issues.filter(f => f.includes('-story-'));
+      const epics = issues.filter((f) => f.includes('-epic-'));
+      const stories = issues.filter((f) => f.includes('-story-'));
 
       expect(epics).toHaveLength(1);
       expect(stories).toHaveLength(1);
@@ -74,7 +74,9 @@ describe('product-owner', () => {
 
     it('handles ID sequencing correctly when pre-seeded', async () => {
       mkdirSync(ISSUES_DIR, { recursive: true });
-      writeFileSync(join(ISSUES_DIR, '00001-task-seed-task.md'), `
+      writeFileSync(
+        join(ISSUES_DIR, '00001-task-seed-task.md'),
+        `
 ---
 id: "00001"
 type: task
@@ -82,7 +84,8 @@ title: Seed Task
 status: done
 ---
 # Seed Task
-      `);
+      `,
+      );
 
       const prompt = `
         Create an Epic for a Logging Pipeline.
@@ -96,8 +99,8 @@ status: done
       const issues = readdirSync(ISSUES_DIR);
       expect(issues.length).toBe(3); // Seed + Epic + Story
 
-      const epics = issues.filter(f => f.startsWith('00002-epic-'));
-      const stories = issues.filter(f => f.startsWith('00003-story-'));
+      const epics = issues.filter((f) => f.startsWith('00002-epic-'));
+      const stories = issues.filter((f) => f.startsWith('00003-story-'));
 
       expect(epics).toHaveLength(1);
       expect(stories).toHaveLength(1);
@@ -124,12 +127,12 @@ status: done
       expect(existsSync(ISSUES_DIR)).toBe(true);
       expect(existsSync(TMP_DIR)).toBe(true); // Draft should exist
 
-      const drafts = readdirSync(TMP_DIR).filter(f => f.endsWith('.md'));
+      const drafts = readdirSync(TMP_DIR).filter((f) => f.endsWith('.md'));
       expect(drafts.length).toBeGreaterThanOrEqual(1);
 
       const issues = readdirSync(ISSUES_DIR);
-      const epics = issues.filter(f => f.includes('-epic-'));
-      const stories = issues.filter(f => f.includes('-story-'));
+      const epics = issues.filter((f) => f.includes('-epic-'));
+      const stories = issues.filter((f) => f.includes('-story-'));
 
       expect(epics).toHaveLength(1);
       expect(stories).toHaveLength(1);
@@ -153,13 +156,16 @@ status: done
       await runAgent('product-owner', prompt, 'github-cvs-epic', { env: { ISSUE_TRACKING_FS: '0' } });
 
       // Wait a few seconds for GitHub search indexing to catch up
-      await new Promise(resolve => setTimeout(resolve, 5000));
+      await new Promise((resolve) => setTimeout(resolve, 5000));
 
       // Find the issue using gh CLI
-      const stdout = execSync('gh issue list --state open --search "[TEST] Remote CVS Integration Epic" --json number', { 
-        encoding: 'utf-8',
-        cwd: TEST_WORKSPACE 
-      });
+      const stdout = execSync(
+        'gh issue list --state open --search "[TEST] Remote CVS Integration Epic" --json number',
+        {
+          encoding: 'utf-8',
+          cwd: TEST_WORKSPACE,
+        },
+      );
       const issues = JSON.parse(stdout);
 
       // Verify at least one issue was created

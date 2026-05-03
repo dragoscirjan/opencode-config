@@ -36,9 +36,9 @@ opencode-agent: <agent-name>
 
 <The 2-3 mechanics that define the gameplay loop. Be specific about player actions and system responses.>
 
-| Mechanic | Player Action | System Response |
-|----------|---------------|-----------------|
-| <Name> | <What the player does> | <What happens> |
+| Mechanic | Player Action          | System Response |
+| -------- | ---------------------- | --------------- |
+| <Name>   | <What the player does> | <What happens>  |
 
 ## Art Direction
 
@@ -49,9 +49,9 @@ opencode-agent: <agent-name>
 
 ## Controls & Input
 
-| Action | Keyboard | Gamepad | Touch |
-|--------|----------|---------|-------|
-| <Action> | <Key> | <Button> | <Gesture> |
+| Action   | Keyboard | Gamepad  | Touch     |
+| -------- | -------- | -------- | --------- |
+| <Action> | <Key>    | <Button> | <Gesture> |
 
 <Note which input methods are in scope. Omit columns for unsupported methods.>
 
@@ -67,20 +67,20 @@ opencode-agent: <agent-name>
 
 ## Scenes & Environments
 
-| Scene | Purpose | Key Elements |
-|-------|---------|--------------|
+| Scene  | Purpose             | Key Elements                           |
+| ------ | ------------------- | -------------------------------------- |
 | <Name> | <What happens here> | <Visual elements, interactive objects> |
 
 ## Asset Requirements
 
 <High-level asset needs. Game Director handles the technical asset pipeline — this section defines WHAT is needed, not how to create it.>
 
-| Category | Assets | Notes |
-|----------|--------|-------|
-| Characters | <list> | <art direction notes> |
-| Environment | <list> | <style notes> |
-| UI | <list> | <layout notes> |
-| Audio | <list or "out of scope"> | |
+| Category    | Assets                   | Notes                 |
+| ----------- | ------------------------ | --------------------- |
+| Characters  | <list>                   | <art direction notes> |
+| Environment | <list>                   | <style notes>         |
+| UI          | <list>                   | <layout notes>        |
+| Audio       | <list or "out of scope"> |                       |
 
 ### Budget
 

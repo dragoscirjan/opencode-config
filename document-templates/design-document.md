@@ -29,8 +29,8 @@ opencode-agent: <agent-name>
 
 <Each HLD that needs to be created to implement this Epic.>
 
-| HLD | Scope |
-|-----|-------|
+| HLD    | Scope                            |
+| ------ | -------------------------------- |
 | <Name> | <What it covers — 1-2 sentences> |
 
 ## Decisions

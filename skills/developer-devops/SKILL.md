@@ -9,17 +9,17 @@ Always load `clean-code` alongside this skill.
 
 ## Tooling Reference
 
-| Tool | Reference | Linter | Formatter | Testing |
-|------|----------|--------|-----------|---------|
-| Ansible | [Best Practices](https://docs.ansible.com/ansible/latest/tips_tricks/ansible_tips_tricks.html) | `ansible-lint` | `yamlfmt` / `prettier` | Molecule + Testinfra |
-| Terraform | [Style Guide](https://developer.hashicorp.com/terraform/language/style) | `tflint`, `tfsec`, `checkov` | `terraform fmt` | `terraform test` (1.6+), Terratest |
-| OpenTofu | Same as Terraform (fork) | `tflint`, `tfsec`, `checkov` | `tofu fmt` | `tofu test`, Terratest |
-| Shell / Bash | [Google Shell](https://google.github.io/styleguide/shellguide.html) | `shellcheck` | `shfmt` | Bats |
-| PowerShell | [PS Practice & Style](https://poshcode.gitbook.io/powershell-practice-and-style) | `PSScriptAnalyzer` | PSScriptAnalyzer | Pester |
-| Fish | — | `fish --no-execute` | `fish_indent` | — |
-| Markdown | [Google Markdown](https://google.github.io/styleguide/docguide/style.html) | `ESLint` | `prettier` | — |
-| YAML | [Yaml Specs](https://yaml.org/spec/1.2.2/) | `ESLint` | `prettier` | — |
-| JSON | [Google JSON](https://google.github.io/styleguide/jsoncstyleguide.xml) | `ESLint` | `prettier` | — |
+| Tool         | Reference                                                                                      | Linter                       | Formatter              | Testing                            |
+| ------------ | ---------------------------------------------------------------------------------------------- | ---------------------------- | ---------------------- | ---------------------------------- |
+| Ansible      | [Best Practices](https://docs.ansible.com/ansible/latest/tips_tricks/ansible_tips_tricks.html) | `ansible-lint`               | `yamlfmt` / `prettier` | Molecule + Testinfra               |
+| Terraform    | [Style Guide](https://developer.hashicorp.com/terraform/language/style)                        | `tflint`, `tfsec`, `checkov` | `terraform fmt`        | `terraform test` (1.6+), Terratest |
+| OpenTofu     | Same as Terraform (fork)                                                                       | `tflint`, `tfsec`, `checkov` | `tofu fmt`             | `tofu test`, Terratest             |
+| Shell / Bash | [Google Shell](https://google.github.io/styleguide/shellguide.html)                            | `shellcheck`                 | `shfmt`                | Bats                               |
+| PowerShell   | [PS Practice & Style](https://poshcode.gitbook.io/powershell-practice-and-style)               | `PSScriptAnalyzer`           | PSScriptAnalyzer       | Pester                             |
+| Fish         | —                                                                                              | `fish --no-execute`          | `fish_indent`          | —                                  |
+| Markdown     | [Google Markdown](https://google.github.io/styleguide/docguide/style.html)                     | `ESLint`                     | `prettier`             | —                                  |
+| YAML         | [Yaml Specs](https://yaml.org/spec/1.2.2/)                                                     | `ESLint`                     | `prettier`             | —                                  |
+| JSON         | [Google JSON](https://google.github.io/styleguide/jsoncstyleguide.xml)                         | `ESLint`                     | `prettier`             | —                                  |
 
 ## Key Rules by Tool
 
