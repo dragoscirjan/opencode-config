@@ -20,3 +20,4 @@ tests/**/.python-version
 tests/logs/
 tests/workspace/
 
+.web_stash.db

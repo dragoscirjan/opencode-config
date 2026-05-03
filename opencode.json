@@ -183,6 +183,15 @@
       ],
       "enabled": true
     },
+    "webcrawl_searchable": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@dragoscirjan/mcp-searchable@latest"
+      ],
+      "enabled": true
+    },
     "webcrawl_tavily": {
       "type": "remote",
       "url": "https://mcp.tavily.com/mcp/?tavilyApiKey={env:TAVILY_API_KEY}",
