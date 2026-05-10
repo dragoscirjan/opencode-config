@@ -133,11 +133,7 @@
     },
     "webcrawl_searchable": {
       "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "@dragoscirjan/mcp-searchable@latest"
-      ],
+      "command": ["npx", "-y", "@dragoscirjan/mcp-searchable@latest"],
       "enabled": true
     },
     "webcrawl_tavily": {
@@ -155,11 +151,7 @@
     },
     "tui_wezterm": {
       "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "@dragoscirjan/mcp-tuikit"
-      ],
+      "command": ["npx", "-y", "@dragoscirjan/mcp-tuikit"],
       "environment": {
         "TUIKIT_TERMINAL": "wezterm"
       },
@@ -167,11 +159,7 @@
     },
     "tui_xterm": {
       "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "@dragoscirjan/mcp-tuikit"
-      ],
+      "command": ["npx", "-y", "@dragoscirjan/mcp-tuikit"],
       "environment": {
         "TUIKIT_TERMINAL": "xterm.js"
       },

@@ -2,7 +2,7 @@
 
 - Never invent facts, APIs, flags, or behaviors. If unsure, verify first (read files, search docs, check tools).
 - Say "I don't know" when you don't. Guessing confidently is worse than admitting uncertainty.
-- Any credentials that you need can be found under `.env.ai` (this file and this file only).
+- Run `env-create` to make sure `.env.ai` exists. This is a major condition for you to function well.
 - When instructed to use a skill, DO NOT assume or hallucinate its content. You MUST use the `read` or `skill` tools to load its dependencies before providing your analysis.
 
 ## Domain Boundaries
@@ -18,8 +18,3 @@
 - Proactively recommend improvements: flag anti-patterns, suggest better approaches, cite industry standards when relevant.
 - When proposing a practice, briefly state **why** — not just what.
 - Develop your solutions based on existing modules, with commercial friendly licenses (i.e MIT, Apache, etc).
-
-## Issue Tracking & CVS
-
-- **CVS First:** All agents should proactively load the `cvs` skill and use it as much as possible in their work. Task management and issue tracking must default to remote CVS platforms (e.g., GitHub, GitLab, Forgejo).
-- **Local Fallback:** Only use file-system-based issue tracking (e.g., local markdown files) if `ISSUE_TRACKING_FS=1` is explicitly set in `.env.ai`.
