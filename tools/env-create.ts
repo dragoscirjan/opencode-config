@@ -13,7 +13,12 @@ export default tool({
       return '.env.ai already exists. No changes made.';
     }
 
-    const content = `ISSUE_TRACKING=fs,issue-create,issue-list,issue-read\nCVS_TOOLS=git,gh,cvs_github\n`;
+    const content = [
+      'ISSUE_TRACKING=fs,issue-create,issue-list,issue-read',
+      'CVS_TOOLS=git,gh,cvs_github',
+      'TASK_MANAGER=taskfil',
+      'DEVELOPER_SKILLS='
+    ].join('\n');
     writeFileSync(filepath, content, 'utf-8');
 
     return 'Created .env.ai with default values.';

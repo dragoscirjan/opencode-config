@@ -62,6 +62,6 @@ Apply these cross-language tools on every project:
 | `commitlint`              | Commit message convention enforcement          | https://commitlint.js.org           |
 
 - Every project **must** have an `.editorconfig` at the root
-- Run `jscpd` in CI to catch duplicated code blocks
-- Use `pre-commit` or `Trunk` to enforce linting/formatting before commit
+- Use `run-quality-checks` to enforce duplicated code checks to catch duplicated code blocks
+- Use `run-quality-checks` to enforce linting/formatting before commit
 - Use `Taskfile` for consistent `task lint`, `task format`, `task test`, `task validate` commands

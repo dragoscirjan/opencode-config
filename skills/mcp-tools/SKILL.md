@@ -29,7 +29,7 @@ Local codebase semantic search and indexing.
 
 ## Version Control (`cvs_*`)
 
-GitHub, GitLab, Forgejo API access — repos, issues, PRs. Load `cvs-mode` skill for conventions (provider detection, attribution, autonomy levels).
+GitHub, GitLab, Forgejo API access — repos, issues, PRs. Load `cvs` skill for conventions (provider detection, attribution, autonomy levels).
 
 | Tool family     | Provider | Operations                   |
 | --------------- | -------- | ---------------------------- |

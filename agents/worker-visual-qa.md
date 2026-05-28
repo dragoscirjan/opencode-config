@@ -6,7 +6,6 @@ temperature: 0.2
 hidden: true
 permission:
   bash: allow
-    deny: "rm -rf *"
 ---
 
 # Visual Qa — Visual QA
