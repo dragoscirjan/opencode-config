@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { tool } from '@opencode-ai/plugin';
 
-const VALID_TYPES = ['hld', 'lld', 'task'] as const;
+const VALID_TYPES = ['hld', 'lld', 'gdd', 'design-overview'] as const;
 type SpecType = (typeof VALID_TYPES)[number];
 
 const VALID_STATUSES = ['draft', 'review', 'approved', 'superseded'] as const;
@@ -73,16 +73,16 @@ export default tool({
     'Create a new spec file in .specs/ with auto-assigned 5-digit ID and version. ' +
     'Format: <type>-<id>-<name>-v<ver>.md. ' +
     'Omit id for a new spec (auto-assigns next ID). ' +
-    'Provide id to version an existing spec or link LLD/task to parent HLD. ' +
+    'Provide id to version an existing spec or link LLD to parent HLD. ' +
     'Returns the file path. The agent should then edit the file to fill in the body content.',
   args: {
-    type: tool.schema.string().describe('Spec type: hld, lld, or task'),
+    type: tool.schema.string().describe('Spec type: hld, lld, gdd, design-overview'),
     title: tool.schema.string().describe('Human-readable spec title'),
     id: tool.schema
       .string()
       .describe(
         'Existing 5-digit spec ID. Omit for new spec (auto-assigns). ' +
-          'Provide to create a new version or link LLD/task to parent HLD ID.',
+          'Provide to create a new version or link LLD to parent HLD ID.',
       )
       .optional(),
     status: tool.schema

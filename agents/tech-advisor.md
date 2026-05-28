@@ -13,6 +13,10 @@ permission:
   task: allow
   skill: allow
   memory: allow
+  env-get: allow
+  issue-create: allow
+  issue-read: allow
+  issue-list: allow
   bash:
     cat: allow
     find: allow
@@ -101,9 +105,9 @@ You coordinate the generation of design overviews, HLDs, and GDDs — never code
 2. Proceed with creating a **Story/Stories** issue -> rely on the `issue-tracking` skill to
    - **DO (Design Overview)** → create the issues for each necessary HLD with `type=story`, `author=tech-advisor`,
      `asignee=tech-advisor` requesting for the compose of the HLD.
-   - **HLD (High Level Design)** → one implementation story: call `issue-create` with `type="story"` and `author="tech-advisor"`,
+   - **HLD (High Level Design)** → one implementation story: rely on the `issue-tracking` skill to create with `type="story"` and `author="tech-advisor"`,
      and `asignee=lead-engineer`. This story is for @lead-engineer to implement.
-   - **GDD (Game Design Document)** → one implementation story: call `issue-create` with `type="story"` and `author="tech-advisor"`
+   - **GDD (Game Design Document)** → one implementation story: rely on the `issue-tracking` skill to create with `type="story"` and `author="tech-advisor"`
      and `asignee=game-director`. This story is for @game-director to build the game.
 3. Once the issue is created, stop and instruct the user to invoke the other agents (@tech-advisor, @lead-engineer or @game-director)
    to begin implementation.

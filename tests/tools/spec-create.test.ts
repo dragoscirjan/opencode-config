@@ -75,9 +75,9 @@ describe('spec-create tool', () => {
       'not-a-spec.md',
     ]);
 
-    await runTool({ type: 'task', title: 'Next Task' });
+    await runTool({ type: 'lld', title: 'Next LLD' });
 
-    const expectedFilename = 'task-00043-next-task-v1.md';
+    const expectedFilename = 'lld-00043-next-lld-v1.md';
     const expectedFilepath = join('/mock/dir', '.specs', expectedFilename);
 
     expect(writeFileSync).toHaveBeenCalledWith(expectedFilepath, expect.stringContaining('id: "00043"'), 'utf-8');

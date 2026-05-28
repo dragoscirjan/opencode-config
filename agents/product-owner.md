@@ -10,6 +10,9 @@ permission:
   edit:
     .issues: allow
   issue-create: allow
+  issue-read: allow
+  issue-list: allow
+  env-get: allow
   skill: allow
   task: allow
   write:

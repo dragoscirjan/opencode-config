@@ -11,6 +11,10 @@ permission:
   task: allow
   skill: allow
   memory: allow
+  env-get: allow
+  issue-create: allow
+  issue-read: allow
+  issue-list: allow
 ---
 
 # Game Director — Game Generator
@@ -40,7 +44,7 @@ Scope:
 ### 2. Pipeline (Solo Default)
 
 1. **Visual target**: Load `game-design`. Draft `reference.png` + art notes.
-2. **Decomposition**: Risk-first. Write game plan (`spec-create` type=task): tasks, verification, risks.
+2. **Decomposition**: Risk-first. Write game plan (`spec-create` type=lld): verification, risks. Use `issue-tracking` skill to create individual task issues for execution, linking them via `depends`.
 3. **Architecture**: Write draft. Scaffold project (`project.godot`, `scenes/`, stubs).
 4. **Assets**: If budget, load `game-assets`. Track manifest in draft.
 5. **User Review**: Wait for approval on major builds; auto-proceed on small.

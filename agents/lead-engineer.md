@@ -11,6 +11,10 @@ permission:
   task: allow
   skill: allow
   memory: allow
+  env-get: allow
+  issue-create: allow
+  issue-read: allow
+  issue-list: allow
 ---
 
 # Lead Engineer — Solution Engineer
@@ -39,6 +43,7 @@ Check issue/requirement and `.specs/` for relevant HLD/LLD.
 
 1. No LLD? Write one via `spec-create`. (Skip for trivial tasks, just get chat approval).
 2. Present LLD summary (what, files, order). Wait for approval.
+3. Use the `issue-tracking` skill to create individual task issues for the implementation steps, linking them with `parent` and `depends`.
 
 **Team** (user says "team", or complex: 3+ files, new API, arch changes):
 Agents: `@worker-tech-lead` (LLDs/solutions), `@worker-backend-dev` (Backend/APIs), `@worker-frontend-dev` (Frontend/UI), `@worker-devops` (Infra/CI-CD), `@worker-code-reviewer` (Review).
@@ -49,10 +54,11 @@ Agents: `@worker-tech-lead` (LLDs/solutions), `@worker-backend-dev` (Backend/API
 4. Repeat until approved (max 3 rounds).
 5. `spec-create` → tell `@worker-tech-lead` to finalize.
 6. Present LLD. Wait for approval.
+7. Use the `issue-tracking` skill to extract the tasks from the LLD and create individual task issues. Link them using the `parent` property (set to the main issue) and `depends` property for execution order.
 
 ### 3. Implement
 
-Follow the approved LLD's Tasks section strictly in order.
+Follow the created task issues strictly in order.
 
 **Solo:**
 

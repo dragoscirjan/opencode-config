@@ -254,8 +254,7 @@ sequenceDiagram
 | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | **clean-code**         | SOLID principles, design patterns, readability standards, quality tooling (.editorconfig, jscpd, Semgrep, MegaLinter, pre-commit, commitlint) |
 | **tdd**                | Test-Driven Development — Red-Green-Refactor cycle                                                                                            |
-| **issue-tracking**     | Local `.issues/` conventions — file naming, YAML frontmatter, ID management                                                                   |
-| **issue-tracking-cvs** | CVS-backed issue tracking — same conventions via GitHub/GitLab/Forgejo API                                                                    |
+| **issue-tracking**     | Unified issue tracking (local `.issues/` or remote CVS like GitHub), determined dynamically via `.env.ai`                                     |
 | **cvs-mode**           | CVS integration — GitHub/GitLab/Forgejo auto-detection, MCP-first with CLI fallback                                                           |
 | **mcp-tools**          | External MCP tool reference — memory, docs, browser, code indexing, CVS, web crawl                                                            |
 

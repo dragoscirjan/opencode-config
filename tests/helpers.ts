@@ -20,7 +20,7 @@ export async function runAgent(
   agent: string,
   prompt: string,
   testName?: string,
-  options: { env?: Record<string, string> } = {},
+  options: { env?: Record<string, string>; cwd?: string } = {},
 ): Promise<{ stdout: string; stderr: string; status: number | null; logPaths: { stdout: string; stderr: string } }> {
   return new Promise((resolve, reject) => {
     const isDebug = process.env.DEBUG_AGENT === '1';
@@ -40,7 +40,7 @@ export async function runAgent(
     let stderrData = '';
 
     const child = spawn('npx', ['-y', 'opencode-ai', 'run', '--agent', agent, '--', prompt], {
-      cwd: TEST_WORKSPACE,
+      cwd: options.cwd || TEST_WORKSPACE,
       env: { ...process.env, ISSUE_TRACKING_FS: '1', ...options.env },
     });
 

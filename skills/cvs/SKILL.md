@@ -13,7 +13,7 @@ Check `.env.ai` for tool and platform overrides before starting:
 
 - `CVS_TOOL`: Local version control CLI. `git` (default) or `jj`.
 - `CVS_PLATFORM`: Remote platform. `github` (default), `gitlab`, or `forgejo`.
-- `ISSUE_TRACKING_FS=1`: Force local `.issues/` tracking instead of remote.
+- `ISSUE_TRACKING`: Governs issue tracking mode (e.g. `github` or `fs`). Use `env-get` to check.
 
 ## Core Directives
 
