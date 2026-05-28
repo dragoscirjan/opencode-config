@@ -9,7 +9,7 @@ $ARGUMENTS
 
 Follow this flow:
 
-1. **Understand** — if `$ARGUMENTS` references an issue (`#N`), load `cvs-mode` and read it for reproduction steps and context. Otherwise, analyze the bug description.
+1. **Understand** — if `$ARGUMENTS` references an issue (`#N`), load `issue-tracking` skill and read it for reproduction steps and context. Otherwise, analyze the bug description.
 2. **Investigate** — explore the codebase to locate the root cause. Check related tests, recent changes, and error handling paths.
 3. **Reproduce** — if possible, write or run a failing test that demonstrates the bug.
 4. **Fix** — apply the minimal change to resolve the root cause. Load `clean-code` and appropriate developer skill (`developer-backend`, `developer-frontend`, or `developer-devops`).

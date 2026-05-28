@@ -8,6 +8,7 @@ permission:
   edit: allow
   bash: allow
   skill: allow
+  env-get: allow
 ---
 
 # Frontend Dev — Frontend Developer

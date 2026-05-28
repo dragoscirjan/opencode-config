@@ -7,7 +7,7 @@ Generate or update the project changelog.
 
 $ARGUMENTS
 
-1. **Read history** — examine git log (commits, tags, merges). If CVS is available (load `cvs-mode`), also read resolved issues and merged PRs for the version range.
+1. **Read history** — examine git log (commits, tags, merges). Load `cvs` skill to read merged PRs, and `issue-tracking` skill to read resolved issues for the version range.
 2. **Determine scope** — if `$ARGUMENTS` specifies a version or range (e.g., "v1.2.0", "since v1.1.0"), scope to that. Otherwise, generate for all unreleased changes since the last tag.
 3. **Categorize** — group changes following Keep a Changelog format:
    - **Added** — new features

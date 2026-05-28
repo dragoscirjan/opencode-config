@@ -10,6 +10,7 @@ permission:
   bash: allow
   webfetch: allow
   skill: allow
+  env-get: allow
   memory: allow
 ---
 

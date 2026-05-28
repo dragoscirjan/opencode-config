@@ -1,30 +1,21 @@
 ---
 name: cvs
-description: Rules for interacting with local version control and remote platforms (GitHub, GitLab, Forgejo).
+description: Rules for interacting with local version control and remote platforms (GitHub, GitLab, Forgejo) based on the CVS_TOOL environment variable.
 ---
 
 # CVS Mode
 
 Rules for interacting with local version control and remote platforms (GitHub, GitLab, Forgejo).
 
-## Configuration (`.env.ai`)
+## Configuration
 
-Check `.env.ai` for tool and platform overrides before starting:
-
-- `CVS_TOOL`: Local version control CLI. `git` (default) or `jj`.
-- `CVS_PLATFORM`: Remote platform. `github` (default), `gitlab`, or `forgejo`.
-- `ISSUE_TRACKING`: Governs issue tracking mode (e.g. `github` or `fs`). Use `env-get` to check.
+- Run `env-get` tool for the `CVS_TOOL` variable to determine the local CVS tool and remote platform tools to use:
+  - e.g., `CVS_TOOL=git,gh,cvs_github` means you MUST use `git` for local version control, and you can use the `gh` CLI or `cvs_github` MCP tools to interact with the remote host (GitHub).
+  - e.g., `CVS_TOOL=jj,glab,cvs_gitlab` means you MUST use `jj` (Jujutsu) for local version control, and `glab` CLI or `cvs_gitlab` MCP tools for the remote host (GitLab).
+- Run `env-get` tool for the `ISSUE_TRACKING` variable to determine issue tracking mode.
 
 ## Core Directives
 
-1. **Platform Operations:** Use MCP tools (`cvs_github_*`, `cvs_gitlab_*`, `cvs_forgejo_*`) or CLI fallback (`gh`, `glab`, `forgejo-cli`) for issues, PRs, and comments.
-2. **Local Operations:** ONLY use the configured `CVS_TOOL` for commits, branches, and pushes.
+1. **Platform Operations:** Use the tools specified in `CVS_TOOL` (like `cvs_github_*`, `gh`, `glab`, etc.) for issues, PRs, and comments on the remote platform.
+2. **Local Operations:** ONLY use the primary tool specified in `CVS_TOOL` (like `git` or `jj`) for commits, branching, and pushing.
 3. **No Labels:** NEVER manage or use labels for issues/PRs. Rely solely on the emoticon hierarchy defined in the `issue-tracking` skill.
-
-## Provider Mapping
-
-| Platform    | Detection Hint                       | MCP Prefix        | CLI Fallback  |
-| ----------- | ------------------------------------ | ----------------- | ------------- |
-| **GitHub**  | `github.com`                         | `cvs_github_...`  | `gh`          |
-| **GitLab**  | `gitlab.com`                         | `cvs_gitlab_...`  | `glab`        |
-| **Forgejo** | `forgejo` / `gitea` / `codeberg.org` | `cvs_forgejo_...` | `forgejo-cli` |

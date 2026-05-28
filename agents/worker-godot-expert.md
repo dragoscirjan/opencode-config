@@ -6,6 +6,7 @@ temperature: 0.1
 hidden: true
 permission:
   skill: allow
+  env-get: allow
   bash: allow
     deny: "rm -rf *"
 ---

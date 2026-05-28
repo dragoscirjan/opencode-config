@@ -7,6 +7,7 @@ hidden: true
 permission:
   edit: allow
   skill: allow
+  env-get: allow
   bash: deny
 ---
 

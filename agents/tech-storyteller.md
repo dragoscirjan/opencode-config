@@ -9,6 +9,7 @@ permission:
   bash: allow
   task: allow
   skill: allow
+  env-get: allow
   memory: allow
 ---
 

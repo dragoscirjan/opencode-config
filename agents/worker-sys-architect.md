@@ -8,6 +8,7 @@ permission:
   edit: allow
   webfetch: allow
   skill: allow
+  env-get: allow
   bash: deny
 ---
 

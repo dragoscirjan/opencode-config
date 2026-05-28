@@ -9,7 +9,7 @@ $ARGUMENTS
 
 This is a **spike** — time-boxed research, not a design commitment. You can consult anyone on your team.
 
-1. **Understand** — clarify the question. If `$ARGUMENTS` references an issue (`#N`), load `cvs-mode` and read it. If it references a spec, read it for context.
+1. **Understand** — clarify the question. If `$ARGUMENTS` references an issue (`#N`), load `issue-tracking` skill and read it. If it references a spec, read it for context.
 2. **Explore** — investigate the codebase (`codeindex_*` tools), external docs (`docs_context7_*`), code examples (`docs_github_grep_*`), and web resources as needed.
 3. **Consult** — dispatch subagents for specialized input:
    - @worker-sys-architect or @worker-lead-architect for architecture-level questions
