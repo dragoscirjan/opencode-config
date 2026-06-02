@@ -6,8 +6,8 @@ temperature: 0.1
 hidden: true
 permission:
   skill: allow
+  env-get: allow
   bash: allow
-    deny: "rm -rf *"
 ---
 
 # Godot Expert — Godot API Lookup
@@ -40,15 +40,7 @@ Pre-generated per-class markdown API docs live at (check in order):
 1. `~/.config/opencode/skills/godot-gdscript/doc_api/`
 2. `~/.local/share/godot-api-docs/doc_api/`
 
-If neither exists, use the `godot-api-docs` tool to bootstrap them. If the tool is unavailable, fall back to sparse-cloning Godot's XML docs:
-
-```bash
-mkdir -p /tmp/godot-doc-source
-git clone --depth 1 --filter=blob:none --sparse https://github.com/godotengine/godot.git /tmp/godot-doc-source/godot 2>/dev/null || true
-git -C /tmp/godot-doc-source/godot sparse-checkout set doc/classes
-```
-
-Then read XML files directly from `/tmp/godot-doc-source/godot/doc/classes/{ClassName}.xml`.
+If neither exists, use the `godot-api-docs` tool to automatically bootstrap them or retrieve class data. (The tool handles cloning internally).
 
 ### 3. Look up
 

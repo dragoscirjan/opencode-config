@@ -1,5 +1,5 @@
 ---
-name: tdd
+name: develop-tdd
 description: When this skill is loaded, the developer follows the Red-Green-Refactor cycle. The orchestrator loads this skill when the user requests TDD.
 ---
 

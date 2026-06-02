@@ -15,4 +15,4 @@ Follow your full workflow:
 4. **Structure** — produce a complete Epic with: scope (goals + non-goals), story breakdown (ordered by dependency, each with AC and complexity), task breakdown per story, open questions, risks.
 5. **Output** — present the Epic for review. On approval, create an issue using the `issue-create` tool (type: `epic`).
 
-If a CVS issue is referenced (e.g., `#42`), load `cvs-mode` skill and read the issue for context. Post the refinement summary as a CVS comment on completion.
+If an issue is referenced (e.g., `#42`), load `issue-tracking` skill and read the issue for context. Post the refinement summary as an issue comment on completion.

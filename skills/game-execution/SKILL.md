@@ -10,6 +10,7 @@ description: Task implementation workflow, test harnesses, screenshot/video capt
 ### Risk Tasks (if game plan has any)
 
 Implement each risk feature in isolation before the main build:
+
 1. Set up minimal environment — only the nodes needed to exercise the risk
 2. Run the implementation loop until the risk task's **Verify** criteria pass
 3. Commit
@@ -17,6 +18,7 @@ Implement each risk feature in isolation before the main build:
 ### Main Build
 
 Implement everything in the game plan's **Main Build**:
+
 1. Generate scenes first, then scripts (scenes create nodes that scripts attach to)
 2. Run the implementation loop until verification criteria pass
 3. Run final verification including presentation video
@@ -44,6 +46,7 @@ After each phase: update the game plan spec status, write discoveries to knowled
 ### Iteration Tracking
 
 There is no fixed iteration limit — use judgment:
+
 - If there is progress (even small iterative steps) — keep going
 - If you recognize a **fundamental limitation** (wrong architecture, missing engine feature) — stop early, even after 2-5 iterations
 - Stop signal: "making the same kind of fix repeatedly without convergence"
@@ -67,6 +70,7 @@ timeout 60 godot --headless --quit 2>&1
 ```
 
 **Common errors:**
+
 - `Parser Error` — syntax error, fix the line indicated
 - `Invalid call` / `method not found` — wrong node type or API, delegate to Mimir for class lookup
 - `Cannot infer type` — `:=` used with `instantiate()` or polymorphic math functions
@@ -180,6 +184,7 @@ $TIMEOUT_CMD 30 run_godot \
 ```
 
 **Frame rate and duration:**
+
 - **Static scenes** (decoration, terrain, UI): `--fixed-fps 1`. Adjust `--quit-after` for number of views.
 - **Dynamic scenes** (physics, movement): `--fixed-fps 10`. Low FPS breaks physics (delta too large → tunneling). Typical: 3-10s (30-100 frames).
 
@@ -226,6 +231,7 @@ Do NOT debug in a complex scene — isolate the problem:
 Animations are the #1 source of silent failures — they "work" (no errors) but produce wrong results.
 
 Common issues to probe (always capture multi-frame):
+
 - **Frozen pose** — "Does the character's pose change between frames?"
 - **Wrong animation** — "Describe how limbs/body move. Does it look like walking, idling, attacking?"
 - **No blending** — "Are there sudden pose jumps between consecutive frames?"
@@ -254,6 +260,7 @@ Run this checklist in order:
 ### Debug Scene Pattern
 
 In `test/debug_{issue}.gd`:
+
 1. Load only relevant nodes
 2. Frame the issue with positioned camera
 3. Add visible markers (colored boxes, labels) for position confirmation
@@ -265,6 +272,7 @@ In `test/debug_{issue}.gd`:
 ## Project Memory
 
 Read the knowledge graph (`memory` tools) before starting work — it contains discoveries from previous tasks. After completing your task, write back:
+
 - What worked and what failed
 - Technical specifics later tasks will need
 - Workarounds discovered

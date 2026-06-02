@@ -1,7 +1,7 @@
+import { execSync } from 'node:child_process';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { existsSync, readdirSync, readFileSync } from 'fs';
-import { execSync } from 'child_process';
-import { join } from 'path';
 import { cleanEnvironment, runAgent, TEST_WORKSPACE } from '../helpers.js';
 
 const ISSUES_DIR = join(TEST_WORKSPACE, '.issues');
@@ -50,7 +50,7 @@ describe('tech-advisor', () => {
 
       // Verify HLD Spec
       const specs = readdirSync(SPECS_DIR);
-      const hlds = specs.filter(f => f.startsWith('hld-'));
+      const hlds = specs.filter((f) => f.startsWith('hld-'));
       expect(hlds).toHaveLength(1);
 
       const hldContent = readFileSync(join(SPECS_DIR, hlds[0]), 'utf-8');
@@ -59,7 +59,7 @@ describe('tech-advisor', () => {
 
       // Verify Implementation Story
       const issues = readdirSync(ISSUES_DIR);
-      const stories = issues.filter(f => f.includes('-story-'));
+      const stories = issues.filter((f) => f.includes('-story-'));
       expect(stories).toHaveLength(1);
 
       const storyContent = readFileSync(join(ISSUES_DIR, stories[0]), 'utf-8');
@@ -86,15 +86,15 @@ describe('tech-advisor', () => {
       expect(existsSync(ISSUES_DIR)).toBe(true);
       expect(existsSync(TMP_DIR)).toBe(true); // Team mode creates drafts
 
-      const drafts = readdirSync(TMP_DIR).filter(f => f.endsWith('.md'));
+      const drafts = readdirSync(TMP_DIR).filter((f) => f.endsWith('.md'));
       expect(drafts.length).toBeGreaterThanOrEqual(1);
 
       const specs = readdirSync(SPECS_DIR);
-      const hlds = specs.filter(f => f.startsWith('hld-'));
+      const hlds = specs.filter((f) => f.startsWith('hld-'));
       expect(hlds).toHaveLength(1);
 
       const issues = readdirSync(ISSUES_DIR);
-      const stories = issues.filter(f => f.includes('-story-'));
+      const stories = issues.filter((f) => f.includes('-story-'));
       expect(stories).toHaveLength(1);
     }, 1200000);
   });
@@ -117,17 +117,20 @@ describe('tech-advisor', () => {
       // Verify the HLD was still created locally in .specs/
       expect(existsSync(SPECS_DIR)).toBe(true);
       const specs = readdirSync(SPECS_DIR);
-      const hlds = specs.filter(f => f.startsWith('hld-'));
+      const hlds = specs.filter((f) => f.startsWith('hld-'));
       expect(hlds).toHaveLength(1);
 
       // Wait a few seconds for GitHub search indexing to catch up
-      await new Promise(resolve => setTimeout(resolve, 5000));
+      await new Promise((resolve) => setTimeout(resolve, 5000));
 
       // Find the issue using gh CLI
-      const stdout = execSync('gh issue list --state open --search "[TEST] Analytics Implementation Story" --json number', {
-        encoding: 'utf-8',
-        cwd: TEST_WORKSPACE
-      });
+      const stdout = execSync(
+        'gh issue list --state open --search "[TEST] Analytics Implementation Story" --json number',
+        {
+          encoding: 'utf-8',
+          cwd: TEST_WORKSPACE,
+        },
+      );
       const issues = JSON.parse(stdout);
 
       // Verify at least one issue was created on GitHub

@@ -1,46 +1,52 @@
 ---
 name: issue-tracking
-description: Manage tasks, epics, and bugs. Default to remote CVS platforms. Use local .issues/ ONLY if ISSUE_TRACKING_FS=1 in .env.ai. Require cvs skill.
+description: Manage tasks, epics, and bugs based on ISSUE_TRACKING environment variable. Use `env-get` to determine storage (fs or github) and tools.
 ---
 
 # Issue Tracking
 
-Manage tasks, epics, and bugs. Default to remote CVS platforms. Use local `.issues/` ONLY if `ISSUE_TRACKING_FS=1` in `.env.ai`. Require `cvs` skill.
+- Run `env-get` tool for the `ISSUE_TRACKING` variable to determine the issue tracking environment and available tools:
+  - e.g., `ISSUE_TRACKING=fs,issue-create,issue-list,issue-read` means issues are stored locally in the file system, and you must use those tools to manage them.
+  - e.g., `ISSUE_TRACKING=github,gh,cvs_github` means issues are stored on GitHub, and you should use the `gh` cli or `cvs_github` MCP tools.
 
 ## Templates
 
-- **Issues:** Base your markdown body on `skills/issue-tracking/issue.md`.
-- **Comments:** Format your updates using `skills/issue-tracking/comment.md`.
+- **Issues:** Follow the instructions in `skills/issue-tracking/issue.md` to format your issue body.
+  - *Note:* The YAML frontmatter (id, type, parent, etc.) is automatically added by the `issue-create` tool (when using `fs`). Do NOT add it yourself when creating an issue. You may update it later if necessary.
+- **Comments:** Format your updates and comments using `skills/issue-tracking/comment.md`.
+
+## Content & Format
+
+When describing features, stories, or bugs, use the **Gherkin format** as much as possible for clarity:
+
+```gherkin
+As a [persona]
+I want to [action]
+So that [benefit/value]
+
+# OR
+
+Given [initial context/state]
+And [more context]
+When [action occurs]
+And [more actions]
+Then [expected outcome]
+And [more outcomes]
+```
 
 ## Hierarchy & Emoticons
 
-Strictly follow this hierarchy. For CVS, you **MUST** prefix issue titles with the exact emoticon (e.g., `🚀 Q3 Goals`). Do **NOT** manage or use labels.
+If not created for the file system (`ISSUE_TRACKING=fs,...`), the issue title **MUST** contain as prefix the exact emoticon (e.g., `🚀 Q3 Goals`). Do **NOT** manage or use labels.
 
-* **🚀 Initiative** (`initiative`): Top-level business goal.
-  * **🏔️ Epic** (`epic`): Large project phase.
-    * **📖 Story** (`story`): User-facing feature.
-      * **🛠️ Task** (`task`): Atomic implementation step.
-      * **🐛 Bug** (`bug`): Defect in a story.
-    * **🐛 Bug** (`bug`): Defect in an epic.
+- **🚀 Initiative** (`initiative`): Top-level business goal.
+  - **🏔️ Epic** (`epic`): Large project phase.
+    - **📖 Story** (`story`): User-facing feature.
+      - **🛠️ Task** (`task`): Atomic implementation step.
+      - **🐛 Bug** (`bug`): Defect in a story.
+    - **🐛 Bug** (`bug`): Defect in an epic.
 
-## CVS Mode Rules
-* **Links over Text:** Link to local `.specs/` files in comments instead of pasting large content.
-* **Hierarchy Links:** Use markdown (`#42`) to link parent/child and dependent issues.
-* **Report Failures:** Always post execution failures as CVS comments so humans can see them.
+## Issue Rules
 
-## FS Fallback Rules (`.issues/`)
-* **Naming:** `<5-digit-id>-<type>-<title-kebab>.md` (e.g., `00001-task-add-auth.md`). Use the `issue-create` tool to automatically generate the file and ID, then edit the body.
-* **Format:** YAML frontmatter followed by markdown body.
-
-**Frontmatter Schema:**
-
-```yaml
-id: "00001"     # 5-digit zero-padded
-type: task      # initiative | epic | story | task | bug
-title: Add Auth # Emoticons optional in FS
-status: open    # open | in_progress | done | closed
-parent: "00000" # Optional: Parent issue ID
-depends: []     # Optional: Array of blocking issue IDs
-author: name    # Optional: Author name
-```
-
+- **Links over Text:** Link to local `.specs/` files in comments instead of pasting large content.
+- **Hierarchy Links:** Use markdown (`#42`) to link parent/child and dependent issues.
+- **Report Failures:** Always post execution failures as CVS comments so humans can see them.

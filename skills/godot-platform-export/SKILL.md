@@ -19,20 +19,24 @@ Export a Godot 4 project to Windows, macOS, Linux, Android, and iOS.
 ## Platform-Specific Prerequisites
 
 ### Windows
+
 - **Host:** Windows, macOS, or Linux
 - **Optional:** `rcedit` for icon/metadata embedding (Windows host only)
 - No code signing required for distribution outside Microsoft Store
 
 ### macOS
+
 - **Host:** macOS required for signed/notarized builds; cross-compile from Linux/Windows produces unsigned `.app`
 - **Optional:** Xcode command line tools, Apple Developer account (for notarization)
 - **Codesigning:** `codesign` + Developer ID certificate for distribution outside App Store
 
 ### Linux
+
 - **Host:** Any (Windows, macOS, Linux)
 - No special requirements — simplest export target
 
 ### Android
+
 - **Host:** Windows, macOS, or Linux
 - **OpenJDK 17** — `java -version` must report 17.x
 - **Android SDK** — with platform-tools and build-tools
@@ -47,6 +51,7 @@ Export a Godot 4 project to Windows, macOS, Linux, Android, and iOS.
   ```
 
 ### iOS
+
 - **Host:** macOS only (Xcode required)
 - **Xcode** with iOS SDK
 - **Apple Developer account** with provisioning profiles and signing certificates
@@ -360,22 +365,26 @@ For release builds, use `--export-release` instead of `--export-debug`.
 ## Platform Gotchas
 
 ### Windows
+
 - `binary_format/embed_pck=true` creates a single `.exe` with data embedded — simpler distribution
 - Without `rcedit`, the `.exe` has no custom icon or version metadata (functional, just generic icon)
 - Windows Defender SmartScreen may block unsigned executables — users need to click "Run anyway"
 
 ### macOS
+
 - Unsigned apps trigger Gatekeeper — users must right-click → Open on first launch
 - For distribution: `codesign --deep -s "Developer ID Application: ..." game.app`
 - Notarization: `xcrun notarytool submit game.zip --apple-id ... --team-id ... --password ...`
 - Universal binary (`architecture="universal"`) supports both Intel and Apple Silicon
 
 ### Linux
+
 - Mark executable: `chmod +x game.x86_64`
 - AppImage or Flatpak wrapping for broader distribution (out of scope for basic export)
 - `texture_format/s3tc_bptc=true` required for desktop GPU compatibility
 
 ### Android
+
 - **Blank config error** — missing `textures/vram_compression/import_etc2_astc=true` in project.godot
 - **Keystore error** — all three editor settings (`debug_keystore`, `debug_keystore_user`, `debug_keystore_pass`) must be set together or none (falls back to debug keystore)
 - **`cannot connect to daemon`** — benign, no adb server running
@@ -383,6 +392,7 @@ For release builds, use `--export-release` instead of `--export-debug`.
 - ARM64 only (`arm64-v8a=true`) covers 98%+ of modern Android devices
 
 ### iOS
+
 - Export produces an Xcode project — must open in Xcode on macOS to build `.ipa`
 - Provisioning profiles must match the bundle identifier exactly
 - Debug builds require a development provisioning profile; TestFlight/App Store requires distribution profile

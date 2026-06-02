@@ -9,7 +9,7 @@ $ARGUMENTS
 
 Follow your workflow:
 
-1. **Assess scope** — determine solo vs team mode. If `$ARGUMENTS` references a spec path (`.specs/`), read it. If it references an issue (`#N`), load `cvs-mode` and read the issue.
+1. **Assess scope** — determine solo vs team mode. If `$ARGUMENTS` references a spec path (`.specs/`), read it. If it references an issue (`#N`), load `issue-tracking` skill and read the issue.
 2. **Plan** — solo: plan in your head and go. Team: dispatch @worker-tech-lead for task breakdown, get dev feasibility reviews, finalize, then present plan to user and **wait for approval**.
 3. **Build** — implement changes. Parallelize independent tasks across @worker-backend-dev, @worker-frontend-dev, @worker-devops where possible. Load `clean-code` and appropriate developer skill (`developer-backend`, `developer-frontend`, or `developer-devops`).
 4. **Test** — run the test suite. All tests must pass.
