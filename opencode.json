@@ -22,6 +22,18 @@
           "name": "Qwen 3 Coder 30b (local)"
         }
       }
+    },
+    "ollama": {
+      "options": {
+        "baseURL": "http://127.0.0.1:11434/api"
+      }
+    },
+    "llamacpp": {
+      "api": "openai",
+      "options": {
+        "baseURL": "http://127.0.0.1:8080/v1",
+        "apiKey": "sk-no-key-required"
+      }
     }
   },
   "mcp": {
