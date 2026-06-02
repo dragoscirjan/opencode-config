@@ -17,17 +17,19 @@ readonly SCRIPT_NAME="${0##*/}"
 declare -A MODEL_NORMAL MODEL_BB
 
 # ── LOCAL ──
-MODEL_NORMAL[local_8gb]="ollama/qwen2.5-coder-7b"
-MODEL_BB[local_8gb]="ollama/deepseek-r1-8b"
+MODEL_NORMAL[local_8gb]="ollama/qwen2.5-coder:7b"
+MODEL_BB[local_8gb]="ollama/deepseek-r1:8b"
 
-MODEL_NORMAL[local_16gb]="ollama/qwen2.5-coder-32b"
-MODEL_BB[local_16gb]="ollama/deepseek-r1-14b"
+MODEL_NORMAL[local_16gb]="ollama/qwen2.5-coder:32b"
+MODEL_BB[local_16gb]="ollama/deepseek-r1:14b"
 
+# MODEL_NORMAL[local_32gb]="ollama/qwen2.5-coder:32b"
+# MODEL_BB[local_32gb]="ollama/deepseek-r1:32b"
 MODEL_NORMAL[local_32gb]="qwen/qwen3-coder-30b"
-MODEL_BB[local_32gb]="ollama/deepseek-r1-32b"
+MODEL_BB[local_32gb]="ollama/deepseek-r1:32b"
 
-MODEL_NORMAL[local_64gb]="ollama/qwen2.5-coder-72b"
-MODEL_BB[local_64gb]="ollama/deepseek-r1-70b"
+MODEL_NORMAL[local_64gb]="ollama/qwen2.5-coder:72b"
+MODEL_BB[local_64gb]="ollama/deepseek-r1:70b"
 
 # ── OPENROUTER ──
 MODEL_NORMAL[openrouter_ultra_budget]="qwen/qwen3.5-9b"
@@ -57,7 +59,7 @@ MODEL_BB[copilot_architect]="github-copilot/o1"
 
 # ── Agent Groupings ──
 readonly BB_AGENTS="worker-bb-coder worker-bb-oracle agent-architect"
-readonly NORMAL_AGENTS="worker-lead-architect worker-tech-lead worker-code-reviewer worker-sys-architect worker-backend-dev worker-frontend-dev worker-devops product-owner lead-engineer tech-writer tech-advisor game-director worker-game-designer worker-godot-expert worker-visual-qa"
+readonly NORMAL_AGENTS="worker-lead-architect worker-tech-lead worker-code-reviewer worker-sys-architect worker-backend-dev worker-frontend-dev worker-devops product-owner lead-engineer tech-writer tech-advisor tech-storyteller game-director worker-game-designer worker-godot-expert worker-visual-qa"
 
 usage() {
   cat <<EOF

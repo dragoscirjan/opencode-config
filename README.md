@@ -71,4 +71,46 @@ To easily manage these configurations, we built a utility script `scripts/switch
 *   `copilot_standard` (Gemini 3.1 Pro -> Sonnet 4.6)
 *   `copilot_premium` (Sonnet 4.6 -> Opus 4.6)
 *   `copilot_architect` (GPT-5.4 -> o1)
+
+---
+
+## 🖥️ Local Provider Setup
+
+For fully offline or on-premise usage, this config supports two local inference backends. Add them to your `opencode.json` under the `provider` key.
+
+### Ollama
+Ollama is supported natively — no extra npm package needed. If running on the default port (`11434`) the provider block is optional, but you can override the base URL if needed:
+
+```json
+"provider": {
+  "ollama": {
+    "name": "Ollama (local)",
+    "options": {
+      "baseURL": "http://127.0.0.1:11434/api"
+    },
+    "models": {
+      "deepseek-r1-32b": { "name": "DeepSeek R1 32b (local)" }
+    }
+  }
+}
 ```
+
+Then use `ollama/<model-name>` in any agent's `model:` frontmatter or with the switcher script (`local_*` combinations).
+
+### llama.cpp
+`llama-server` exposes an OpenAI-compatible API (default port `8080`). Register it as a custom provider using the `openai` API adapter:
+
+```json
+"provider": {
+  "llamacpp": {
+    "name": "LlamaCpp (local)",
+    "api": "openai",
+    "options": {
+      "baseURL": "http://127.0.0.1:8080/v1",
+      "apiKey": "sk-no-key-required"
+    }
+  }
+}
+```
+
+Then use `llamacpp/<model-name>` in any agent's `model:` frontmatter.

@@ -8,6 +8,22 @@
     "@tarquinen/opencode-dcp@latest"
   ],
   "provider": {
+    "llamacpp": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "LlamaCpp (local)",
+      "options": {
+        "baseURL": "http://127.0.0.1:8080/v1",
+      },
+      "models": {
+        "qwen3-coder:a3b": {
+          "name": "Qwen3-Coder: a3b-30b (local)",
+          "limit": {
+            "context": 128000,
+            "output": 65536
+          }
+        }
+      }
+    },
     "lmstudio": {
       "npm": "@ai-sdk/openai-compatible",
       "name": "LM Studio (local)",
@@ -20,19 +36,46 @@
         },
         "qwen/qwen3-coder-30b": {
           "name": "Qwen 3 Coder 30b (local)"
+        },
+        "qwen/qwen3.6-27b": {
+          "name": "Qwen 3.6 27b (local)"
         }
       }
     },
     "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama (local)",
       "options": {
-        "baseURL": "http://127.0.0.1:11434/api"
-      }
-    },
-    "llamacpp": {
-      "api": "openai",
-      "options": {
-        "baseURL": "http://127.0.0.1:8080/v1",
-        "apiKey": "sk-no-key-required"
+        "baseURL": "http://127.0.0.1:11434/v1"
+      },
+      "models": {
+        "deepseek-r1:7b": {
+          "name": "DeepSeek R1 7b (local)"
+        },
+        "deepseek-r1:14b": {
+          "name": "DeepSeek R1 14b (local)"
+        },
+        "deepseek-r1:32b": {
+          "name": "DeepSeek R1 32b (local)"
+        },
+        "deepseek-r1:70b": {
+          "name": "DeepSeek R1 70b (local)"
+        },
+        "qwen2.5-coder:7b": {
+          "name": "Qwen Coder 2.5 7b (local)"
+        },
+        "qwen2.5-coder:32b": {
+          "name": "Qwen Coder 2.5 32b (local)"
+        },
+        "qwen2.5-coder:72b": {
+          "name": "Qwen Coder 2.5 72b (local)"
+        },
+        "qwen3-coder:30b": {
+          "name": "Qwen Coder 3 30b (local)"
+        },
+        "qwen3.6:27b": {
+          "name": "Qwen 3.6 27b (local)"
+        }
       }
     }
   },

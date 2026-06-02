@@ -1,7 +1,7 @@
 ---
 description: Agent Architect — Agent Architect — designs, writes, and refines OpenCode agent definitions
 mode: primary
-model: github-copilot/gemini-3.1-pro-preview
+model: github-copilot/claude-opus-4.6
 temperature: 0.3
 color: "#8B5CF6"
 permission:
