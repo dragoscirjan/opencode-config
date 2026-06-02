@@ -55,20 +55,20 @@ To easily manage these configurations, we built a utility script `scripts/switch
 ### Available Combinations:
 
 **[LOCAL - by VRAM]**
-*   `local-8gb` (Qwen 7B -> DeepSeek 8B)
-*   `local-16gb` (Qwen 32B -> DeepSeek 14B)
-*   `local-32gb` (Qwen 32B -> DeepSeek 32B)
-*   `local-64gb` (Qwen 72B -> DeepSeek 70B)
+*   `local_8gb` (Qwen 7B -> DeepSeek 8B)
+*   `local_16gb` (Qwen 32B -> DeepSeek 14B)
+*   `local_32gb` (Qwen 30B -> DeepSeek 32B)
+*   `local_64gb` (Qwen 72B -> DeepSeek 70B)
 
 **[OPENROUTER - by Cost]**
-*   `openrouter-ultra-budget` (Qwen 9B -> DeepSeek V3.2)
-*   `openrouter-value` (Step 3.5 Flash -> MiniMax M2.5)
-*   `openrouter-standard` (Gemini 3.1 Pro -> GPT-5.4)
-*   `openrouter-premium` (Sonnet 4.6 -> Opus 4.6)
+*   `openrouter_ultra_budget` (Qwen 9B -> DeepSeek V3.2)
+*   `openrouter_value` (Step 3.5 Flash -> MiniMax M2.5)
+*   `openrouter_standard` (Gemini 3.1 Pro -> GPT-5.4)
+*   `openrouter_premium` (Sonnet 4.6 -> Opus 4.6)
 
 **[GITHUB COPILOT]**
-*   `copilot-budget` (GPT-4o-mini -> o3-mini)
-*   `copilot-standard` (Gemini 3.1 Pro -> Sonnet 4.6)
-*   `copilot-premium` (Sonnet 4.6 -> Opus 4.6)
-*   `copilot-architect` (GPT-5.4 -> o1)
+*   `copilot_budget` (GPT-4o-mini -> o3-mini)
+*   `copilot_standard` (Gemini 3.1 Pro -> Sonnet 4.6)
+*   `copilot_premium` (Sonnet 4.6 -> Opus 4.6)
+*   `copilot_architect` (GPT-5.4 -> o1)
 ```

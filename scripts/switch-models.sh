@@ -17,43 +17,43 @@ readonly SCRIPT_NAME="${0##*/}"
 declare -A MODEL_NORMAL MODEL_BB
 
 # ── LOCAL ──
-MODEL_NORMAL[local-8gb]="ollama/qwen2.5-coder:7b"
-MODEL_BB[local-8gb]="ollama/deepseek-r1:8b"
+MODEL_NORMAL[local_8gb]="ollama/qwen2.5-coder-7b"
+MODEL_BB[local_8gb]="ollama/deepseek-r1-8b"
 
-MODEL_NORMAL[local-16gb]="ollama/qwen2.5-coder:32b"
-MODEL_BB[local-16gb]="ollama/deepseek-r1:14b"
+MODEL_NORMAL[local_16gb]="ollama/qwen2.5-coder-32b"
+MODEL_BB[local_16gb]="ollama/deepseek-r1-14b"
 
-MODEL_NORMAL[local-32gb]="ollama/qwen2.5-coder:32b"
-MODEL_BB[local-32gb]="ollama/deepseek-r1:32b"
+MODEL_NORMAL[local_32gb]="qwen/qwen3-coder-30b"
+MODEL_BB[local_32gb]="ollama/deepseek-r1-32b"
 
-MODEL_NORMAL[local-64gb]="ollama/qwen2.5-coder:72b"
-MODEL_BB[local-64gb]="ollama/deepseek-r1:70b"
+MODEL_NORMAL[local_64gb]="ollama/qwen2.5-coder-72b"
+MODEL_BB[local_64gb]="ollama/deepseek-r1-70b"
 
 # ── OPENROUTER ──
-MODEL_NORMAL[openrouter-ultra-budget]="qwen/qwen3.5-9b"
-MODEL_BB[openrouter-ultra-budget]="deepseek/deepseek-v3.2"
+MODEL_NORMAL[openrouter_ultra_budget]="qwen/qwen3.5-9b"
+MODEL_BB[openrouter_ultra_budget]="deepseek/deepseek-v3.2"
 
-MODEL_NORMAL[openrouter-value]="stepfun/step-3.5-flash"
-MODEL_BB[openrouter-value]="minimax/minimax-m2.5"
+MODEL_NORMAL[openrouter_value]="stepfun/step-3.5-flash"
+MODEL_BB[openrouter_value]="minimax/minimax-m2.5"
 
-MODEL_NORMAL[openrouter-standard]="google/gemini-3.1-pro-preview"
-MODEL_BB[openrouter-standard]="openai/gpt-5.4"
+MODEL_NORMAL[openrouter_standard]="google/gemini-3.1-pro-preview"
+MODEL_BB[openrouter_standard]="openai/gpt-5.4"
 
-MODEL_NORMAL[openrouter-premium]="anthropic/claude-sonnet-4.6"
-MODEL_BB[openrouter-premium]="anthropic/claude-opus-4.6"
+MODEL_NORMAL[openrouter_premium]="anthropic/claude-sonnet-4.6"
+MODEL_BB[openrouter_premium]="anthropic/claude-opus-4.6"
 
 # ── COPILOT ──
-MODEL_NORMAL[copilot-budget]="github-copilot/gpt-4o-mini"
-MODEL_BB[copilot-budget]="github-copilot/o3-mini"
+MODEL_NORMAL[copilot_budget]="github-copilot/gpt-4o-mini"
+MODEL_BB[copilot_budget]="github-copilot/o3-mini"
 
-MODEL_NORMAL[copilot-standard]="github-copilot/gemini-3.1-pro-preview"
-MODEL_BB[copilot-standard]="github-copilot/claude-sonnet-4.6"
+MODEL_NORMAL[copilot_standard]="github-copilot/gemini-3.1-pro-preview"
+MODEL_BB[copilot_standard]="github-copilot/claude-sonnet-4.6"
 
-MODEL_NORMAL[copilot-premium]="github-copilot/claude-sonnet-4.6"
-MODEL_BB[copilot-premium]="github-copilot/claude-opus-4.6"
+MODEL_NORMAL[copilot_premium]="github-copilot/claude-sonnet-4.6"
+MODEL_BB[copilot_premium]="github-copilot/claude-opus-4.6"
 
-MODEL_NORMAL[copilot-architect]="github-copilot/gpt-5.4"
-MODEL_BB[copilot-architect]="github-copilot/o1"
+MODEL_NORMAL[copilot_architect]="github-copilot/gpt-5.4"
+MODEL_BB[copilot_architect]="github-copilot/o1"
 
 # ── Agent Groupings ──
 readonly BB_AGENTS="worker-bb-coder worker-bb-oracle agent-architect"
@@ -69,22 +69,22 @@ Options:
 Available Combinations:
 
   [LOCAL - by VRAM]
-  local-8gb                (Qwen 7B -> DeepSeek 8B)
-  local-16gb               (Qwen 32B -> DeepSeek 14B)
-  local-32gb               (Qwen 32B -> DeepSeek 32B)
-  local-64gb               (Qwen 72B -> DeepSeek 70B)
+  local_8gb                (Qwen 7B -> DeepSeek 8B)
+  local_16gb               (Qwen 32B -> DeepSeek 14B)
+  local_32gb               (Qwen 30B -> DeepSeek 32B)
+  local_64gb               (Qwen 72B -> DeepSeek 70B)
 
   [OPENROUTER - by Cost]
-  openrouter-ultra-budget  (Qwen 9B -> DeepSeek V3.2)
-  openrouter-value         (Step 3.5 Flash -> MiniMax M2.5)
-  openrouter-standard      (Gemini 3.1 Pro -> GPT-5.4)
-  openrouter-premium       (Sonnet 4.6 -> Opus 4.6)
+  openrouter_ultra_budget  (Qwen 9B -> DeepSeek V3.2)
+  openrouter_value         (Step 3.5 Flash -> MiniMax M2.5)
+  openrouter_standard      (Gemini 3.1 Pro -> GPT-5.4)
+  openrouter_premium       (Sonnet 4.6 -> Opus 4.6)
 
   [GITHUB COPILOT]
-  copilot-budget           (GPT-4o-mini -> o3-mini)
-  copilot-standard         (Gemini 3.1 Pro -> Sonnet 4.6)
-  copilot-premium          (Sonnet 4.6 -> Opus 4.6)
-  copilot-architect        (GPT-5.4 -> o1)
+  copilot_budget           (GPT-4o-mini -> o3-mini)
+  copilot_standard         (Gemini 3.1 Pro -> Sonnet 4.6)
+  copilot_premium          (Sonnet 4.6 -> Opus 4.6)
+  copilot_architect        (GPT-5.4 -> o1)
 
 EOF
 }
@@ -98,7 +98,7 @@ switch_model() {
   old_model="$(grep -m1 '^model:' "${file}" | sed 's/^model: *//' || echo "")"
 
   if [[ -z "${old_model}" ]]; then
-    echo "model: ${new_model}" >> "${file}"
+    echo "model: ${new_model}" >>"${file}"
     printf "  %-25s (New) → %s\n" "${name}" "${new_model}"
     return
   fi
@@ -114,7 +114,7 @@ switch_model() {
 
 main() {
   local target="all"
-  
+
   if [[ $# -eq 0 ]] || [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
     usage
     exit 0
@@ -141,7 +141,7 @@ main() {
 
   echo "Switching agents (Target: ${target}) to combination: ${profile}"
   [[ "${target}" == "all" || "${target}" == "normal" ]] && echo "  Normal Agents:      ${normal_model}"
-  [[ "${target}" == "all" || "${target}" == "bb" ]]     && echo "  Big Brother Agents: ${bb_model}"
+  [[ "${target}" == "all" || "${target}" == "bb" ]] && echo "  Big Brother Agents: ${bb_model}"
   echo "--------------------------------------------------------"
 
   if [[ "${target}" == "all" || "${target}" == "bb" ]]; then
