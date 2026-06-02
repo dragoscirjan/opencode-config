@@ -2,138 +2,165 @@
 set -euo pipefail
 
 # ──────────────────────────────────────────────────────────────
-# switch-models.sh — Bulk-swap model providers across all agents
+# switch-models.sh — Dynamic Model Switcher for OpenCode Agents
 #
-# Usage: ./scripts/switch-models.sh <keyword>
-#   Keywords: free | copilot | anthropic | openai | openrouter
+# Usage: ./scripts/switch-models.sh [--target normal|bb] <combination>
 #
-# Edit the maps below to adjust model IDs.
+# Combinations automatically assign a Normal model to standard agents
+# and a Big Brother model to escalation agents.
 # ──────────────────────────────────────────────────────────────
 
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly AGENTS_DIR="${SCRIPT_DIR}/../agents"
 readonly SCRIPT_NAME="${0##*/}"
 
-# ── Model maps ────────────────────────────────────────────────
-# Each keyword defines two tiers:
-#   STRONG  = opus-class (worker-lead-architect, worker-tech-lead, worker-code-reviewer, agent-architect)
-#   FAST    = sonnet-class (architect, developers, devops, orchestrators)
+declare -A MODEL_NORMAL MODEL_BB
 
-declare -A MODEL_STRONG MODEL_FAST
+# ── LOCAL ──
+MODEL_NORMAL[local-8gb]="ollama/qwen2.5-coder:7b"
+MODEL_BB[local-8gb]="ollama/deepseek-r1:8b"
 
-MODEL_STRONG[copilot]="github-copilot/claude-opus-4.6"
-MODEL_FAST[copilot]="github-copilot/claude-sonnet-4.6"
+MODEL_NORMAL[local-16gb]="ollama/qwen2.5-coder:32b"
+MODEL_BB[local-16gb]="ollama/deepseek-r1:14b"
 
-MODEL_STRONG[copilot_google]="github-copilot/gemini-3.1-pro-preview"
-MODEL_FAST[copilot_google]="github-copilot/gemini-3.1-pro-preview"
+MODEL_NORMAL[local-32gb]="ollama/qwen2.5-coder:32b"
+MODEL_BB[local-32gb]="ollama/deepseek-r1:32b"
 
-MODEL_STRONG[copilot_gpt]="github-copilot/gpt-5.4"
-MODEL_FAST[copilot_gpt]="github-copilot/gpt-5.3-codex"
+MODEL_NORMAL[local-64gb]="ollama/qwen2.5-coder:72b"
+MODEL_BB[local-64gb]="ollama/deepseek-r1:70b"
 
-MODEL_STRONG[anthropic]="anthropic/claude-opus-4-2025-04-16"
-MODEL_FAST[anthropic]="anthropic/claude-sonnet-4-20250514"
+# ── OPENROUTER ──
+MODEL_NORMAL[openrouter-ultra-budget]="qwen/qwen3.5-9b"
+MODEL_BB[openrouter-ultra-budget]="deepseek/deepseek-v3.2"
 
-MODEL_STRONG[openai]="openai/o3"
-MODEL_FAST[openai]="openai/gpt-4.1"
+MODEL_NORMAL[openrouter-value]="stepfun/step-3.5-flash"
+MODEL_BB[openrouter-value]="minimax/minimax-m2.5"
 
-MODEL_STRONG[openrouter]="openrouter/anthropic/claude-opus-4"
-MODEL_FAST[openrouter]="openrouter/anthropic/claude-sonnet-4"
+MODEL_NORMAL[openrouter-standard]="google/gemini-3.1-pro-preview"
+MODEL_BB[openrouter-standard]="openai/gpt-5.4"
 
-# Free tier — best-effort reasoning & code gen from free models
-MODEL_STRONG[free]="opencode/nemotron-3-super-free"
-MODEL_FAST[free]="opencode/gpt-5-nano"
+MODEL_NORMAL[openrouter-premium]="anthropic/claude-sonnet-4.6"
+MODEL_BB[openrouter-premium]="anthropic/claude-opus-4.6"
 
-# ── Agent tier assignments ────────────────────────────────────
-# STRONG-tier agents (need reasoning power)
-readonly STRONG_AGENTS="worker-lead-architect worker-tech-lead worker-code-reviewer agent-architect"
-# FAST-tier agents (volume work, orchestration)
-readonly FAST_AGENTS="worker-sys-architect worker-backend-dev worker-frontend-dev worker-devops product-owner lead-engineer tech-writer tech-advisor game-director worker-game-designer worker-godot-expert worker-visual-qa"
+# ── COPILOT ──
+MODEL_NORMAL[copilot-budget]="github-copilot/gpt-4o-mini"
+MODEL_BB[copilot-budget]="github-copilot/o3-mini"
 
-# ── Functions ─────────────────────────────────────────────────
+MODEL_NORMAL[copilot-standard]="github-copilot/gemini-3.1-pro-preview"
+MODEL_BB[copilot-standard]="github-copilot/claude-sonnet-4.6"
+
+MODEL_NORMAL[copilot-premium]="github-copilot/claude-sonnet-4.6"
+MODEL_BB[copilot-premium]="github-copilot/claude-opus-4.6"
+
+MODEL_NORMAL[copilot-architect]="github-copilot/gpt-5.4"
+MODEL_BB[copilot-architect]="github-copilot/o1"
+
+# ── Agent Groupings ──
+readonly BB_AGENTS="worker-bb-coder worker-bb-oracle agent-architect"
+readonly NORMAL_AGENTS="worker-lead-architect worker-tech-lead worker-code-reviewer worker-sys-architect worker-backend-dev worker-frontend-dev worker-devops product-owner lead-engineer tech-writer tech-advisor game-director worker-game-designer worker-godot-expert worker-visual-qa"
 
 usage() {
   cat <<EOF
-Usage: ${SCRIPT_NAME} <keyword>
+Usage: ${SCRIPT_NAME} [--target normal|bb|all] <combination>
 
-Keywords:
-  copilot     GitHub Copilot models (claude-opus/sonnet via Copilot)
-  anthropic   Direct Anthropic API
-  openai      OpenAI models (o3 / gpt-4.1)
-  openrouter  OpenRouter-proxied models
-  free        Free-tier models (all agents get lightweight model)
+Options:
+  --target <target>        Update only specific agents (normal, bb, all). Default is all.
 
-Current models:
+Available Combinations:
+
+  [LOCAL - by VRAM]
+  local-8gb                (Qwen 7B -> DeepSeek 8B)
+  local-16gb               (Qwen 32B -> DeepSeek 14B)
+  local-32gb               (Qwen 32B -> DeepSeek 32B)
+  local-64gb               (Qwen 72B -> DeepSeek 70B)
+
+  [OPENROUTER - by Cost]
+  openrouter-ultra-budget  (Qwen 9B -> DeepSeek V3.2)
+  openrouter-value         (Step 3.5 Flash -> MiniMax M2.5)
+  openrouter-standard      (Gemini 3.1 Pro -> GPT-5.4)
+  openrouter-premium       (Sonnet 4.6 -> Opus 4.6)
+
+  [GITHUB COPILOT]
+  copilot-budget           (GPT-4o-mini -> o3-mini)
+  copilot-standard         (Gemini 3.1 Pro -> Sonnet 4.6)
+  copilot-premium          (Sonnet 4.6 -> Opus 4.6)
+  copilot-architect        (GPT-5.4 -> o1)
+
 EOF
-  for agent_file in "${AGENTS_DIR}"/*.md; do
-    local name
-    name="$(basename "${agent_file}" .md)"
-    local current
-    current="$(grep -m1 '^model:' "${agent_file}" 2>/dev/null | sed 's/^model: *//' || echo "???")"
-    printf "  %-25s %s\n" "${name}" "${current}"
-  done
 }
 
 switch_model() {
   local file="$1" new_model="$2" name
   name="$(basename "${file}" .md)"
+  [[ ! -f "${file}" ]] && return
 
   local old_model
-  old_model="$(grep -m1 '^model:' "${file}" | sed 's/^model: *//')"
+  old_model="$(grep -m1 '^model:' "${file}" | sed 's/^model: *//' || echo "")"
+
+  if [[ -z "${old_model}" ]]; then
+    echo "model: ${new_model}" >> "${file}"
+    printf "  %-25s (New) → %s\n" "${name}" "${new_model}"
+    return
+  fi
 
   if [[ "${old_model}" == "${new_model}" ]]; then
     printf "  %-25s %s (unchanged)\n" "${name}" "${old_model}"
     return
   fi
 
-  # Portable sed in-place (works on macOS and Linux)
-  # Use | as delimiter since model IDs contain /
   sed -i.bak -e "s|^model: .*|model: ${new_model}|g" "${file}" && rm -f "${file}.bak"
-
   printf "  %-25s %s → %s\n" "${name}" "${old_model}" "${new_model}"
 }
 
 main() {
-  if [[ $# -lt 1 ]] || [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+  local target="all"
+  
+  if [[ $# -eq 0 ]] || [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
     usage
     exit 0
   fi
 
-  local keyword="$1"
+  if [[ "$1" == "--target" ]]; then
+    if [[ $# -lt 3 ]]; then
+      echo "Error: --target requires an argument (normal, bb, all) followed by a combination" >&2
+      exit 1
+    fi
+    target="$2"
+    shift 2
+  fi
 
-  if [[ -z "${MODEL_STRONG[${keyword}]+set}" ]]; then
-    echo "Error: Unknown keyword '${keyword}'" >&2
-    echo "Valid keywords: copilot | anthropic | openai | openrouter | free" >&2
+  local profile="$1"
+
+  if [[ -z "${MODEL_NORMAL[${profile}]+set}" ]]; then
+    echo "Error: Unknown combination '${profile}'" >&2
     exit 1
   fi
 
-  local strong="${MODEL_STRONG[${keyword}]}"
-  local fast="${MODEL_FAST[${keyword}]}"
+  local normal_model="${MODEL_NORMAL[${profile}]}"
+  local bb_model="${MODEL_BB[${profile}]}"
 
-  echo "Switching to: ${keyword}"
-  echo "  STRONG (opus-tier):  ${strong}"
-  echo "  FAST   (sonnet-tier): ${fast}"
-  echo ""
+  echo "Switching agents (Target: ${target}) to combination: ${profile}"
+  [[ "${target}" == "all" || "${target}" == "normal" ]] && echo "  Normal Agents:      ${normal_model}"
+  [[ "${target}" == "all" || "${target}" == "bb" ]]     && echo "  Big Brother Agents: ${bb_model}"
+  echo "--------------------------------------------------------"
 
-  for agent in ${STRONG_AGENTS}; do
-    local file="${AGENTS_DIR}/${agent}.md"
-    if [[ -f "${file}" ]]; then
-      switch_model "${file}" "${strong}"
-    else
-      printf "  %-25s (not found, skipped)\n" "${agent}"
-    fi
-  done
+  if [[ "${target}" == "all" || "${target}" == "bb" ]]; then
+    echo "Updating Big Brother Agents..."
+    for agent in ${BB_AGENTS}; do
+      switch_model "${AGENTS_DIR}/${agent}.md" "${bb_model}"
+    done
+    echo ""
+  fi
 
-  for agent in ${FAST_AGENTS}; do
-    local file="${AGENTS_DIR}/${agent}.md"
-    if [[ -f "${file}" ]]; then
-      switch_model "${file}" "${fast}"
-    else
-      printf "  %-25s (not found, skipped)\n" "${agent}"
-    fi
-  done
+  if [[ "${target}" == "all" || "${target}" == "normal" ]]; then
+    echo "Updating Normal Agents..."
+    for agent in ${NORMAL_AGENTS}; do
+      switch_model "${AGENTS_DIR}/${agent}.md" "${normal_model}"
+    done
+  fi
 
-  echo ""
-  echo "Done."
+  echo "--------------------------------------------------------"
+  echo "Done!"
 }
 
 main "$@"
