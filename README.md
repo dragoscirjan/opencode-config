@@ -1,39 +1,55 @@
-# OpenCode Architecture & Configuration
+# OpenCode Agent Configuration & Architecture
 
-This repository contains the configuration and custom architecture designed to optimize OpenCode agents for both performance and cost.
+This repository contains a comprehensive, highly-optimized configuration suite for OpenCode. The intention behind this setup is to provide a production-ready, multi-agent ecosystem that handles everything from high-level system architecture and game design to low-level backend implementations—all while strictly managing AI model costs.
+
+## 🌟 Ecosystem Overview
+
+Rather than relying on a single monolithic AI agent, this configuration splits responsibilities into specific roles, ensuring context remains clean, workflows are respected, and domain boundaries are maintained.
+
+### 1. Orchestrators & Directors
+Primary agents that interface directly with the user to manage large-scale planning:
+- **`product-owner` / `tech-advisor`**: Manage requirements, User Stories, and high-level technical direction.
+- **`lead-engineer`**: Orchestrates software engineering tasks, delegating to specialized development sub-agents.
+- **`game-director`**: Specifically tuned for Godot 4 game development, managing visual targets, art pipelines, and execution.
+
+### 2. Specialized Workers (Sub-agents)
+Task-specific agents invoked by the orchestrators to do the heavy lifting:
+- **Software Dev**: `worker-frontend-dev`, `worker-backend-dev`, `worker-devops`, `worker-sys-architect`, `worker-tech-lead`, `worker-code-reviewer`
+- **Game Dev**: `worker-game-designer`, `worker-godot-expert`, `worker-visual-qa`
+
+### 3. Domain-Specific Skills
+A rich library of loadable skills (e.g., `clean-code`, `develop-tdd`, `godot-engine`) that inject precise workflows and standards dynamically based on the active task.
+
+---
 
 ## 🏛️ The "Big Brother" Escalation Architecture
 
-To prevent burning through expensive API credits (like Claude Opus 4.6 or o1) on simple typos, we built a tiered escalation system. 
+To prevent burning through expensive API credits (like Claude Opus 4.6 or o1) on simple typos or repetitive trial-and-error, we built a tiered **Escalation Protocol** (`skills/escalation-protocol`). 
 
-By default, the standard OpenCode agents (`worker-frontend-dev`, `worker-backend-dev`, etc.) use extremely cheap, fast "Daily Driver" models. If they get stuck in an execution loop, they invoke the **Escalation Protocol** to call in the "Big Brothers".
+By default, standard sub-agents use extremely cheap, fast "Daily Driver" models. If they fail repeatedly or get stuck in a logic loop, they automatically format a distress payload and call in the "Big Brothers":
 
-### The Big Brother Agents:
-1. **`worker-bb-coder` (The Execution Closer):** Designed to jump into a failing agent's context, adopt their persona, fix the immediate complex logic bug, and hand control back.
-2. **`worker-bb-oracle` (The Deep Reasoner):** Designed for architectural deadlocks. It doesn't write code; it provides a high-level, step-by-step solution path using massive context reasoning models.
-
-### The Escalation Protocol (`skills/escalation-protocol`)
-A custom skill teaches normal agents exactly *when* to escalate (e.g., failing a test 3 times) and *how* to format the request to the Big Brother (Identity, Goal, The Wall, Context).
+1. **`worker-bb-coder` (The Execution Closer):** Adopts the failing agent's persona, fixes the immediate complex code bug, and hands control back.
+2. **`worker-bb-oracle` (The Deep Reasoner):** Resolves deep architectural deadlocks by providing high-level, step-by-step logic paths without writing the final code.
 
 ---
 
 ## 📊 Live Model Benchmarking & Tiering
 
-Using live 2026 pricing and context windows from the OpenRouter `/api/v1/models` endpoint combined with the Onyx Coding Leaderboard, we organized the models into distinct combinations based on provider (Local, OpenRouter, Copilot).
+We track model performance and pricing to keep our agent configurations optimal. Our tiering strategy is heavily informed by data from the [Onyx Best LLMs for Coding Leaderboard](https://onyx.app/best-llm-for-coding), cross-referenced with live pricing from the OpenRouter API.
 
-*You can view the raw scraped benchmark data in `models-coding.csv` and `models-reasoning.csv`.*
+*You can view our scraped benchmark data snapshots in `models-coding.csv` and `models-reasoning.csv`.*
 
-These combinations are documented in `model-list.yaml` and integrated directly into our custom script.
+Based on this data, we organize models into distinct "Normal" (Daily Driver) and "Big Brother" pairs across different environments (Local, OpenRouter, Copilot), documented in `model-list.yaml`.
 
 ---
 
 ## 🛠️ Dynamic Model Switcher
 
-To easily manage these configurations, we built `scripts/switch-models.sh`. It allows you to instantly swap the models across your entire OpenCode agent fleet using predefined cost combinations, scaling from free local hardware up to premium API calls.
+To easily manage these configurations, we built a utility script `scripts/switch-models.sh`. It allows you to instantly swap the models across your entire OpenCode agent fleet using predefined combinations.
 
 ### Usage:
 ```bash
-./scripts/switch-models.sh <combination>
+./scripts/switch-models.sh [--target normal|bb|all] <combination>
 ```
 
 ### Available Combinations:
@@ -55,3 +71,4 @@ To easily manage these configurations, we built `scripts/switch-models.sh`. It a
 *   `copilot-standard` (Gemini 3.1 Pro -> Sonnet 4.6)
 *   `copilot-premium` (Sonnet 4.6 -> Opus 4.6)
 *   `copilot-architect` (GPT-5.4 -> o1)
+```
