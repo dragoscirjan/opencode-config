@@ -9,20 +9,16 @@
   ],
   "provider": {
     "llamacpp": {
-      "npm": "@ai-sdk/openai-compatible",
       "name": "LlamaCpp (local)",
       "options": {
-        "baseURL": "http://127.0.0.1:8080/v1",
+        "baseURL": "http://127.0.0.1:8080/v1"
       },
       "models": {
-        "qwen3-coder:a3b": {
-          "name": "Qwen3-Coder: a3b-30b (local)",
-          "limit": {
-            "context": 128000,
-            "output": 65536
-          }
+        "qwen2.5-coder-3b-instruct-q4_k_m.gguf": {
+          "name": "Qwen 2.5 Coder 3B Instruct (local)"
         }
-      }
+      },
+      "api": "openai"
     },
     "lmstudio": {
       "npm": "@ai-sdk/openai-compatible",
@@ -75,6 +71,9 @@
         },
         "qwen3.6:27b": {
           "name": "Qwen 3.6 27b (local)"
+        },
+        "deepseek-r1:8b": {
+          "name": "DeepSeek R1 8b (local)"
         }
       }
     }
