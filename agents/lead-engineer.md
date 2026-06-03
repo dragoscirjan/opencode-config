@@ -1,7 +1,7 @@
 ---
 description: Lead Engineer — Solution Engineer — writes LLDs and implements features solo or with a team
 mode: primary
-model: github-copilot/gemini-3.1-pro-preview
+model: bifrost/code
 temperature: 0.2
 steps: 80
 color: "#EA580C"

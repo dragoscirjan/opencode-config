@@ -1,7 +1,7 @@
 ---
 description: Plans architecture (design overviews, HLDs, GDDs)
 mode: primary
-model: github-copilot/gemini-3.1-pro-preview
+model: bifrost/code
 temperature: 0.2
 steps: 50
 color: "#6366F1"

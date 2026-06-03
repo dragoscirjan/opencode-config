@@ -1,7 +1,7 @@
 ---
 description: "Backend Dev — Backend Developer — implements backend code, APIs, data layers, and writes tests"
 mode: subagent
-model: github-copilot/gemini-3.1-pro-preview
+model: bifrost/code
 temperature: 0.2
 hidden: true
 permission:

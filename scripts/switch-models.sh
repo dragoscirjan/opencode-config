@@ -31,6 +31,17 @@ MODEL_BB[local_32gb]="ollama/deepseek-r1:32b"
 MODEL_NORMAL[local_64gb]="ollama/qwen2.5-coder:72b"
 MODEL_BB[local_64gb]="ollama/deepseek-r1:70b"
 
+# ── ABACUS AI ──
+#MODEL_NORMAL[abacus_standard]="abacus/zai-org/glm-5"
+MODEL_NORMAL[abacus_standard]="abacus/kimi-k2.5"
+MODEL_BB[abacus_standard]="abacus/gpt-5.4"
+
+MODEL_NORMAL[abacus_premium]="abacus/claude-sonnet-4-6"
+MODEL_BB[abacus_premium]="abacus/claude-opus-4-6"
+
+MODEL_NORMAL[abacus_deepseek]="abacus/deepseek-v3.2"
+MODEL_BB[abacus_deepseek]="abacus/deepseek-v3.2"
+
 # ── OPENROUTER ──
 MODEL_NORMAL[openrouter_ultra_budget]="qwen/qwen3.5-9b"
 MODEL_BB[openrouter_ultra_budget]="deepseek/deepseek-v3.2"
@@ -75,6 +86,11 @@ Available Combinations:
   local_16gb               (Qwen 32B -> DeepSeek 14B)
   local_32gb               (Qwen 30B -> DeepSeek 32B)
   local_64gb               (Qwen 72B -> DeepSeek 70B)
+
+  [ABACUS AI]
+  abacus_standard          (Kimi K2 2.5 -> GPT-5.4)
+  abacus_premium           (Sonnet 4.6 -> Opus 4.6)
+  abacus_deepseek          (DeepSeek V3.2 -> DeepSeek V3.2)
 
   [OPENROUTER - by Cost]
   openrouter_ultra_budget  (Qwen 9B -> DeepSeek V3.2)

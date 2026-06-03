@@ -7,24 +7,29 @@ This repository contains a comprehensive, highly-optimized configuration suite f
 Rather than relying on a single monolithic AI agent, this configuration splits responsibilities into specific roles, ensuring context remains clean, workflows are respected, and domain boundaries are maintained.
 
 ### 1. Orchestrators & Directors
+
 Primary agents that interface directly with the user to manage large-scale planning:
+
 - **`product-owner` / `tech-advisor`**: Manage requirements, User Stories, and high-level technical direction.
 - **`lead-engineer`**: Orchestrates software engineering tasks, delegating to specialized development sub-agents.
 - **`game-director`**: Specifically tuned for Godot 4 game development, managing visual targets, art pipelines, and execution.
 
 ### 2. Specialized Workers (Sub-agents)
+
 Task-specific agents invoked by the orchestrators to do the heavy lifting:
+
 - **Software Dev**: `worker-frontend-dev`, `worker-backend-dev`, `worker-devops`, `worker-sys-architect`, `worker-tech-lead`, `worker-code-reviewer`
 - **Game Dev**: `worker-game-designer`, `worker-godot-expert`, `worker-visual-qa`
 
 ### 3. Domain-Specific Skills
+
 A rich library of loadable skills (e.g., `clean-code`, `develop-tdd`, `godot-engine`) that inject precise workflows and standards dynamically based on the active task.
 
 ---
 
 ## 🏛️ The "Big Brother" Escalation Architecture
 
-To prevent burning through expensive API credits (like Claude Opus 4.6 or o1) on simple typos or repetitive trial-and-error, we built a tiered **Escalation Protocol** (`skills/escalation-protocol`). 
+To prevent burning through expensive API credits (like Claude Opus 4.6 or o1) on simple typos or repetitive trial-and-error, we built a tiered **Escalation Protocol** (`skills/escalation-protocol`).
 
 By default, standard sub-agents use extremely cheap, fast "Daily Driver" models. If they fail repeatedly or get stuck in a logic loop, they automatically format a distress payload and call in the "Big Brothers":
 
@@ -37,7 +42,7 @@ By default, standard sub-agents use extremely cheap, fast "Daily Driver" models.
 
 We track model performance and pricing to keep our agent configurations optimal. Our tiering strategy is heavily informed by data from the [Onyx Best LLMs for Coding Leaderboard](https://onyx.app/best-llm-for-coding), cross-referenced with live pricing from the OpenRouter API.
 
-*You can view our scraped benchmark data snapshots in `models-coding.csv` and `models-reasoning.csv`.*
+_You can view our scraped benchmark data snapshots in `models-coding.csv` and `models-reasoning.csv`._
 
 Based on this data, we organize models into distinct "Normal" (Daily Driver) and "Big Brother" pairs across different environments (Local, OpenRouter, Copilot), documented in `model-list.yaml`.
 
@@ -48,6 +53,7 @@ Based on this data, we organize models into distinct "Normal" (Daily Driver) and
 To easily manage these configurations, we built a utility script `scripts/switch-models.sh`. It allows you to instantly swap the models across your entire OpenCode agent fleet using predefined combinations.
 
 ### Usage:
+
 ```bash
 ./scripts/switch-models.sh [--target normal|bb|all] <combination>
 ```
@@ -55,22 +61,25 @@ To easily manage these configurations, we built a utility script `scripts/switch
 ### Available Combinations:
 
 **[LOCAL - by VRAM]**
-*   `local_8gb` (Qwen 7B -> DeepSeek 8B)
-*   `local_16gb` (Qwen 32B -> DeepSeek 14B)
-*   `local_32gb` (Qwen 30B -> DeepSeek 32B)
-*   `local_64gb` (Qwen 72B -> DeepSeek 70B)
+
+- `local_8gb` (Qwen 7B -> DeepSeek 8B)
+- `local_16gb` (Qwen 32B -> DeepSeek 14B)
+- `local_32gb` (Qwen 30B -> DeepSeek 32B)
+- `local_64gb` (Qwen 72B -> DeepSeek 70B)
 
 **[OPENROUTER - by Cost]**
-*   `openrouter_ultra_budget` (Qwen 9B -> DeepSeek V3.2)
-*   `openrouter_value` (Step 3.5 Flash -> MiniMax M2.5)
-*   `openrouter_standard` (Gemini 3.1 Pro -> GPT-5.4)
-*   `openrouter_premium` (Sonnet 4.6 -> Opus 4.6)
+
+- `openrouter_ultra_budget` (Qwen 9B -> DeepSeek V3.2)
+- `openrouter_value` (Step 3.5 Flash -> MiniMax M2.5)
+- `openrouter_standard` (Gemini 3.1 Pro -> GPT-5.4)
+- `openrouter_premium` (Sonnet 4.6 -> Opus 4.6)
 
 **[GITHUB COPILOT]**
-*   `copilot_budget` (GPT-4o-mini -> o3-mini)
-*   `copilot_standard` (Gemini 3.1 Pro -> Sonnet 4.6)
-*   `copilot_premium` (Sonnet 4.6 -> Opus 4.6)
-*   `copilot_architect` (GPT-5.4 -> o1)
+
+- `copilot_budget` (GPT-4o-mini -> o3-mini)
+- `copilot_standard` (Gemini 3.1 Pro -> Sonnet 4.6)
+- `copilot_premium` (Sonnet 4.6 -> Opus 4.6)
+- `copilot_architect` (GPT-5.4 -> o1)
 
 ---
 
@@ -79,6 +88,7 @@ To easily manage these configurations, we built a utility script `scripts/switch
 For fully offline or on-premise usage, this config supports two local inference backends. Add them to your `opencode.json` under the `provider` key.
 
 ### Ollama
+
 Ollama is supported natively — no extra npm package needed. If running on the default port (`11434`) the provider block is optional, but you can override the base URL if needed:
 
 ```json
@@ -98,6 +108,7 @@ Ollama is supported natively — no extra npm package needed. If running on the 
 Then use `ollama/<model-name>` in any agent's `model:` frontmatter or with the switcher script (`local_*` combinations).
 
 ### llama.cpp
+
 `llama-server` exposes an OpenAI-compatible API (default port `8080`). Register it as a custom provider using the `openai` API adapter:
 
 ```json
@@ -114,3 +125,22 @@ Then use `ollama/<model-name>` in any agent's `model:` frontmatter or with the s
 ```
 
 Then use `llamacpp/<model-name>` in any agent's `model:` frontmatter.
+
+---
+
+## 🔄 Local Model Discovery Sync
+
+Use the `/local-models-sync` command to reconcile provider model lists into `opencode.json`.
+
+What it does:
+
+- scans configured providers in `opencode.json`
+- selects only OpenAI-compatible providers
+- fetches `GET <baseURL>/models` with a 5s timeout per provider
+- reconciles `provider.<id>.models` with source-of-truth endpoint data:
+  - add new models
+  - remove models no longer exposed
+  - keep existing model entries (preserve custom fields)
+- reports warnings for unreachable providers, timeouts, malformed responses, and HTTP failures
+
+After running sync, restart OpenCode so refreshed model registrations are loaded.
