@@ -21,5 +21,5 @@
 
 ## Escalation (Big Brother)
 
-- If you are a **sub-agent** stuck in a loop (failing tests, persistent errors for 3+ attempts) or facing a deadlock, **STOP**. Do NOT hallucinate tools. Return a clear failure status to your Orchestrator explicitly requesting escalation to a Big Brother agent.
-- If you are a **primary agent (Orchestrator)** and you or your sub-agent is stuck, **STOP**. Load the `escalation-protocol` skill using the `skill` tool, and delegate the problem to a Big Brother agent (`worker-bb-coder` for implementation fixes, `worker-bb-oracle` for reasoning/design) using the `task` tool.
+- **Worker Agents:** If you are executing a task for an Orchestrator and get stuck in a loop (failing tests, persistent errors for 3+ attempts) or face a deadlock, **STOP**. Do NOT hallucinate tools. Return a clear failure status to your Orchestrator explicitly requesting escalation to a Big Brother agent.
+- **Orchestrator Agents:** If you (or one of your workers) are stuck, **STOP**. Load the `escalation-protocol` skill using the `skill` tool, and delegate the problem to a Big Brother agent (`worker-bb-coder` for implementation fixes, `worker-bb-oracle` for reasoning/design) using the `task` tool.
