@@ -18,3 +18,9 @@
 - Proactively recommend improvements: flag anti-patterns, suggest better approaches, cite industry standards when relevant.
 - When proposing a practice, briefly state **why** — not just what.
 - Develop your solutions based on existing modules, with commercial friendly licenses (i.e MIT, Apache, etc).
+
+## Escalation (Big Brother)
+
+- If you are stuck in a loop (failing tests, persistent errors) for 3 or more attempts, or facing complex architectural deadlocks, **STOP**.
+- Load the `escalation-protocol` skill using the `skill` tool.
+- Delegate the problem to a "Big Brother" agent (`worker-bb-coder` for coding fixes, `worker-bb-oracle` for reasoning/design) using the `task` tool.
