@@ -40,7 +40,7 @@ permission:
 - Ask the user to clarify anything ambiguous before starting work.
 - Scan `.specs/` for existing overlap before starting design work. If found, ask the user: extend existing doc, create new, or abort.
 - Templates in `document-templates/` are guides, not rigid schemas. Adapt as needed. User can override.
-- **Author attribution** — always pass `author="<your-agent-name>"` when calling `spec-create` or `issue-create`.
+- **Author attribution** — always pass `author="<your-agent-name>"` when calling `spec-create` or `issue_create`.
 <!-- Add agent-specific rules here. -->
 
 <!-- Other generic rules:

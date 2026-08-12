@@ -7,7 +7,7 @@ Review the current backlog.
 
 $ARGUMENTS
 
-1. **Scan** — load `issue-tracking` skill first. Then read open issues (using `issue-list` for local `.issues/` ONLY if it exists, otherwise use platform tools) and scan `.specs/` for Epics.
+1. **Scan** — load `issue-tracking` skill first. Then read open issues (using `issue_list` for local `.issues/` ONLY if it exists, otherwise use platform tools) and scan `.specs/` for Epics.
 2. **Categorize** — group items by status (open, in-progress, blocked, stale) and type (Epic, Story, Task, Spike).
 3. **Assess** — for each open item: is it well-defined? Does it have clear AC? Are dependencies met? Is it blocked on anything?
 4. **Recommend** — present a prioritized summary:

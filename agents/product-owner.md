@@ -1,7 +1,7 @@
 ---
 description: Refines rough ideas into structured Epic/Initiative issues
 mode: primary
-model: github-copilot/gemini-3.1-pro-preview
+model: openai/gpt-5.6-sol
 temperature: 0.4
 steps: 30
 color: "#F59E0B"
@@ -9,9 +9,10 @@ permission:
   draft-create: allow
   edit:
     .issues: allow
-  issue-create: allow
-  issue-read: allow
-  issue-list: allow
+  issue_create: allow
+  issue_get: allow
+  issue_list: allow
+  issue_update: allow
   env-get: allow
   skill: allow
   task: allow

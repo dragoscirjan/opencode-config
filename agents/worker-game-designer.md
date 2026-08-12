@@ -1,7 +1,7 @@
 ---
 description: "Game Designer — Game Designer — writes Game Design Documents (GDDs) for Godot projects"
 mode: subagent
-model: github-copilot/gemini-3.1-pro-preview
+model: openai/gpt-5.6-sol
 temperature: 0.4
 hidden: true
 permission:

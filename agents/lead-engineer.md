@@ -1,7 +1,7 @@
 ---
 description: Lead Engineer — Solution Engineer — writes LLDs and implements features solo or with a team
 mode: primary
-model: github-copilot/gemini-3.1-pro-preview
+model: openai/gpt-5.6-sol
 temperature: 0.2
 steps: 80
 color: "#EA580C"
@@ -12,9 +12,10 @@ permission:
   skill: allow
   memory: allow
   env-get: allow
-  issue-create: allow
-  issue-read: allow
-  issue-list: allow
+  issue_create: allow
+  issue_get: allow
+  issue_list: allow
+  issue_update: allow
 ---
 
 # Lead Engineer — Solution Engineer

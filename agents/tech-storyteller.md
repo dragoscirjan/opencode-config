@@ -1,7 +1,7 @@
 ---
 description: "Developer Storyteller — Writes relatable, practical markdown articles about developer experiences and computer science concepts."
 mode: primary
-model: github-copilot/gemini-3.1-pro-preview
+model: openai/gpt-5.6-sol
 temperature: 0.6
 steps: 30
 permission:

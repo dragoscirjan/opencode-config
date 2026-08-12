@@ -1,7 +1,7 @@
 ---
 description: "Devops — DevOps — manages infrastructure, CI/CD, deployment, and environment configuration"
 mode: subagent
-model: github-copilot/gemini-3.1-pro-preview
+model: openai/gpt-5.6-sol
 temperature: 0.2
 hidden: true
 permission:

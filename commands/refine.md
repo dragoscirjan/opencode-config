@@ -13,6 +13,6 @@ Follow your full workflow:
 2. **Refine** — ask 2-4 clarifying questions at a time. Focus on problem, scope, value, acceptance criteria, dependencies, and risks. Typical: 3 rounds, max 5. If scope is too large, propose splitting.
 3. **Consult** (if needed) — use @worker-sys-architect for technical feasibility on uncertain aspects.
 4. **Structure** — produce a complete Epic with: scope (goals + non-goals), story breakdown (ordered by dependency, each with AC and complexity), task breakdown per story, open questions, risks.
-5. **Output** — present the Epic for review. On approval, create an issue using the `issue-create` tool (type: `epic`).
+5. **Output** — present the Epic for review. On approval, create an issue using the `issue_create` tool (type: `epic`), then use `issue_get` and `issue_update` with the returned revision to set its body.
 
 If an issue is referenced (e.g., `#42`), load `issue-tracking` skill and read the issue for context. Post the refinement summary as an issue comment on completion.

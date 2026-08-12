@@ -1,7 +1,7 @@
 ---
 description: "Visual Qa — Visual QA — screenshot analysis, defect detection, reference comparison"
 mode: subagent
-model: github-copilot/gemini-3.1-pro-preview
+model: openai/gpt-5.6-sol
 temperature: 0.2
 hidden: true
 permission:

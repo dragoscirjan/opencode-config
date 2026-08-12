@@ -102,10 +102,10 @@
       },
       "models": {
         "code": {
-          "name": "Code (Coding Agent)"
+          "name": "Code (Coding Agent)",
         },
         "design": {
-          "name": "Design (Design Agent)"
+          "name": "Design (Design Agent)",
         }
       }
     },
@@ -121,10 +121,10 @@
       },
       "models": {
         "code": {
-          "name": "Code (Coding Agent) (Test)"
+          "name": "Code (Coding Agent) (Test)",
         },
         "design": {
-          "name": "Design (Design Agent) (Test)"
+          "name": "Design (Design Agent) (Test)",
         }
       }
     },
@@ -140,10 +140,10 @@
       },
       "models": {
         "code": {
-          "name": "Code (Coding Agent) (Dev)"
+          "name": "Code (Coding Agent) (Dev)",
         },
         "design": {
-          "name": "Design (Design Agent) (Dev)"
+          "name": "Design (Design Agent) (Dev)",
         }
       }
     },
@@ -158,10 +158,10 @@
       },
       "models": {
         "code": {
-          "name": "Code (Local) (Coding Agent)"
+          "name": "Code (Local) (Coding Agent)",
         },
         "design": {
-          "name": "Design (Local) (Design Agent)"
+          "name": "Design (Local) (Design Agent)",
         }
       }
     }
@@ -192,6 +192,32 @@
       ],
       "enabled": true
     },
+    // "codeindex_cocoindex": {
+    //   "type": "local",
+    //   "command": [
+    //     "{env:HOME}/.local/bin/mcp-coco-index"
+    //   ],
+    //   "environment": {
+    //     "COCOINDEX_DB_HOST": "{env:COCOINDEX_DB_HOST}",
+    //     "COCOINDEX_DB_PORT": "{env:COCOINDEX_DB_PORT}",
+    //     "COCOINDEX_DB_NAME": "{env:COCOINDEX_DB_NAME}",
+    //     "COCOINDEX_DB_USER": "{env:COCOINDEX_DB_USER}",
+    //     "COCOINDEX_DB_PASSWORD": "{env:COCOINDEX_DB_PASSWORD}"
+    //   },
+    //   "enabled": false
+    // },
+    // "codeindex_fastcode": {
+    //   "type": "local",
+    //   "command": [
+    //     "{env:HOME}/.local/bin/fastcode"
+    //   ],
+    //   "environment": {
+    //     "OPENAI_API_KEY": "{env:FASTCODE_API_KEY}",
+    //     "MODEL": "{env:FASTCODE_MODEL}",
+    //     "BASE_URL": "{env:FASTCODE_BASE_URL}"
+    //   },
+    //   "enabled": false
+    // },
     "codeindex_gitnexus": {
       "type": "local",
       "command": [
@@ -220,6 +246,24 @@
       "enabled": true,
       "timeout": 30000
     },
+    // "cvs_gitlab": {
+    //   "type": "remote",
+    //   "url": "https://{env:GITLAB_URL}/api/v4/mcp",
+    //   "enabled": false
+    // },
+    // "cvs_forgejo": {
+    //   "type": "local",
+    //   "command": [
+    //     "forgejo-mcp",
+    //     "--transport",
+    //     "stdio"
+    //   ],
+    //   "environment": {
+    //     "FORGEJO_URL": "{env:FORGEJO_URL}",
+    //     "FORGEJO_ACCESS_TOKEN": "{env:FORGEJO_ACCESS_TOKEN}"
+    //   },
+    //   "enabled": false
+    // },
     "docs_context7": {
       "type": "remote",
       "url": "https://mcp.context7.com/mcp",

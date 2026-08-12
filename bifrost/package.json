@@ -1,0 +1,12 @@
+{
+  "name": "bifrost",
+  "version": "1.0.0",
+  "description": "Typed Bifrost configuration for OpenCode.",
+  "license": "MIT",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

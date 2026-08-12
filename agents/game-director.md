@@ -1,7 +1,7 @@
 ---
 description: Game Director — Game Generator — autonomous Godot 4 game development from natural language
 mode: primary
-model: github-copilot/gemini-3.1-pro-preview
+model: openai/gpt-5.6-sol
 temperature: 0.3
 steps: 100
 color: "#4F46E5"
@@ -12,9 +12,10 @@ permission:
   skill: allow
   memory: allow
   env-get: allow
-  issue-create: allow
-  issue-read: allow
-  issue-list: allow
+  issue_create: allow
+  issue_get: allow
+  issue_list: allow
+  issue_update: allow
 ---
 
 # Game Director — Game Generator

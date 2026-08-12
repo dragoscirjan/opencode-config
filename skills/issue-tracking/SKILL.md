@@ -6,13 +6,24 @@ description: Manage tasks, epics, and bugs based on ISSUE_TRACKING environment v
 # Issue Tracking
 
 - Run `env-get` tool for the `ISSUE_TRACKING` variable to determine the issue tracking environment and available tools:
-  - e.g., `ISSUE_TRACKING=fs,issue-create,issue-list,issue-read` means issues are stored locally in the file system, and you must use those tools to manage them.
+  - e.g., `ISSUE_TRACKING=fs,issue_create,issue_list,issue_get,issue_update` means issues are stored locally in the file system, and you must use those tools to manage them.
   - e.g., `ISSUE_TRACKING=github,gh,cvs_github` means issues are stored on GitHub, and you should use the `gh` cli or `cvs_github` MCP tools.
+
+## Local Issue Workflow
+
+When `ISSUE_TRACKING` starts with `fs`:
+
+1. Use `issue_create` to create the issue metadata and obtain its ID.
+2. Use `issue_get` with that ID to obtain the current issue and its revision token.
+3. Use `issue_update` with the complete body and `expectedRevision` from `issue_get`.
+4. Before every later mutation, call `issue_get` again and pass its latest `expectedRevision` to `issue_update` or `issue_transition`.
+
+Use `issue_list` for discovery and `issue_comment` for immutable progress or failure comments when those tools are listed in `ISSUE_TRACKING`. Do NOT edit files under `.issues/` directly; use the issue tools so validation and concurrency checks are preserved.
 
 ## Templates
 
 - **Issues:** Follow the instructions in `skills/issue-tracking/issue.md` to format your issue body.
-  - *Note:* The YAML frontmatter (id, type, parent, etc.) is automatically added by the `issue-create` tool (when using `fs`). Do NOT add it yourself when creating an issue. You may update it later if necessary.
+  - _Note:_ Local metadata and YAML frontmatter are managed by `issue_create` and `issue_update`. Do NOT include frontmatter in the issue body.
 - **Comments:** Format your updates and comments using `skills/issue-tracking/comment.md`.
 
 ## Content & Format

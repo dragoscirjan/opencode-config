@@ -4,16 +4,20 @@ When creating or updating an issue, structure the body of the issue as follows:
 
 ## YAML Frontmatter Reference (For Local `fs` tracking)
 
-*Note: The YAML frontmatter is automatically injected by the `issue-create` tool at the top of the file when creating a new issue. You do not need to generate it initially, but you MUST use this reference to update the fields (like `status`, `depends`, or `parent`) using the `edit` tool as the issue progresses.*
+_Note: `issue_create` injects the YAML frontmatter. Do NOT include frontmatter in the body and do NOT edit the local issue file directly. Read the issue with `issue_get`, then use `issue_update` with its latest `expectedRevision` for metadata or body changes. Use `issue_transition` for status changes when available._
 
 ```yaml
-id: "00001" # 5-digit zero-padded / only if ISSUE_TRACKING contains 'fs'
+id: "<configured-prefix>00001" # Tool-managed configured prefix + zero-padded sequence
 type: <type> # initiative | epic | story | task | bug
+title: <title>
+status: open # open | in_progress | done | closed
 parent: <parent-issue> # Optional: ID of the parent issue
-depends: [] # Optional: Array of blocking issue IDs
-opencode-agent: <agent-name>
-status: open # open | in_progress | done | closed / only if ISSUE_TRACKING contains 'fs'
-author: name # Optional: Author name
+children: [] # Tool-managed child issue IDs
+depends_on: [] # Optional: blocking issue IDs
+created_by: <agent-name> # From issue_create author
+assigned_to: <agent-name> # From issue_create assignee
+created_at: <timestamp>
+updated_at: <timestamp>
 ```
 
 ---
@@ -23,13 +27,14 @@ author: name # Optional: Author name
 1. **Title**: A clear and concise title. (If not using local `fs`, include the hierarchy emoticon in the title).
 
 2. **Description**: Use the Gherkin format to clearly state the user story or scenario:
+
    ```gherkin
    As a [persona]
    I want to [action]
    So that [benefit/value]
-   
+
    # OR
-   
+
    Given [initial context/state]
    When [action occurs]
    Then [expected outcome]

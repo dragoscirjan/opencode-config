@@ -1,7 +1,7 @@
 ---
 description: Godot Expert - Godot API Lookup - class APIs, GDScript syntax, engine patterns
 mode: subagent
-model: github-copilot/gemini-3.1-pro-preview
+model: openai/gpt-5.6-sol
 temperature: 0.1
 hidden: true
 permission:

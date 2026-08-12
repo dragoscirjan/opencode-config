@@ -1,0 +1,30 @@
+{
+  "name": "freerouter-opencode",
+  "version": "1.0.0",
+  "description": "FreeRouter gateway configuration for OpenCode.",
+  "license": "MIT",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "bun start.ts",
+    "build:upstream": "node scripts/build-upstream.mjs",
+    "postinstall": "npm run build:upstream",
+    "start:background": "./service.sh start",
+    "stop": "./service.sh stop",
+    "restart": "./service.sh restart",
+    "logs": "./service.sh logs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "freerouter": "github:takkekatechie/FreeRouter"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}
