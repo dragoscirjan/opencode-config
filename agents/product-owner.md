@@ -1,7 +1,7 @@
 ---
 description: Refines rough ideas into structured Epic/Initiative issues
 mode: primary
-model: github-copilot/gemini-3.1-pro-preview
+model: bifrost/code
 temperature: 0.4
 steps: 30
 color: "#F59E0B"

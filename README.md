@@ -1,150 +1,146 @@
-<p align="center">
-  <img src="https://github.com/anomalyco/opencode/raw/dev/packages/console/app/src/asset/logo-ornate-dark.svg" alt="opencode" width="200" />
-</p>
+# OpenCode Agent Configuration & Architecture
 
-<h1 align="center">opencode-config</h1>
+This repository contains a comprehensive, highly-optimized configuration suite for OpenCode. The intention behind this setup is to provide a production-ready, multi-agent ecosystem that handles everything from high-level system architecture and game design to low-level backend implementations—all while strictly managing AI model costs.
 
-<p align="center">
-  My personal <a href="https://opencode.ai">opencode</a> configuration — a multi-agent AI development team with orchestrated design-to-delivery workflows, domain-specific skills, and curated MCP integrations.
-</p>
+## 🌟 Ecosystem Overview
+
+Rather than relying on a single monolithic AI agent, this configuration splits responsibilities into specific roles, ensuring context remains clean, workflows are respected, and domain boundaries are maintained.
+
+### 1. Orchestrators & Directors
+
+Primary agents that interface directly with the user to manage large-scale planning:
+
+- **`product-owner` / `tech-advisor`**: Manage requirements, User Stories, and high-level technical direction.
+- **`lead-engineer`**: Orchestrates software engineering tasks, delegating to specialized development sub-agents.
+- **`game-director`**: Specifically tuned for Godot 4 game development, managing visual targets, art pipelines, and execution.
+
+### 2. Specialized Workers (Sub-agents)
+
+Task-specific agents invoked by the orchestrators to do the heavy lifting:
+
+- **Software Dev**: `worker-frontend-dev`, `worker-backend-dev`, `worker-devops`, `worker-sys-architect`, `worker-tech-lead`, `worker-code-reviewer`
+- **Game Dev**: `worker-game-designer`, `worker-godot-expert`, `worker-visual-qa`
+
+### 3. Domain-Specific Skills
+
+A rich library of loadable skills (e.g., `clean-code`, `develop-tdd`, `godot-engine`) that inject precise workflows and standards dynamically based on the active task.
 
 ---
 
-## Table of Contents
+## 🏛️ The "Big Brother" Escalation Architecture
 
-- [What's Inside](#whats-inside)
-- [Documentation](#documentation)
-- [MCP Servers](#mcp-servers)
-- [Plugin](#plugin)
-- [Testing](#testing)
-- [Scripts](#scripts)
-- [Setup](#setup)
-- [License](#license)
+To prevent burning through expensive API credits (like Claude Opus 4.6 or o1) on simple typos or repetitive trial-and-error, we built a tiered **Escalation Protocol** (`skills/escalation-protocol`).
+
+By default, standard sub-agents use extremely cheap, fast "Daily Driver" models. If they fail repeatedly or get stuck in a logic loop, they automatically format a distress payload and call in the "Big Brothers":
+
+1. **`worker-bb-coder` (The Execution Closer):** Adopts the failing agent's persona, fixes the immediate complex code bug, and hands control back.
+2. **`worker-bb-oracle` (The Deep Reasoner):** Resolves deep architectural deadlocks by providing high-level, step-by-step logic paths without writing the final code.
 
 ---
 
-## What's Inside
+## 📊 Live Model Benchmarking & Tiering
 
-```
-.
-├── opencode.json          # Main config (MCP servers, plugins)
-├── dcp.jsonc              # Dynamic Context Pruning settings
-├── AGENTS.md              # Global rules injected into all agents
-├── agents/                # Agent definitions (16 agents: 6 primary + 10 subagents)
-├── agent-templates/       # Reusable prompt templates (primary.md, subagent.md)
-├── commands/              # Slash commands (/design, /implement, /review, …)
-├── document-templates/    # Templates for HLDs, LLDs, epics, stories
-├── skills/                # Domain-specific instruction packs (13 skills)
-├── tools/                 # Custom TypeScript tools (spec-create, issue-create, …)
-├── scripts/               # Utility scripts (model switching)
-└── tests/                 # Agent integration tests (Taskfile-based)
-```
+We track model performance and pricing to keep our agent configurations optimal. Our tiering strategy is heavily informed by data from the [Onyx Best LLMs for Coding Leaderboard](https://onyx.app/best-llm-for-coding), cross-referenced with live pricing from the OpenRouter API.
 
-Projects that use this config also produce:
+_You can view our scraped benchmark data snapshots in `models-coding.csv` and `models-reasoning.csv`._
 
-```
-<project>/
-├── .issues/             # Local issue tracking (Epic, Story, Task, Spike)
-├── .specs/              # Finalized design documents (HLDs, LLDs, task plans)
-└── .ai.tmp/             # Ephemeral AI drafts (disposable working files)
-```
+Based on this data, we organize models into distinct "Normal" (Daily Driver) and "Big Brother" pairs across different environments (Local, OpenRouter, Copilot), documented in `model-list.yaml`.
 
-## Documentation
+---
 
-This configuration supports two primary development modes. Please refer to the specific documentation for your use case:
+## 🛠️ Dynamic Model Switcher
 
-- **[Software Development](README_DEV.md)** — Workflows for building standard applications (web, backend, CLI, etc.). Includes agents like Product Owner, Technical Advisor, and Lead Engineer.
-- **[Game Development](README_GAME_DEV.md)** — Workflows for building games with Godot 4. Includes game-specific agents (Game Designer, Game Director, Visual QA) and asset generation pipelines.
+To easily manage these configurations, we built a utility script `scripts/switch-models.sh`. It allows you to instantly swap the models across your entire OpenCode agent fleet using predefined combinations.
 
-## MCP Servers
-
-Pre-configured integrations (enable/disable in `opencode.json`):
-
-| Server                  | Category                   | Default  |
-| ----------------------- | -------------------------- | -------- |
-| **Playwright**          | Browser automation         | Enabled  |
-| **Puppeteer**           | Browser automation         | Disabled |
-| **Context7**            | Documentation lookup       | Enabled  |
-| **GitHub Grep**         | Code search across GitHub  | Enabled  |
-| **JSON Memory**         | Persistent knowledge graph | Enabled  |
-| **Sequential Thinking** | Structured reasoning       | Enabled  |
-| **LibSQL Memory**       | SQLite-based memory        | Disabled |
-| **GitHub MCP**          | GitHub repos & issues      | Enabled  |
-| **GitLab MCP**          | GitLab integration         | Disabled |
-| **Forgejo MCP**         | Forgejo integration        | Disabled |
-| **CocoIndex**           | Code indexing              | Disabled |
-| **FastCode**            | Code indexing              | Disabled |
-| **Tavily**              | Web crawling               | Disabled |
-| **Firecrawl**           | Web crawling               | Disabled |
-
-## Plugin
-
-Uses [`@tarquinen/opencode-dcp`](https://www.npmjs.com/package/@tarquinen/opencode-dcp) for Dynamic Context Pruning — automatic context management to keep conversations efficient.
-
-## Testing
-
-Agent integration tests live in `tests/` and use [Vitest](https://vitest.dev) as the test runner. Each agent suite follows a pattern: clean workspace, seed input, run agent via `opencode run`, then assert outputs.
+### Usage:
 
 ```bash
-# Run all tests
-cd tests && npm test
-
-# Run tests in watch mode
-cd tests && npm run test:watch
+./scripts/switch-models.sh [--target normal|bb|all] <combination>
 ```
 
-Reusable test helpers are defined in `tests/helpers.ts` (path assertions, content checks, file counting).
-Additionally, custom tools (such as asset generators, image utilities) are fully tested via `vitest` in `tests/tools/`.
+### Available Combinations:
 
-## Scripts
+**[LOCAL - by VRAM]**
 
-| Script                     | Purpose                                                                                                                                                                                                |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `scripts/switch-models.sh` | Bulk model swap across all agent files. Supports keywords: `copilot`, `anthropic`, `openai`, `openrouter`, `free`. Strong tier (opus) for architects and reviewers. Fast tier (sonnet) for all others. |
+- `local_8gb` (Qwen 7B -> DeepSeek 8B)
+- `local_16gb` (Qwen 32B -> DeepSeek 14B)
+- `local_32gb` (Qwen 30B -> DeepSeek 32B)
+- `local_64gb` (Qwen 72B -> DeepSeek 70B)
 
-## Setup
+**[OPENROUTER - by Cost]**
 
-1. **Install [opencode](https://opencode.ai)**
+- `openrouter_ultra_budget` (Qwen 9B -> DeepSeek V3.2)
+- `openrouter_value` (Step 3.5 Flash -> MiniMax M2.5)
+- `openrouter_standard` (Gemini 3.1 Pro -> GPT-5.4)
+- `openrouter_premium` (Sonnet 4.6 -> Opus 4.6)
 
-2. **Clone this repo** into your opencode config directory:
+**[GITHUB COPILOT]**
 
-   ```bash
-   git clone git@github.com:dragoscirjan/opencode-config.git ~/.config/opencode
-   ```
+- `copilot_budget` (GPT-4o-mini -> o3-mini)
+- `copilot_standard` (Gemini 3.1 Pro -> Sonnet 4.6)
+- `copilot_premium` (Sonnet 4.6 -> Opus 4.6)
+- `copilot_architect` (GPT-5.4 -> o1)
 
-3. **Install dependencies:**
+---
 
-   ```bash
-   cd ~/.config/opencode && bun install
-   ```
+## 🖥️ Local Provider Setup
 
-4. **Set environment variables** for any MCP servers you want to enable:
+For fully offline or on-premise usage, this config supports two local inference backends. Add them to your `opencode.json` under the `provider` key.
 
-   ```bash
-   # Browser automation
-   export BROWSER_PATH="/usr/bin/chromium"
+### Ollama
 
-   # Memory (auto-configured per project)
-   export PROJECT_PATH="/path/to/your/project"
+Ollama is supported natively — no extra npm package needed. If running on the default port (`11434`) the provider block is optional, but you can override the base URL if needed:
 
-   # Optional — enable as needed
-   export GITHUB_TOKEN="..."
-   export TAVILY_API_KEY="..."
-   export FIRECRAWL_API_KEY="..."
-   ```
+```json
+"provider": {
+  "ollama": {
+    "name": "Ollama (local)",
+    "options": {
+      "baseURL": "http://127.0.0.1:11434/api"
+    },
+    "models": {
+      "deepseek-r1-32b": { "name": "DeepSeek R1 32b (local)" }
+    }
+  }
+}
+```
 
-5. **Enable/disable MCP servers** by toggling `"enabled"` in `opencode.json`.
+Then use `ollama/<model-name>` in any agent's `model:` frontmatter or with the switcher script (`local_*` combinations).
 
-6. **Switch model providers** (optional):
+### llama.cpp
 
-   ```bash
-   # Switch all agents to Anthropic direct API models
-   ./scripts/switch-models.sh anthropic
+`llama-server` exposes an OpenAI-compatible API (default port `8080`). Register it as a custom provider using the `openai` API adapter:
 
-   # Switch to GitHub Copilot models (default)
-   ./scripts/switch-models.sh copilot
-   ```
+```json
+"provider": {
+  "llamacpp": {
+    "name": "LlamaCpp (local)",
+    "api": "openai",
+    "options": {
+      "baseURL": "http://127.0.0.1:8080/v1",
+      "apiKey": "sk-no-key-required"
+    }
+  }
+}
+```
 
-## License
+Then use `llamacpp/<model-name>` in any agent's `model:` frontmatter.
 
-[MIT](LICENSE)
+---
+
+## 🔄 Local Model Discovery Sync
+
+Use the `/local-models-sync` command to reconcile provider model lists into `opencode.json`.
+
+What it does:
+
+- scans configured providers in `opencode.json`
+- selects only OpenAI-compatible providers
+- fetches `GET <baseURL>/models` with a 5s timeout per provider
+- reconciles `provider.<id>.models` with source-of-truth endpoint data:
+  - add new models
+  - remove models no longer exposed
+  - keep existing model entries (preserve custom fields)
+- reports warnings for unreachable providers, timeouts, malformed responses, and HTTP failures
+
+After running sync, restart OpenCode so refreshed model registrations are loaded.

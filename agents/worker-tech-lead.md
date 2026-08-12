@@ -1,7 +1,7 @@
 ---
 description: "Tech Lead — Tech Lead — challenges designs, writes LLDs, proposes technical solutions"
 mode: subagent
-model: github-copilot/gemini-3.1-pro-preview
+model: bifrost/code
 temperature: 0.2
 hidden: true
 permission:

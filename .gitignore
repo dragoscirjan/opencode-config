@@ -23,3 +23,7 @@ tests/logs/
 tests/workspace/
 
 .web_stash.db
+
+.env
+.env.ai
+bifrost/data

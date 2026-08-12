@@ -1,7 +1,7 @@
 ---
 description: Tech Writer — Technical Writer — generates and maintains MkDocs documentation sites
 mode: primary
-model: github-copilot/gemini-3.1-pro-preview
+model: bifrost/code
 temperature: 0.3
 steps: 40
 color: "#10B981"

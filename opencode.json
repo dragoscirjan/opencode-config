@@ -1,11 +1,178 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "instructions": ["CONTRIBUTING.md", "PLAN.md"],
-  "plugin": ["@tarquinen/opencode-dcp@latest"],
+  "instructions": [
+    "CONTRIBUTING.md",
+    "PLAN.md"
+  ],
+  "plugin": [
+    "@tarquinen/opencode-dcp@latest"
+  ],
+  "provider": {
+    "lmstudio/tw-nixos": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "LM Studio (tw-nixos)",
+      "options": {
+        "baseURL": "http://tw-nixos.trilu.lila:1234/v1",
+        "timeout": false,
+        "chunkTimeout": 86400000,
+        "headerTimeout": 86400000
+      },
+      "models": {
+        "essentialai/rnj-1": {
+          "name": "essentialai/rnj-1"
+        },
+        "north-mini-code-1.0": {
+          "name": "north-mini-code-1.0"
+        },
+        "qwen/qwen2.5-coder-14b": {
+          "name": "qwen/qwen2.5-coder-14b"
+        },
+        "qwen/qwen3-coder-30b": {
+          "name": "qwen/qwen3-coder-30b"
+        },
+        "qwen/qwen3.6-27b": {
+          "name": "Qwen 3.6 27b (local)"
+        },
+        "text-embedding-nomic-embed-text-v1.5": {
+          "name": "text-embedding-nomic-embed-text-v1.5"
+        }
+      }
+    },
+    "lmstudio/m5": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "LM Studio (mac-m5)",
+      "options": {
+        "baseURL": "http://mac-m5.trilu.lila:1234/v1",
+        "timeout": false,
+        "chunkTimeout": 86400000,
+        "headerTimeout": 86400000
+      },
+      "models": {
+        "google/gemma-4-31b": {
+          "name": "google/gemma-4-31b"
+        },
+        "ibm/granite-4.1-30b": {
+          "name": "ibm/granite-4.1-30b"
+        },
+        "nvidia/nemotron-3-super": {
+          "name": "nvidia/nemotron-3-super"
+        },
+        "openai/gpt-oss-120b": {
+          "name": "openai/gpt-oss-120b"
+        },
+        "qwen/qwen3-next-80b": {
+          "name": "qwen/qwen3-next-80b"
+        },
+        "qwen/qwen3.6-27b": {
+          "name": "qwen/qwen3.6-27b"
+        },
+        "qwen/qwen3.6-35b-a3b": {
+          "name": "qwen/qwen3.6-35b-a3b"
+        },
+        "text-embedding-nomic-embed-text-v1.5": {
+          "name": "text-embedding-nomic-embed-text-v1.5"
+        },
+        "zai-org/glm-4.7-flash": {
+          "name": "zai-org/glm-4.7-flash"
+        }
+      }
+    },
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama (local)",
+      "options": {
+        "baseURL": "http://tw-nixos.trilu.lila:11434/v1"
+      },
+      "models": {
+        "nomic-embed-text:latest": {
+          "name": "nomic-embed-text:latest"
+        }
+      }
+    },
+    "bifrost": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Syrius Bifrost (adaptive routing)",
+      "options": {
+        "baseURL": "https://bifrost.trilu.lila/v1",
+        "apiKey": "unused",
+        "timeout": false,
+        "chunkTimeout": 86400000,
+        "headerTimeout": 86400000
+      },
+      "models": {
+        "code": {
+          "name": "Code (Coding Agent)",
+        },
+        "design": {
+          "name": "Design (Design Agent)",
+        }
+      }
+    },
+    "bifrost-test": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Syrius Bifrost (adaptive routing)",
+      "options": {
+        "baseURL": "https://bifrost-test.trilu.lila/v1",
+        "apiKey": "unused",
+        "timeout": false,
+        "chunkTimeout": 86400000,
+        "headerTimeout": 86400000
+      },
+      "models": {
+        "code": {
+          "name": "Code (Coding Agent) (Test)",
+        },
+        "design": {
+          "name": "Design (Design Agent) (Test)",
+        }
+      }
+    },
+    "bifrost-dev": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Syrius Bifrost (adaptive routing)",
+      "options": {
+        "baseURL": "https://bifrost.trilu.lila/v1",
+        "apiKey": "unused",
+        "timeout": false,
+        "chunkTimeout": 86400000,
+        "headerTimeout": 86400000
+      },
+      "models": {
+        "code": {
+          "name": "Code (Coding Agent) (Dev)",
+        },
+        "design": {
+          "name": "Design (Design Agent) (Dev)",
+        }
+      }
+    },
+    "bifrost-local": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Local Bifrost (adaptive routing)",
+      "options": {
+        "baseURL": "http://localhost:8080/v1",
+        "timeout": false,
+        "chunkTimeout": 86400000,
+        "headerTimeout": 86400000
+      },
+      "models": {
+        "code": {
+          "name": "Code (Local) (Coding Agent)",
+        },
+        "design": {
+          "name": "Design (Local) (Design Agent)",
+        }
+      }
+    }
+  },
   "mcp": {
     "browser_puppeteer": {
       "type": "local",
-      "command": ["npx", "-y", "@anthropics/mcp-puppeteer"],
+      "command": [
+        "npx",
+        "-y",
+        "@anthropics/mcp-puppeteer"
+      ],
       "enabled": false,
       "environment": {
         "PUPPETEER_EXECUTABLE_PATH": "{env:BROWSER_PATH}"
@@ -26,7 +193,9 @@
     },
     "codeindex_cocoindex": {
       "type": "local",
-      "command": ["{env:HOME}/.local/bin/mcp-coco-index"],
+      "command": [
+        "{env:HOME}/.local/bin/mcp-coco-index"
+      ],
       "environment": {
         "COCOINDEX_DB_HOST": "{env:COCOINDEX_DB_HOST}",
         "COCOINDEX_DB_PORT": "{env:COCOINDEX_DB_PORT}",
@@ -38,7 +207,9 @@
     },
     "codeindex_fastcode": {
       "type": "local",
-      "command": ["{env:HOME}/.local/bin/fastcode"],
+      "command": [
+        "{env:HOME}/.local/bin/fastcode"
+      ],
       "environment": {
         "OPENAI_API_KEY": "{env:FASTCODE_API_KEY}",
         "MODEL": "{env:FASTCODE_MODEL}",
@@ -48,7 +219,10 @@
     },
     "codeindex_gitnexus": {
       "type": "local",
-      "command": ["gitnexus", "mcp"],
+      "command": [
+        "gitnexus",
+        "mcp"
+      ],
       "enabled": true
     },
     "cvs_github": {
@@ -68,7 +242,11 @@
     },
     "cvs_forgejo": {
       "type": "local",
-      "command": ["forgejo-mcp", "--transport", "stdio"],
+      "command": [
+        "forgejo-mcp",
+        "--transport",
+        "stdio"
+      ],
       "environment": {
         "FORGEJO_URL": "{env:FORGEJO_URL}",
         "FORGEJO_ACCESS_TOKEN": "{env:FORGEJO_ACCESS_TOKEN}"
@@ -87,32 +265,56 @@
     },
     "godot_editor": {
       "type": "local",
-      "command": ["npx", "-y", "@cgame-directorg-solo/godot-mcp"],
+      "command": [
+        "npx",
+        "-y",
+        "@cgame-directorg-solo/godot-mcp"
+      ],
       "enabled": false
     },
     "godot_forge": {
       "type": "local",
-      "command": ["npx", "-y", "godot-forge"],
+      "command": [
+        "npx",
+        "-y",
+        "godot-forge"
+      ],
       "enabled": false
     },
     "godot_diagnostics": {
       "type": "local",
-      "command": ["npx", "-y", "minimal-godot-mcp"],
+      "command": [
+        "npx",
+        "-y",
+        "minimal-godot-mcp"
+      ],
       "enabled": false
     },
     "godot_docs": {
       "type": "local",
-      "command": ["npx", "-y", "@nuskey8/godot-docs-mcp"],
+      "command": [
+        "npx",
+        "-y",
+        "@nuskey8/godot-docs-mcp"
+      ],
       "enabled": false
     },
     "godot_gopeak": {
       "type": "local",
-      "command": ["npx", "-y", "gopeak"],
+      "command": [
+        "npx",
+        "-y",
+        "gopeak"
+      ],
       "enabled": false
     },
     "memory_json": {
       "type": "local",
-      "command": ["npx", "-y", "@modelcontextprotocol/server-memory"],
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ],
       "environment": {
         "MEMORY_FILE_PATH": "{env:PROJECT_PATH}/.memory.jsonl"
       },
@@ -120,7 +322,11 @@
     },
     "memory_libsql": {
       "type": "local",
-      "command": ["npx", "-y", "mcp-memory-libsql"],
+      "command": [
+        "npx",
+        "-y",
+        "mcp-memory-libsql"
+      ],
       "environment": {
         "LIBSQL_URL": "file:{env:PROJECT_PATH}/.memory.db"
       },
@@ -128,12 +334,20 @@
     },
     "sequential_thinking": {
       "type": "local",
-      "command": ["npx", "-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ],
       "enabled": true
     },
     "webcrawl_searchable": {
       "type": "local",
-      "command": ["npx", "-y", "@dragoscirjan/mcp-searchable@latest"],
+      "command": [
+        "npx",
+        "-y",
+        "@dragoscirjan/mcp-searchable@latest"
+      ],
       "enabled": true
     },
     "webcrawl_tavily": {
@@ -143,7 +357,11 @@
     },
     "webcrawl_firecrawl": {
       "type": "local",
-      "command": ["npx", "-y", "firecrawl-mcp"],
+      "command": [
+        "npx",
+        "-y",
+        "firecrawl-mcp"
+      ],
       "environment": {
         "FIRECRAWL_API_KEY": "{env:FIRECRAWL_API_KEY}"
       },
@@ -151,7 +369,11 @@
     },
     "tui_wezterm": {
       "type": "local",
-      "command": ["npx", "-y", "@dragoscirjan/mcp-tuikit"],
+      "command": [
+        "npx",
+        "-y",
+        "@dragoscirjan/mcp-tuikit"
+      ],
       "environment": {
         "TUIKIT_TERMINAL": "wezterm"
       },
@@ -159,7 +381,11 @@
     },
     "tui_xterm": {
       "type": "local",
-      "command": ["npx", "-y", "@dragoscirjan/mcp-tuikit"],
+      "command": [
+        "npx",
+        "-y",
+        "@dragoscirjan/mcp-tuikit"
+      ],
       "environment": {
         "TUIKIT_TERMINAL": "xterm.js"
       },

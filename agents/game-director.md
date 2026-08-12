@@ -1,7 +1,7 @@
 ---
 description: Game Director — Game Generator — autonomous Godot 4 game development from natural language
 mode: primary
-model: github-copilot/gemini-3.1-pro-preview
+model: bifrost/code
 temperature: 0.3
 steps: 100
 color: "#4F46E5"
